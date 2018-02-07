@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class player_controller : MonoBehaviour {
-  float playerSpeed = 1f;
-  float playerTurnSpeed = 10f;
+  public float playerSpeed = 1f;
+  public float playerTurnSpeed = 10f;
 	// Use this for initialization
 	void Start () {
 		
