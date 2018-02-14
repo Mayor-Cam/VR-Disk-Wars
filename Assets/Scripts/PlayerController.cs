@@ -28,9 +28,9 @@ public class PlayerController : MonoBehaviour {
 		//Logic to translate input to ingame movement
 		Vector3 playerPosition = gameObject.transform.position;
     gameObject.transform.Translate(new Vector3 (horizontalInput * Time.deltaTime * playerSpeed, 0, verticalInput * Time.deltaTime * playerSpeed));
-		gameObject.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X"));
+		gameObject.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * playerTurnSpeed);
 		//Player Camera Look
-		playerCamera.transform.Rotate(Vector3.right * -Input.GetAxis("Mouse Y"));
+		playerCamera.transform.Rotate(Vector3.right * -Input.GetAxis("Mouse Y") * playerTurnSpeed);
 		//Logic to translate input to shoot disks
 		if(Input.GetAxis("Fire1") == 1 && !diskController.GetFired()) {
       diskController.Fire(gameObject, playerCamera);
