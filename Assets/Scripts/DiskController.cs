@@ -17,21 +17,18 @@ public class DiskController : MonoBehaviour {
 	void FixedUpdate () {
 		if(diskFired) {
       Vector3 orig = transform.position;
-//      float rad = collider.radius;
-      RaycastHit hit;
-      
-      //if(Physics.SphereCast(orig,rad,transform.forward, out hit, diskSpeed* Time.deltaTime)) {
-      if(rb.SweepTest(transform.forward, out hit, diskSpeed*Time.fixedDeltaTime)) {        
-        Debug.Log("B: " + transform.forward);
+      RaycastHit hit;            
+      float frameDistance = diskSpeed * Time.fixedDeltaTime;
+            int counter = 0;
+      while(rb.SweepTest(transform.forward, out hit, diskSpeed*Time.fixedDeltaTime) ) {
+        counter++;
+        Debug.Log("Check Number: " + counter);  
         Vector3 reflect = Vector3.Reflect(transform.forward, hit.normal);
-        Debug.Log("A: " + reflect);
+        transform.position = hit.point + transform.forward * 0.5f * transform.localScale.x * Mathf.Cos(Vector3.Angle(transform.forward, hit.normal)* Mathf.Deg2Rad);
         transform.forward = reflect;
-        transform.position = hit.point+ transform.forward*0.5f*transform.localScale.x + (reflect*((diskSpeed*Time.fixedDeltaTime)-hit.distance)); 
-        
+        frameDistance -= hit.distance;
       } 
-      else {
-        transform.Translate(Vector3.forward * diskSpeed * Time.fixedDeltaTime);
-        }
+      transform.Translate(Vector3.forward * frameDistance);
       orig = transform.position;
       Debug.DrawRay(orig+transform.forward*0.5f*transform.localScale.x,transform.forward*diskSpeed*Time.deltaTime,Color.red);
 		}
