@@ -12,9 +12,8 @@ public class DiskController : MonoBehaviour {
     collider = GetComponent<SphereCollider>();
     rb = GetComponent<Rigidbody>();
 	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
+    // Update is called once per frame
+    void FixedUpdate () {
 		if(diskFired) {
 
             Vector3 orig = transform.position;
