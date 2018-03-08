@@ -7,16 +7,18 @@ Player Controller handles all player controls, to include movement and disk mani
 public class PlayerController : MonoBehaviour {
   //Camera Object for Looking
   public GameObject playerCamera;
-  //Disk object and prefab
-  public GameObject prefDisk;
-  GameObject objDisk;
+    //Disk object and prefab
+    public GameObject leftHand;
+    public GameObject rightHand;
+  public GameObject objDisk;
   public DiskController diskController;
   // Player Speed Scalar Variable
   public float playerSpeed = 1f;
   // Player Rotation Speed Scalar Variable
   public float playerTurnSpeed = 10f;
-  
- 
+    public bool leftClicked = false;
+    bool rightClicked = false;
+    public float catchDistanceThreshold = 1;
   void Start () {
 		
 	}
@@ -32,11 +34,26 @@ public class PlayerController : MonoBehaviour {
 		//Player Camera Look
 		playerCamera.transform.Rotate(Vector3.right * -Input.GetAxis("Mouse Y") * playerTurnSpeed);
 		//Logic to translate input to shoot disks
-		if(Input.GetAxis("Fire1") == 1 && !diskController.GetFired()) {
-      diskController.Fire(gameObject, playerCamera);
+		if(Input.GetAxis("Fire1") == 1) {
+            if (!leftClicked)
+            {
+                leftClicked = true;
+                Debug.Log(diskController.GetFired());
+                if (!diskController.GetFired())
+                {
+                    Debug.Log("THROW!");
+                    diskController.Fire(gameObject, playerCamera);
+                }
+                else if (Vector3.Distance(leftHand.transform.position, objDisk.transform.position) <= catchDistanceThreshold)
+                {
+                    Debug.Log("CATCH!");
+                    diskController.Catch(leftHand);
+                }
+            }
 		}
-		else if(Input.GetAxis("Fire1") == 0 && diskController.GetFired()) {
-		}
-		
+        else
+        {
+            leftClicked = false;
+        }
 	}
 }
