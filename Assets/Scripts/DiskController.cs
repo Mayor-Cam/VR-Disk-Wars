@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 using UnityEngine;
 
-public class DiskController : MonoBehaviour {
+public class DiskController : NetworkBehaviour {
     public float diskSpeed = 10;
     bool diskFired = false;
     SphereCollider collider;

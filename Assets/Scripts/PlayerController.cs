@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 using UnityEngine;
 /*
 Player Controller handles all player controls, to include movement and disk manipulation
 */
-public class PlayerController : MonoBehaviour {
+public class PlayerController : NetworkBehaviour {
   //Camera Object for Looking
   public GameObject playerCamera;
     //Disk object and prefab
@@ -24,8 +25,13 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
-    //Shortened variable name for WASD for convenience 
-		float horizontalInput = Input.GetAxis("Horizontal");
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+        transform.GetChild(0).GetComponent<Camera>().gameObject.SetActive(true);
+        //Shortened variable name for WASD for convenience 
+        float horizontalInput = Input.GetAxis("Horizontal");
 		float verticalInput = Input.GetAxis("Vertical");
 		//Logic to translate input to ingame movement
 		Vector3 playerPosition = gameObject.transform.position;
