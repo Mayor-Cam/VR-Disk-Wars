@@ -21,7 +21,11 @@ public class PlayerController : NetworkBehaviour {
     bool rightClicked = false;
     public float catchDistanceThreshold = 1;
   void Start () {
-		
+    if (!isLocalPlayer) {
+      transform.position = new Vector3(0f,1f,2.5f);
+    } else {
+      transform.position = new Vector3(0f,1f,-2.5f);
+    }
 	}
 	
 	void Update () {
