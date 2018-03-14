@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Created by Cam 3/13/2018
+// Last edited 3/14/2018
+
 public class DummyController : MonoBehaviour {
 
-	public gameObject gameController;
-	public GameControllerScript gameControllerScript;
+	public GameObject gameController;
+	GameControllerScript gameControllerScript;
 	
 	Vector3 spawnPoint;
 	
 	// Use this for initialization
 	void Start () {
-		spawnPoint = Transform.parent.Transform.position;  // Could perhaps get rid of spawn object altogether and set initial position as spawnPoint.
+		spawnPoint = transform.position;  // Set initial position as spawnPoint.
+
+        gameControllerScript = gameController.GetComponent<GameControllerScript>();
 	}
 	
 	// Update is called once per frame
@@ -20,25 +25,25 @@ public class DummyController : MonoBehaviour {
 	}
 	
 	// Called when this player is hit by the disk.  Called by the disk upon collision.
-	void DiskHit() {
-		// Hit animation.  Probably spawn some kind of explosion?
-		
-		
-		// Set inactive
-		SetActive(0);
-		
-		// Send point info to gamecontroller
-		gameController.gameControllerScript.Score(this.gameObject);
+	public void DiskHit() {
+        // Hit animation.  Probably spawn some kind of explosion?
+
+        // Send point info to gamecontroller
+        gameControllerScript.Score(this.gameObject);
+
+        // Set inactive
+        gameObject.SetActive(false);
 	}
 	
-	// Respawns player to spawnpoint position.  Called by gameController object.
-	void Respawn() {
-		// Reset position to spawn
-		Transform.position = spawnPoint;
+	// Resores player if they are destroyed. Called by gameController object.
+	public void Restore() {
+        // Reset position to spawn
+        // 
+        transform.position = spawnPoint;
 		
 		// Spawn animation.  Reverse explosion?
 		
 		// Set active (might need to move this to animation method, so it won't appear until animation is over)
-		SetActive(1);
+		gameObject.SetActive(true);
 	}
 }

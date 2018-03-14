@@ -7,24 +7,32 @@ public class DiskController : MonoBehaviour {
     bool diskFired = false;
     SphereCollider collider;
     Rigidbody rb;
+
+    ///////////////////
+    // Additions for game functionality
+    // -- Cam 3/13/2018
+    public GameObject gameController;   // Reference to gameController object.  Needed to communicate hits for points.  (may instead implement into player objects)
+    public GameObject diskOwner;  // Identifier for which player this disk belongs to.  
+
+    // public PlayerController playerScript;  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
+    // public DummyController dummyController;
+
+    Vector3 spawnPoint;
+    //
+    //////////////////
+
     // Use this for initialization
-	void Start () {
-    collider = GetComponent<SphereCollider>();
-    rb = GetComponent<Rigidbody>();
-	
-	///////////////////
-	// Additions for game functionality
-	// -- Cam 3/13/2018
-	public GameObject gameController;	// Reference to gameController object.  Needed to communicate hits for points.  (may instead implement into player objects)
-	public GameObject diskOwner;  // Identifier for which player this disk belongs to.  
-	
-	// public PlayerController playerScript;  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
-	public DummyController dummyScript;
-	
-	//
-	///////////
-	
-	}
+    void Start()
+    {
+        collider = GetComponent<SphereCollider>();
+        rb = GetComponent<Rigidbody>();
+
+        spawnPoint = transform.position;   // -- Added by Cam 3/14/2018
+    }
+    
+
+    
+
     // Update is called once per frame
     void FixedUpdate () {
 		if(diskFired) {
@@ -39,17 +47,32 @@ public class DiskController : MonoBehaviour {
                 transform.position = hit.point + transform.forward * 0.5f * transform.localScale.x * Mathf.Cos(Vector3.Angle(transform.forward, hit.normal)* Mathf.Deg2Rad);
                 transform.forward = reflect;
                 frameDistance -= hit.distance;
-				
-				///////////////////
-				// Additions for player/dummy collision
-				// -- Cam 3/13/2018
-					if 	(hit.Transform.gameObject.name == "DummyPlayer" || // If we've hit the dummy OR...
-						(hit.Transform.gameObject.tag == "Player" && hit.Transform.gameObject.tag != diskOwner)) // If we've hit the other player...
-					{
-						// Call the hit player's DiskHit method.
-						hit.Transform.gameObject.dummyScript.DiskHit();
-						// hit.Transform.gameObject.playerScript.DiskHit();  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
-					}
+
+                ///////////////////
+                // Additions for player/dummy collision
+                // -- Cam 3/13/2018
+                if (hit.transform.gameObject.name == "DummyPlayer")  // If we've hit the dummy
+                {
+                    // Call the hit player's DiskHit method.
+                    hit.transform.gameObject.GetComponent<DummyController>().DiskHit();
+                    print("Dummy Hit Confirm");
+
+                    // Call the disk's DestroyDisk method
+                    DestroyDisk();
+
+                    // hit.Transform.gameObject.playerScript.DiskHit();  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
+                }
+
+                else if (hit.transform.gameObject.CompareTag("Player") && hit.transform.gameObject != diskOwner) // If we've hit the other player...
+                {
+                    // Call the hit player's DiskHit method.
+                    // hit.transform.gameObject.GetComponent<PlayerController>().DiskHit();
+
+                    // Call the disk's DestroyDisk method
+                    DestroyDisk();
+
+                    // hit.Transform.gameObject.playerScript.DiskHit();  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
+                }
 				//
 				///////
             } 
@@ -100,7 +123,24 @@ public class DiskController : MonoBehaviour {
         diskFired = false;
     }
 	
-	public void HitTarget() {
-		// 
+	public void DestroyDisk() {
+        // Spawn disk explosion animation
+
+        // Set Inactive
+        gameObject.SetActive(false);
 	}
+
+    public void Respawn()
+    {
+        gameObject.SetActive(false);  // Set inactive in case this disk is currently active
+        diskFired = false;
+
+        // Stop, re-orient, and reposition to spawnPoint.
+        transform.position = spawnPoint;
+        transform.eulerAngles = new Vector3(0, 0, 0);
+        rb.velocity = new Vector3(0, 0, 0);
+
+        // Set Active
+        gameObject.SetActive(true);
+    }
 }
