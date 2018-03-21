@@ -32,6 +32,16 @@ public class HandGrabbing : MonoBehaviour
         transform.localRotation = InputTracking.GetLocalRotation(NodeType);
 
 
+        if(Input.GetAxis("TriggerLeft") == 1.0f)
+        {
+            // grab code
+        }
+
+        if(Input.GetAxis("TriggerRight") == 1.0f)
+        {
+            // grab code
+        }
+
         //if we don't have an active object in hand, look if there is one in proximity
         if (_currentObject == null)
         {
