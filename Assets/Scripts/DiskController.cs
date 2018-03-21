@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Networking;
 using UnityEngine;
 
-public class DiskController : NetworkBehaviour {
+public class DiskController : MonoBehaviour {
     public float diskSpeed = 10;
     bool diskFired = false;
     SphereCollider collider;
@@ -13,6 +12,7 @@ public class DiskController : NetworkBehaviour {
     collider = GetComponent<SphereCollider>();
     rb = GetComponent<Rigidbody>();
 	}
+
     // Update is called once per frame
     void FixedUpdate () {
 		if(diskFired) {
@@ -29,6 +29,7 @@ public class DiskController : NetworkBehaviour {
                 frameDistance -= hit.distance;
             } 
         transform.Translate(Vector3.forward * frameDistance);
+        rb.velocity = transform.forward * diskSpeed;
         orig = transform.position;
         Debug.DrawRay(orig+transform.forward*0.5f*transform.localScale.x,transform.forward*diskSpeed*Time.deltaTime,Color.red);
 		}
