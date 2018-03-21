@@ -29,8 +29,9 @@ public class PlayerController : NetworkBehaviour {
     [SyncVar]
     public Vector3 networkPlayerVelocity;
 
-    void Start () {
-        if(!isLocalPlayer)
+    void Start()
+    {
+        if (!isLocalPlayer)
         {
             if (isServer)
             {
@@ -47,7 +48,8 @@ public class PlayerController : NetworkBehaviour {
         {
             GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
             GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
-	}
+        }
+    }
 
     private void Update()
     {
