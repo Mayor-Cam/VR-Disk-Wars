@@ -13,6 +13,10 @@ public class HandGrabbing : MonoBehaviour
     public string GrabTag = "Grab";
     public float ThrowMultiplier=1.5f;
 
+    bool triggerPress;
+    bool triggerHold;
+    bool triggerRelease;
+
     private Transform _currentObject;
     private Vector3 _lastFramePosition;
 
@@ -22,6 +26,9 @@ public class HandGrabbing : MonoBehaviour
         _currentObject = null;
         _lastFramePosition = transform.position;
 
+        triggerPress = false;
+        triggerHold = false;
+        triggerRelease = false;
     }
 
     // Update is called once per frame
@@ -31,17 +38,41 @@ public class HandGrabbing : MonoBehaviour
         transform.localPosition = InputTracking.GetLocalPosition(NodeType);
         transform.localRotation = InputTracking.GetLocalRotation(NodeType);
 
-
-        if(Input.GetAxis("TriggerLeft") == 1.0f)
+        ///////////////
+        // Added by Cam - 3/26/2018
+        //
+        
+        // If-statements for declaring triggerPress, triggerHold, triggerRelease booleans.
+        if (Input.GetAxis("TriggerLeft") == 1.0f || Input.GetAxis("TriggerRight") == 1.0f)  // Pressed  -- May want to fiddle with the threshold
         {
-            // grab code
+            if (triggerHold == false)
+            {
+                triggerPress = true;
+                triggerHold = true;
+            }
+            else triggerPress = false;
+
+            // triggerHold = true;
+        }
+        else //  if (Input.GetAxis("TriggerLeft") < 1.0f || Input.GetAxis("TriggerRight") < 1.0f) // Released
+        {
+            if (triggerHold == true)
+            {
+                triggerRelease = true;
+                triggerHold = false;
+            }
+            else triggerRelease = false;
+
+            // triggerHold = false;
         }
 
-        if(Input.GetAxis("TriggerRight") == 1.0f)
-        {
-            // grab code
-        }
 
+
+        //
+        /////////
+
+        /*
+        
         //if we don't have an active object in hand, look if there is one in proximity
         if (_currentObject == null)
         {
@@ -95,6 +126,7 @@ public class HandGrabbing : MonoBehaviour
         //save the current position for calculation of velocity in next frame
         _lastFramePosition = transform.position;
 
+    */
 
     }
 }

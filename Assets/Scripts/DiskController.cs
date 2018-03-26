@@ -123,6 +123,11 @@ public class DiskController : MonoBehaviour {
         diskFired = false;
     }
 	
+	
+	///////////////////
+	// Additions for player/dummy collision
+	// -- Cam 3/13/2018
+	
 	public void DestroyDisk() {
         // Spawn disk explosion animation
 
@@ -143,4 +148,16 @@ public class DiskController : MonoBehaviour {
         // Set Active
         gameObject.SetActive(true);
     }
+	
+	// -- Cam 3/26/2018
+
+    // Snap moves and re-orients the disk.  Used by hand objects for grabbing.
+	public void Snap(Vector3 newPosition, Vector3 newAngle) 
+	{
+        transform.position = newPosition;
+        transform.eulerAngles = newAngle;
+	}
+
+	//
+	///////
 }
