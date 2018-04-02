@@ -13,9 +13,12 @@ public class HandGrabbing : MonoBehaviour
     public string GrabTag = "Grab";
     public float ThrowMultiplier=1.5f;
 
+    bool grabbing;
     bool triggerPress;
     bool triggerHold;
     bool triggerRelease;
+    bool isLeftHand;  // Identifies which hand this object is.  Using a boolean instead of a string for the sake of efficiency.
+    float triggerInput; // Value of the corresponding hand's input.  Range from 0 to 1.
 
     private Transform _currentObject;
     private Vector3 _lastFramePosition;
@@ -26,9 +29,17 @@ public class HandGrabbing : MonoBehaviour
         _currentObject = null;
         _lastFramePosition = transform.position;
 
+        grabbing = false;
         triggerPress = false;
         triggerHold = false;
         triggerRelease = false;
+
+        // Determine which hand this object is.
+        if (string.Compare(gameObject.name, "leftHand") == 1)
+        {
+            isLeftHand = true;
+        }
+        else isLeftHand = false;
     }
 
     // Update is called once per frame
@@ -41,33 +52,24 @@ public class HandGrabbing : MonoBehaviour
         ///////////////
         // Added by Cam - 3/26/2018
         //
-        
-        // If-statements for declaring triggerPress, triggerHold, triggerRelease booleans.
-        if (Input.GetAxis("TriggerLeft") == 1.0f || Input.GetAxis("TriggerRight") == 1.0f)  // Pressed  -- May want to fiddle with the threshold
+
+        getInput();
+
+        if (triggerPress &&  _currentObject == null /*!grabbing*/)
         {
-            if (triggerHold == false)
+            //check for colliders in proximity
+            Collider[] colliders = Physics.OverlapSphere(transform.position, GrabDistance);
+
+            // If we collided with something
+            if (colliders.Length > 0)
             {
-                triggerPress = true;
-                triggerHold = true;
+                // If the collided object is a disk
+                if (string.Compare(colliders[0].transform.gameObject.name, "disk") == 1)
+                {
+
+                }
             }
-            else triggerPress = false;
-
-            // triggerHold = true;
         }
-        else //  if (Input.GetAxis("TriggerLeft") < 1.0f || Input.GetAxis("TriggerRight") < 1.0f) // Released
-        {
-            if (triggerHold == true)
-            {
-                triggerRelease = true;
-                triggerHold = false;
-            }
-            else triggerRelease = false;
-
-            // triggerHold = false;
-        }
-
-
-
         //
         /////////
 
@@ -128,5 +130,40 @@ public class HandGrabbing : MonoBehaviour
 
     */
 
+    }
+
+    // Records input for the controller that corresponds to this hand object.
+    void getInput()
+    {
+        // Determining which controller to get input from
+        if (isLeftHand)
+        {
+            triggerInput = Input.GetAxis("TriggerLeft");
+        }
+        else triggerInput = Input.GetAxis("TriggerRight");
+
+        // If-statements for declaring triggerPress, triggerHold, triggerRelease booleans.
+        if (triggerInput == 1.0f)  // Pressed  -- May want to fiddle with the threshold
+        {
+            if (triggerHold == false)
+            {
+                triggerPress = true;
+                triggerHold = true;
+            }
+            else triggerPress = false;
+
+            // triggerHold = true;
+        }
+        else //  if (triggerInput < 1.0f) // Released
+        {
+            if (triggerHold == true)
+            {
+                triggerRelease = true;
+                triggerHold = false;
+            }
+            else triggerRelease = false;
+
+            // triggerHold = false;
+        }
     }
 }
