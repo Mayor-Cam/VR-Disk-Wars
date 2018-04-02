@@ -691,6 +691,22 @@ Transform:
   m_Father: {fileID: 59638894}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &258796562 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1920224563284434, guid: 9f4882db5b4c53d48bc3f7c1d5763110,
+    type: 2}
+  m_PrefabInternal: {fileID: 697480399}
+--- !u!114 &258796565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 258796562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c873ba0512a9e641b44f87bca86050d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &259217281 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4915404708202860, guid: d5f502375c8a41c40a0cedf83b7851ac,
@@ -1054,6 +1070,22 @@ Transform:
   m_PrefabParentObject: {fileID: 4400256572809950, guid: 9f4882db5b4c53d48bc3f7c1d5763110,
     type: 2}
   m_PrefabInternal: {fileID: 78129383}
+--- !u!1 &620426105 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1920224563284434, guid: 9f4882db5b4c53d48bc3f7c1d5763110,
+    type: 2}
+  m_PrefabInternal: {fileID: 200980489}
+--- !u!114 &620426108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 620426105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c873ba0512a9e641b44f87bca86050d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &621123989
 GameObject:
   m_ObjectHideFlags: 0
@@ -1606,6 +1638,22 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3e82eff8806950e4395c7a4e37132476, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1000838078 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1920224563284434, guid: 9f4882db5b4c53d48bc3f7c1d5763110,
+    type: 2}
+  m_PrefabInternal: {fileID: 78129383}
+--- !u!114 &1000838080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1000838078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c873ba0512a9e641b44f87bca86050d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1083235081 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4542901921931600, guid: 564aa8f413970fc4b8159e85d1d018fa,
