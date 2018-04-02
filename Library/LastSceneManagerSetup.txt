@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Cityscape.unity
+- path: Assets/Scenes/Wasteland.unity
   isLoaded: 1
   isActive: 1
