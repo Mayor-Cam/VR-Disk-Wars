@@ -148,14 +148,45 @@ public class DiskController : MonoBehaviour {
         // Set Active
         gameObject.SetActive(true);
     }
-	
-	// -- Cam 3/26/2018
 
+	/////////
+	// Additions for grab mechanics -- Cam 3/26/2018
+	// Last edited -- 4/2/2018
+	//
+	
     // Snap moves and re-orients the disk.  Used by hand objects for grabbing.
 	public void Snap(Vector3 newPosition, Vector3 newAngle) 
 	{
         transform.position = newPosition;
         transform.eulerAngles = newAngle;
+	}
+
+	public void SetParent(GameObject newParent) 
+	{
+		if(gameObject.transform.parent != null)
+		{
+			HandGrabbing handScript = gameObject.transform.parent.GetComponent<HandGrabbing>();
+			handScript.ReleaseDisk();
+		}
+		gameObject.transform.parent = newParent.transform;
+	}
+
+	public void Grab(GameObject newParent, Vector3 newPosition, Vector3 newAngle) 
+	{
+		if(gameObject.transform.parent != null)
+		{
+			HandGrabbing handScript = gameObject.transform.parent.GetComponent<HandGrabbing>();
+			handScript.ReleaseDisk();
+		}
+
+		transform.position = newPosition;
+        transform.eulerAngles = newAngle;
+        gameObject.transform.parent = newParent.transform;
+	}
+
+	public void Release() 
+	{
+		gameObject.transform.parent = null;
 	}
 
 	//
