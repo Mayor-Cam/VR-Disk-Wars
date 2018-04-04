@@ -714,7 +714,7 @@ MonoBehaviour:
   m_UseSimulator: 0
   m_SimulatedLatency: 1
   m_PacketLossPercentage: 0
-  m_MaxBufferedPackets: 16
+  m_MaxBufferedPackets: 8
   m_AllowFragmentation: 1
   m_MatchHost: mm.unet.unity3d.com
   m_MatchPort: 443

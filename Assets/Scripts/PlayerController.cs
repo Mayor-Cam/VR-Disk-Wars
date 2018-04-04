@@ -16,6 +16,7 @@ public class PlayerController : NetworkBehaviour {
     public DiskController diskController;
   // Player Speed Scalar Variable
     public float playerSpeed = 1f;
+    public float mouseSensitivity = 10f;
   // Player Rotation Speed Scalar Variable
   public float playerTurnSpeed = 10f;
     public bool leftClicked = false;
@@ -51,32 +52,46 @@ public class PlayerController : NetworkBehaviour {
     void FixedUpdate () {
     
     }
-    public Vector3 cumulativeVelocity;
+    public Vector3 deltaPosition;
     private void Update(){
       if(isLocalPlayer) {
         transform.GetChild(0).gameObject.SetActive(true);
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-        transform.position += new Vector3(horizontalInput*playerSpeed*Time.deltaTime,0f,verticalInput*playerSpeed*Time.deltaTime);
-        networkPlayerNextPosition = transform.position;
+        float mouseX = Input.GetAxis("Mouse X");
+        Vector3 longMovement = transform.forward*verticalInput*Time.deltaTime*playerSpeed;
+        Vector3 latMovement =  transform.right*horizontalInput*Time.deltaTime*playerSpeed;
+        transform.position += longMovement + latMovement;
+        transform.Rotate(Vector3.up * mouseX * Time.deltaTime * mouseSensitivity);
+        new Vector3(horizontalInput*playerSpeed*Time.deltaTime,0f,verticalInput*playerSpeed*Time.deltaTime);
+        
         if(!isServer)
-          CmdSyncMove(transform.position);
+          CmdSyncMove(transform.position, transform.rotation);
+        else {
+        networkPlayerNextPosition = transform.position;
+        networkPlayerRotation = transform.rotation;
         }
+      }
       else {
-        transform.position = Vector3.Lerp(transform.position, networkPlayerNextPosition + cumulativeVelocity , Time.deltaTime * playerSpeed);
+        transform.position = Vector3.Lerp(transform.position, networkPlayerNextPosition + deltaPosition , Time.deltaTime * playerSpeed);
+        transform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime*60f);
         if(NetworkUpdated()) {
-          cumulativeVelocity = Vector3.zero;
+          deltaPosition = Vector3.zero;
         }
         else {
-          cumulativeVelocity += networkPlayerVelocity * Time.deltaTime;
+          deltaPosition += networkPlayerVelocity * Time.deltaTime;
         }
       }
     }
     [Command]
-    void CmdSyncMove(Vector3 playerPos){
+    void CmdSyncMove(Vector3 playerPos, Quaternion playerRot){
       networkPlayerVelocity = (playerPos - networkPlayerNextPosition) / Time.deltaTime;
       networkPlayerNextPosition = playerPos;
+      networkPlayerRotation = playerRot;
       networkPlayerNewTimestamp = Time.time;
+    }
+    [Command]
+    void CmdThrow(Vector3 discPosition, Vector3 discRotation, float throwStrength){
     }
     float networkPlayerOldTimestamp;
     bool NetworkUpdated() {
