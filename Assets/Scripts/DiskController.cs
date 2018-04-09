@@ -166,7 +166,7 @@ public class DiskController : MonoBehaviour {
 		if(gameObject.transform.parent != null)
 		{
 			HandGrabbing handScript = gameObject.transform.parent.GetComponent<HandGrabbing>();
-			handScript.ReleaseDisk();
+			handScript.Release();
 		}
 		gameObject.transform.parent = newParent.transform;
 	}
@@ -176,7 +176,7 @@ public class DiskController : MonoBehaviour {
 		if(gameObject.transform.parent != null)
 		{
 			HandGrabbing handScript = gameObject.transform.parent.GetComponent<HandGrabbing>();
-			handScript.ReleaseDisk();
+			handScript.Release();
 		}
 
 		transform.position = newPosition;

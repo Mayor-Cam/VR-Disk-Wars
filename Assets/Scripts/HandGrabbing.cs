@@ -18,7 +18,7 @@ public class HandGrabbing : MonoBehaviour
     bool triggerHold;
     bool triggerRelease;
     bool isLeftHand;  // Identifies which hand this object is.  Using a boolean instead of a string for the sake of efficiency.
-    float triggerInput; // Value of the corresponding hand's input.  Range from 0 to 1.
+    public float triggerInput; // Value of the corresponding hand's input.  Range from 0 to 1.
 	DiskController diskController;
 
     private Transform _currentObject;
@@ -76,8 +76,8 @@ public class HandGrabbing : MonoBehaviour
                 // If the collided object is a disk
                 if (string.Compare(colliders[0].transform.gameObject.name, "disk") == 1)
                 {
-					_currentObject = colliders[0];
-					diskController = _currentObject.getComponent<DiskController>();
+					_currentObject = colliders[0].transform;
+					diskController = _currentObject.gameObject.GetComponent<DiskController>();
 
 					// If it's already being grabbed by your other hand, release it.
 					if (_currentObject.transform.parent != null) {
@@ -175,6 +175,8 @@ public class HandGrabbing : MonoBehaviour
         }
         else triggerInput = Input.GetAxis("TriggerRight");
 
+        print(Input.GetAxis("TriggerLeft"));
+
         // If-statements for declaring triggerPress, triggerHold, triggerRelease booleans.
         if (triggerInput == 1.0f)  // Pressed  -- May want to fiddle with the threshold
         {
@@ -182,6 +184,7 @@ public class HandGrabbing : MonoBehaviour
             {
                 triggerPress = true;
                 triggerHold = true;
+                print("Trigger pressed");
             }
             else triggerPress = false;
 
@@ -193,6 +196,7 @@ public class HandGrabbing : MonoBehaviour
             {
                 triggerRelease = true;
                 triggerHold = false;
+                print("Trigger released");
             }
             else triggerRelease = false;
 
