@@ -5,11 +5,12 @@ using UnityEngine;
 public class DiskController : MonoBehaviour {
     public float diskSpeed = 10;
     bool diskFired = false;
+	bool grabbed = false; 	// Added by Cam - 4/9/2918
     SphereCollider collider;
     Rigidbody rb;
 
     ///////////////////
-    // Additions for game functionality
+    // Additions for game functionality and disk movement
     // -- Cam 3/13/2018
     public GameObject gameController;   // Reference to gameController object.  Needed to communicate hits for points.  (may instead implement into player objects)
     public GameObject diskOwner;  // Identifier for which player this disk belongs to.  
@@ -18,6 +19,9 @@ public class DiskController : MonoBehaviour {
     // public DummyController dummyController;
 
     Vector3 spawnPoint;
+	Vector3 lastPosition;
+	Vector3 currentVelocity;
+	public float throwThreshold = 0.001;
     //
     //////////////////
 
@@ -41,6 +45,8 @@ public class DiskController : MonoBehaviour {
             RaycastHit hit;            
             float frameDistance = diskSpeed * Time.fixedDeltaTime;
             int counter = 0;
+
+			// Checking for collisions on next frame
             while(rb.SweepTest(transform.forward, out hit, diskSpeed*Time.fixedDeltaTime) ) {
                 counter++;
                 Vector3 reflect = Vector3.Reflect(transform.forward, hit.normal);
@@ -82,8 +88,20 @@ public class DiskController : MonoBehaviour {
 			
 			
 		}
-		
-		
+
+
+		/////////////
+		/// Added by Cam -- 4/9/2018
+		/// 
+		if (grabbed) 
+		{
+			// record motion
+			currentVelocity = transform.position - lastPosition;
+		}
+
+		///
+		///
+		/////////////
 	}
 	
 	
@@ -150,8 +168,8 @@ public class DiskController : MonoBehaviour {
     }
 
 	/////////
-	// Additions for grab mechanics -- Cam 3/26/2018
-	// Last edited -- 4/2/2018
+	// Additions for grab/throw mechanics -- Cam 3/26/2018
+	// Last edited -- 4/9/2018
 	//
 	
     // Snap moves and re-orients the disk.  Used by hand objects for grabbing.
@@ -173,20 +191,38 @@ public class DiskController : MonoBehaviour {
 
 	public void Grab(GameObject newParent, Vector3 newPosition, Vector3 newAngle) 
 	{
+		grabbed = true;
+		diskFired = false;
+		
+		// If it's already grabbed by a hand...
 		if(gameObject.transform.parent != null)
 		{
+			// Get it to release the disk
 			HandGrabbing handScript = gameObject.transform.parent.GetComponent<HandGrabbing>();
 			handScript.Release();
 		}
 
+		transform.rigidbody.velocity = 0;	// Stop the disk
+		// Snap to hand
 		transform.position = newPosition;
         transform.eulerAngles = newAngle;
-        gameObject.transform.parent = newParent.transform;
+        gameObject.transform.parent = newParent.transform;	// Set hand as parent
+        lastPosition = transform.position;
 	}
 
 	public void Release() 
 	{
 		gameObject.transform.parent = null;
+		grabbed = false;
+
+		if (currentVelocity.magnitude > throwThreshold) 
+		{
+			diskFired = true;
+			rb.velocity = currentVelocity;
+			// transform.eulerAngles =  // use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
+		}
+		// else
+		// release idle
 	}
 
 	//
