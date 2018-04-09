@@ -5,7 +5,15 @@ using UnityEngine;
 /*
 Player Controller handles all player controls, to include movement and disk manipulation
 */
+
 public class PlayerController : NetworkBehaviour {
+  //Left / Right Hand Object
+  public class Body {
+    public int HEAD = 0;
+    public int LEFTHAND = 1;
+    public int RIGHTRIGHT = 2;
+  }
+  Body body;
   //Camera Object for Looking
   public GameObject playerCamera;
     //Disk object and prefab
@@ -18,7 +26,7 @@ public class PlayerController : NetworkBehaviour {
     public float playerSpeed = 1f;
     public float mouseSensitivity = 10f;
   // Player Rotation Speed Scalar Variable
-  public float playerTurnSpeed = 10f;
+    public float playerTurnSpeed = 10f;
     public bool leftClicked = false;
     bool rightClicked = false;
     public float catchDistanceThreshold = 1;
@@ -34,6 +42,7 @@ public class PlayerController : NetworkBehaviour {
     
     void Start()
     {
+    body = new Body();
         if (isServer){
             print("SERVER");
             transform.position = new Vector3(0f, 1f, 2.5f);
@@ -46,6 +55,11 @@ public class PlayerController : NetworkBehaviour {
           GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
           GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
         }
+        //Instantiate disk
+        objDisk = Instantiate(prefDisk);
+        NetworkServer.Spawn(objDisk);
+        objDisk.transform.parent = gameObject.transform.GetChild(body.LEFTHAND).transform;
+        objDisk.transform.localPosition = Vector3.zero;
     }
     
     Vector3 playerPosition;

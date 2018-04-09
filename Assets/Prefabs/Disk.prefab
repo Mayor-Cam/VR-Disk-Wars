@@ -25,7 +25,6 @@ GameObject:
   - component: {fileID: 54199640315728190}
   - component: {fileID: 64552587502234198}
   - component: {fileID: 108371830543027248}
-  - component: {fileID: 114149970088796366}
   - component: {fileID: 114854185614535076}
   m_Layer: 0
   m_Name: Disk
@@ -154,27 +153,6 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &114149970088796366
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1800443872324012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 3
-  m_SendInterval: 0.033333335
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 0.1
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!114 &114740723211080130
 MonoBehaviour:
   m_ObjectHideFlags: 1
