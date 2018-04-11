@@ -21,7 +21,8 @@ public class DiskController : MonoBehaviour {
     Vector3 spawnPoint;
 	Vector3 lastPosition;
 	Vector3 currentVelocity;
-	public float throwThreshold = 0.001f;
+	public float throwThreshold = 0.01f;
+	GameObject anchorObj;
     //
     //////////////////
 
@@ -190,7 +191,7 @@ public class DiskController : MonoBehaviour {
 		gameObject.transform.parent = newParent.transform;
 	}
 
-	public void Grab(GameObject newParent, Vector3 newPosition, Vector3 newAngle) 
+	public void Grab(GameObject newParent, Transform anchor) // Vector3 newPosition, Vector3 newAngle) 
 	{
 		grabbed = true;
 		diskFired = false;
@@ -205,8 +206,8 @@ public class DiskController : MonoBehaviour {
 
 		rb.velocity = new Vector3(0f,0f,0f);	// Stop the disk
 		// Snap to hand
-		transform.position = newPosition;
-        transform.eulerAngles = newAngle;
+		transform.position = anchor.position; // newPosition;
+        transform.eulerAngles = anchor.eulerAngles; // newAngle;
         gameObject.transform.parent = newParent.transform;	// Set hand as parent
         lastPosition = transform.position;
 	}

@@ -20,6 +20,7 @@ public class HandGrabbing : MonoBehaviour
     bool isLeftHand;  // Identifies which hand this object is.  Using a boolean instead of a string for the sake of efficiency.
     public float triggerInput; // Value of the corresponding hand's input.  Range from 0 to 1.
 	DiskController diskController;
+	public Transform anchor;
 
     private Transform _currentObject;
     private Vector3 _lastFramePosition;
@@ -45,6 +46,9 @@ public class HandGrabbing : MonoBehaviour
             isLeftHand = true;
         }
         else isLeftHand = false;
+
+		Transform[] childTransforms = transform.GetComponentsInChildren<Transform>();
+		anchor = childTransforms[0];
 
 		//
 		///////
@@ -86,7 +90,7 @@ public class HandGrabbing : MonoBehaviour
 						// diskController.Release();  // Removed this because handScript.Release() should do this for us.
 					}
 
-					diskController.Grab(gameObject, gameObject.transform.position, gameObject.transform.eulerAngles);
+					diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
 					grabbing = true;
                 }
             }
@@ -101,7 +105,7 @@ public class HandGrabbing : MonoBehaviour
         //
         /////////
 
-        /*
+        /*  Original "gimme" code
         
         //if we don't have an active object in hand, look if there is one in proximity
         if (_currentObject == null)
