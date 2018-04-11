@@ -175,8 +175,6 @@ public class HandGrabbing : MonoBehaviour
         }
         else triggerInput = Input.GetAxis("TriggerRight");
 
-        print(Input.GetAxis("TriggerLeft"));
-
         // If-statements for declaring triggerPress, triggerHold, triggerRelease booleans.
         if (triggerInput == 1.0f)  // Pressed  -- May want to fiddle with the threshold
         {
@@ -184,7 +182,6 @@ public class HandGrabbing : MonoBehaviour
             {
                 triggerPress = true;
                 triggerHold = true;
-                print("Trigger pressed");
             }
             else triggerPress = false;
 
@@ -196,7 +193,6 @@ public class HandGrabbing : MonoBehaviour
             {
                 triggerRelease = true;
                 triggerHold = false;
-                print("Trigger released");
             }
             else triggerRelease = false;
 

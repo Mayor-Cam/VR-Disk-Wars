@@ -21,7 +21,7 @@ public class DiskController : MonoBehaviour {
     Vector3 spawnPoint;
 	Vector3 lastPosition;
 	Vector3 currentVelocity;
-	public float throwThreshold = 0.001;
+	public float throwThreshold = 0.001f;
     //
     //////////////////
 
@@ -97,6 +97,7 @@ public class DiskController : MonoBehaviour {
 		{
 			// record motion
 			currentVelocity = transform.position - lastPosition;
+            lastPosition = transform.position;
 		}
 
 		///
@@ -202,7 +203,7 @@ public class DiskController : MonoBehaviour {
 			handScript.Release();
 		}
 
-		transform.rigidbody.velocity = 0;	// Stop the disk
+		rb.velocity = new Vector3(0f,0f,0f);	// Stop the disk
 		// Snap to hand
 		transform.position = newPosition;
         transform.eulerAngles = newAngle;
@@ -217,10 +218,12 @@ public class DiskController : MonoBehaviour {
 
 		if (currentVelocity.magnitude > throwThreshold) 
 		{
-			diskFired = true;
-			rb.velocity = currentVelocity;
-			// transform.eulerAngles =  // use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
-		}
+            diskFired = true;
+            diskSpeed = currentVelocity.magnitude;
+
+            // rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
+            transform.forward = currentVelocity;  // option 2: use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
+        }
 		// else
 		// release idle
 	}
