@@ -4,13 +4,19 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class DiskController : NetworkBehaviour {
-    public float diskSpeed = 10;
-    bool diskFired = false;
+    public GameObject owner;
+    public PlayerController ownerController;
+    [SyncVar]
+    public float networkDiskSpeed = 10;
+    [SyncVar]
+    public bool networkDiskFired = false;
     SphereCollider collider;
     Rigidbody rb;
     
     [SyncVar]
     Vector3 networkDiskDeparturePosition;
+    
+    Vector3 diskDeparturePosition;
     [SyncVar]
     Vector3 networkDiskDirection;
     [SyncVar]
@@ -20,70 +26,66 @@ public class DiskController : NetworkBehaviour {
 	void Start () {
     collider = GetComponent<SphereCollider>();
     rb = GetComponent<Rigidbody>();
+    owner = transform.parent.parent.gameObject;
+    ownerController = owner.GetComponent<PlayerController>();
 	}
 
     // Update is called once per frame
-    void FixedUpdate () {
-      if(diskFired) {
-          if(isLocalPlayer){
-              Vector3 orig = transform.position;
-              RaycastHit hit;            
-              float frameDistance = diskSpeed * Time.fixedDeltaTime;
-              int counter = 0;
-              while(rb.SweepTest(transform.forward, out hit, diskSpeed*Time.fixedDeltaTime) ) {
-                  counter++;
-                  Vector3 reflect = Vector3.Reflect(transform.forward, hit.normal);
-                  transform.position = hit.point + transform.forward * 0.5f * transform.localScale.x * Mathf.Cos(Vector3.Angle(transform.forward, hit.normal)* Mathf.Deg2Rad);
-                  transform.forward = reflect;
-                  frameDistance -= hit.distance;
-                  if(frameDistance <= 0) {
-                    if(!isServer)
-                      CmdUpdateVector(transform.position,transform.forward,diskSpeed /* <-- needs to change with the VR implementation*/);
-                    else {
-                        networkDiskDirection = transform.forward;
-                        networkDiskMagnitude = diskSpeed;
-                        networkDiskDeparturePosition = transform.position;
-                    }
-                    break;
-                  }
-              } 
-          transform.Translate(Vector3.forward * frameDistance);
-          rb.velocity = transform.forward * diskSpeed;
-          orig = transform.position;
-          Debug.DrawRay(orig+transform.forward*0.5f*transform.localScale.x,transform.forward*diskSpeed*Time.deltaTime,Color.red);
-          
-       }
-      else {
-        if(transform.forward != networkDiskDirection) 
-          transform.forward = networkDiskDirection;
-          transform.Translate(networkDiskDirection * diskSpeed * Time.fixedDeltaTime);
+  void Update () {
+    if(networkDiskFired) {
+        if(ownerController.isLocalPlayer){
+        //Collision detection
+        Vector3 startPosition = transform.position; // Position of disk at start of the frame
+        RaycastHit hit;           
+        float frameDistance = networkDiskSpeed * Time.deltaTime; //The distance the disk is projected to travel in one frame
+        bool isHit = false;
+        while(rb.SweepTest(transform.forward, out hit, frameDistance)) {  //While the Sweeptest actually hits something (Collides)
+            isHit = true;
+            Vector3 reflect = Vector3.Reflect(transform.forward, hit.normal); //Get the reflect vector from collision point
+            transform.position = transform.position + hit.distance * transform.forward;
+            transform.forward = reflect;
+            frameDistance -= hit.distance;
+        }
+        transform.Translate(Vector3.forward * frameDistance);
+        if(isHit) {
+          CmdUpdateVector(transform.position, transform.forward, networkDiskSpeed);
+          networkDiskDeparturePosition = transform.position;
+          networkDiskDirection = transform.forward;
+          networkDiskMagnitude = networkDiskSpeed;
+        }
       }
-		}
-	}
-	
+      else {
+        print("OH SHIT");
+        if(diskDeparturePosition != networkDiskDeparturePosition) {
+          diskDeparturePosition = networkDiskDeparturePosition;
+          transform.position = diskDeparturePosition;
+        }
+        transform.forward = networkDiskDirection;
+        transform.Translate(Vector3.forward * networkDiskSpeed * Time.deltaTime);
+        diskDeparturePosition = networkDiskDeparturePosition;
+      }
+    }
+  }
+
 	[Command]
 	void CmdUpdateVector(Vector3 pos, Vector3 dir, float mag){
-    transform.position = pos;
     networkDiskDeparturePosition = pos;
     networkDiskDirection = dir;
     networkDiskMagnitude = mag;
 	}
 	
-	public bool GetFired() {
-    return diskFired;
+
+	bool GetFired() {
+    return networkDiskFired;
 	}
-	
 	public void Fire(GameObject player, GameObject playerCamera) {
+    CmdFire(player, playerCamera);
+	}
+	[Command]
+	void CmdFire(GameObject player, GameObject playerCamera) {
     transform.rotation = playerCamera.transform.rotation;
-    diskFired = true;
+    networkDiskDirection = transform.forward;
+    networkDiskFired = true;
     gameObject.transform.parent = null;
 	}
-	
-    public void Catch(GameObject hand)
-    {
-        transform.position = hand.transform.position;
-        transform.rotation = hand.transform.rotation;
-        gameObject.transform.parent = hand.transform;
-        diskFired = false;
-    }
 }

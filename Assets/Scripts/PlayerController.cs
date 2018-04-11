@@ -39,33 +39,42 @@ public class PlayerController : NetworkBehaviour {
     public Vector3 networkPlayerVelocity;
     [SyncVar]
     public float networkPlayerNewTimestamp;
-    
-    void Start()
-    {
-    body = new Body();
-        if (isServer){
-            print("SERVER");
-            transform.position = new Vector3(0f, 1f, 2.5f);
-        }
-        else{
-            print("REMOTE");
-            transform.position = new Vector3(0f, 1f, -2.5f);
-        }
-        if (!isLocalPlayer){
-          GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
-          GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
-        }
-        //Instantiate disk
+    void OnStartServer() {
+      print("YO");
+    }
+    void Start() {
+      body = new Body();
+      if (isServer){
+        print("SERVER");
+        transform.position = new Vector3(0f, 1f, 2.5f);
         objDisk = Instantiate(prefDisk);
         NetworkServer.Spawn(objDisk);
         objDisk.transform.parent = gameObject.transform.GetChild(body.LEFTHAND).transform;
         objDisk.transform.localPosition = Vector3.zero;
+        diskController = objDisk.GetComponent<DiskController>();
+      }
+      else{
+        print("REMOTE");
+        transform.position = new Vector3(0f, 1f, -2.5f);
+        objDisk = Instantiate(prefDisk);
+        CmdInstantiateDisk();
+        objDisk.transform.parent = gameObject.transform.GetChild(body.LEFTHAND).transform;
+        objDisk.transform.localPosition = Vector3.zero;
+        diskController = objDisk.GetComponent<DiskController>();
+      }
+      if (!isLocalPlayer){
+        GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
+        GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
+      }
+    
+    }
+    [Command]
+    void CmdInstantiateDisk() {
+
+      NetworkServer.Spawn(objDisk);
     }
     
     Vector3 playerPosition;
-    void FixedUpdate () {
-    
-    }
     public Vector3 deltaPosition;
     private void Update(){
       if(isLocalPlayer) {
@@ -84,6 +93,9 @@ public class PlayerController : NetworkBehaviour {
         else {
         networkPlayerNextPosition = transform.position;
         networkPlayerRotation = transform.rotation;
+        }
+        if(Input.GetAxis("Fire1") == 1) {
+          diskController.Fire(gameObject, playerCamera);
         }
       }
       else {
@@ -105,7 +117,7 @@ public class PlayerController : NetworkBehaviour {
       networkPlayerNewTimestamp = Time.time;
     }
     [Command]
-    void CmdThrow(Vector3 discPosition, Vector3 discRotation, float throwStrength){
+    void CmdThrow(Vector3 diskPosition, Vector3 discRotation, float throwStrength){
     }
     float networkPlayerOldTimestamp;
     bool NetworkUpdated() {
