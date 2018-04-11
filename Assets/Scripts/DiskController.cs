@@ -96,7 +96,7 @@ public class DiskController : MonoBehaviour {
 		if (grabbed) 
 		{
 			// record motion
-			currentVelocity = transform.position - lastPosition;
+			currentVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
             lastPosition = transform.position;
 		}
 
