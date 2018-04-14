@@ -21,7 +21,7 @@ public class DiskController : MonoBehaviour {
     Vector3 spawnPoint;
 	Vector3 lastPosition;
 	Vector3 currentVelocity;
-	public float throwThreshold = 0.01f;
+	public float throwThreshold = 1f;
 	GameObject anchorObj;
     //
     //////////////////
@@ -93,13 +93,21 @@ public class DiskController : MonoBehaviour {
 
 		/////////////
 		/// Added by Cam -- 4/9/2018
-		/// 
+		/// last edited -- 4/13/2018
+        /// 
 		if (grabbed) 
 		{
-			// record motion
-			currentVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
-            lastPosition = transform.position;
-		}
+
+            if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchormObj.transform.eulerAngles)
+            {
+                // record motion
+                currentVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
+                lastPosition = transform.position;
+            }
+            // else
+            // increment transform.position and transform.eulerAngles toward anchorObj
+        }
+        // else  // idle - level out the eulerAngles and maybe a float animation?
 
 		///
 		///
@@ -204,15 +212,59 @@ public class DiskController : MonoBehaviour {
 			handScript.Release();
 		}
 
-		rb.velocity = new Vector3(0f,0f,0f);	// Stop the disk
-		// Snap to hand
-		transform.position = anchor.position; // newPosition;
+		rb.velocity = new Vector3(0f,0f,0f);    // Stop the disk
+
+        // Snap to hand
+        /*
+        transform.position = newParent.transform.position; // newPosition;
+        transform.eulerAngles = newParent.transform.eulerAngles; // newAngle;
+        gameObject.transform.parent = newParent.transform;	// Set hand as parent
+        */
+        transform.position = anchor.position; // newPosition;
         transform.eulerAngles = anchor.eulerAngles; // newAngle;
         gameObject.transform.parent = newParent.transform;	// Set hand as parent
+
+        print("DiskController Hand position:" + newParent.transform.position);
+        print("DiskController Anchor position:" + anchor.position);
+
+
         lastPosition = transform.position;
 	}
 
-	public void Release() 
+    public void Grab(GameObject newParent, GameObject anchor) // Vector3 newPosition, Vector3 newAngle) 
+    {
+        grabbed = true;
+        diskFired = false;
+
+        // If it's already grabbed by a hand...
+        if (gameObject.transform.parent != null)
+        {
+            // Get it to release the disk
+            HandGrabbing handScript = gameObject.transform.parent.GetComponent<HandGrabbing>();
+            handScript.Release();
+        }
+
+        rb.velocity = new Vector3(0f, 0f, 0f);  // Stop the disk
+
+        // Snap to hand
+        /*
+        transform.position = newParent.transform.position; // newPosition;
+        transform.eulerAngles = newParent.transform.eulerAngles; // newAngle;
+        gameObject.transform.parent = newParent.transform;	// Set hand as parent
+        */
+        transform.position = anchor.transform.position; // newPosition;
+        transform.eulerAngles = anchor.transform.eulerAngles; // newAngle;
+        gameObject.transform.parent = newParent.transform;	// Set hand as parent
+        anchorObj = anchor;
+
+        print("DiskController Hand position:" + newParent.transform.position);
+        print("DiskController Anchor position:" + anchor.transform.position);
+
+
+        lastPosition = transform.position;
+    }
+
+    public void Release() 
 	{
 		gameObject.transform.parent = null;
 		grabbed = false;
