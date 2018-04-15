@@ -44,34 +44,22 @@ public class PlayerController : NetworkBehaviour {
     }
     void Start() {
       body = new Body();
+      objDisk = Instantiate(prefDisk);
+      objDisk.transform.parent = gameObject.transform.GetChild(body.LEFTHAND).transform;
+      objDisk.transform.localPosition = Vector3.zero;
+      diskController = objDisk.GetComponent<DiskController>();
       if (isServer){
         print("SERVER");
         transform.position = new Vector3(0f, 1f, 2.5f);
-        objDisk = Instantiate(prefDisk);
-        NetworkServer.Spawn(objDisk);
-        objDisk.transform.parent = gameObject.transform.GetChild(body.LEFTHAND).transform;
-        objDisk.transform.localPosition = Vector3.zero;
-        diskController = objDisk.GetComponent<DiskController>();
+        //NetworkServer.Spawn(objDisk);
+        if (!isLocalPlayer){
+          GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
+          GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
+        }
       }
-      else{
-        print("REMOTE");
-        transform.position = new Vector3(0f, 1f, -2.5f);
-        objDisk = Instantiate(prefDisk);
-        CmdInstantiateDisk();
-        objDisk.transform.parent = gameObject.transform.GetChild(body.LEFTHAND).transform;
-        objDisk.transform.localPosition = Vector3.zero;
-        diskController = objDisk.GetComponent<DiskController>();
+      else {
+        transform.position = new Vector3(0f, 1f, 2.5f);
       }
-      if (!isLocalPlayer){
-        GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
-        GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
-      }
-    
-    }
-    [Command]
-    void CmdInstantiateDisk() {
-
-      NetworkServer.Spawn(objDisk);
     }
     
     Vector3 playerPosition;
@@ -95,7 +83,8 @@ public class PlayerController : NetworkBehaviour {
         networkPlayerRotation = transform.rotation;
         }
         if(Input.GetAxis("Fire1") == 1) {
-          diskController.Fire(gameObject, playerCamera);
+          if(!isServer) CmdFire(gameObject, playerCamera);
+          else Fire(gameObject, playerCamera);
         }
       }
       else {
@@ -126,5 +115,19 @@ public class PlayerController : NetworkBehaviour {
       return true;
       }
     return false;
+    }
+
+    void Fire (GameObject player, GameObject mainCam) {
+        objDisk.transform.rotation = playerCamera.transform.rotation;
+        diskController.networkDiskDirection = transform.forward;
+        diskController.networkDiskFired = true;
+        diskController.gameObject.transform.parent = null;      
+    }
+    [Command]
+    void CmdFire (GameObject player, GameObject mainCam) {
+        objDisk.transform.rotation = playerCamera.transform.rotation;
+        diskController.networkDiskDirection = transform.forward;
+        diskController.networkDiskFired = true;
+        diskController.gameObject.transform.parent = null;  
     }
 }

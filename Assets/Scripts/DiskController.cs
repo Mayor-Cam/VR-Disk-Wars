@@ -14,13 +14,13 @@ public class DiskController : NetworkBehaviour {
     Rigidbody rb;
     
     [SyncVar]
-    Vector3 networkDiskDeparturePosition;
+    public Vector3 networkDiskDeparturePosition;
     
-    Vector3 diskDeparturePosition;
+    public Vector3 diskDeparturePosition;
     [SyncVar]
-    Vector3 networkDiskDirection;
+    public Vector3 networkDiskDirection;
     [SyncVar]
-    float networkDiskMagnitude;
+    public float networkDiskMagnitude;
     
     // Use this for initialization
 	void Start () {
@@ -77,15 +77,5 @@ public class DiskController : NetworkBehaviour {
 
 	bool GetFired() {
     return networkDiskFired;
-	}
-	public void Fire(GameObject player, GameObject playerCamera) {
-    CmdFire(player, playerCamera);
-	}
-	[Command]
-	void CmdFire(GameObject player, GameObject playerCamera) {
-    transform.rotation = playerCamera.transform.rotation;
-    networkDiskDirection = transform.forward;
-    networkDiskFired = true;
-    gameObject.transform.parent = null;
 	}
 }
