@@ -41,7 +41,7 @@ public class LightBlink : MonoBehaviour {
      void Update(){
         if(flag){
             l.intensity+=.01f;
-            if (l.intensity>=3f){flag=false;} 
+            if (l.intensity>=2f){flag=false;} 
         }
         else{
             l.intensity-=.01f;
