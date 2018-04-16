@@ -30,7 +30,7 @@ public class PlayerController : NetworkBehaviour {
     public bool leftClicked = false;
     bool rightClicked = false;
     public float catchDistanceThreshold = 1;
-    //Network synchronization
+    //Network synchronization for Player
     [SyncVar]
     public Vector3 networkPlayerNextPosition;
     [SyncVar]
@@ -39,52 +39,76 @@ public class PlayerController : NetworkBehaviour {
     public Vector3 networkPlayerVelocity;
     [SyncVar]
     public float networkPlayerNewTimestamp;
-    void OnStartServer() {
-      print("YO");
-    }
+
+    //Network synchronization for Disk
+    [SyncVar]
+    public float networkDiskSpeed = 10;
+    [SyncVar]
+    public bool networkDiskFired = false;
+    [SyncVar]
+    public Vector3 networkDiskDeparturePosition;
+    [SyncVar]
+    public Vector3 networkDiskDirection;
+    [SyncVar]
+    public float networkDiskMagnitude;
+
     void Start() {
+      //instantiate body 'object'
       body = new Body();
+      //instantiate disk and put it in the body's left hand
       objDisk = Instantiate(prefDisk);
-      objDisk.transform.parent = gameObject.transform.GetChild(body.LEFTHAND).transform;
+      objDisk.transform.SetParent(gameObject.transform.GetChild(body.LEFTHAND).transform);      
       objDisk.transform.localPosition = Vector3.zero;
+      //grab disk's controller
       diskController = objDisk.GetComponent<DiskController>();
       if (isServer){
-        print("SERVER");
+        //Server is put on one side of the room and flipped around
         transform.position = new Vector3(0f, 1f, 2.5f);
-        //NetworkServer.Spawn(objDisk);
-        if (!isLocalPlayer){
-          GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
-          GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
-        }
+        transform.Rotate(Vector3.up * 180);
       }
       else {
-        transform.position = new Vector3(0f, 1f, 2.5f);
+      //If client, put player on other side
+        transform.position = new Vector3(0f, 1f, -2.5f);
+      }
+      //Set OTHER player a different color
+      if (!isLocalPlayer){
+        GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
+        GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
+        objDisk.GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
+        objDisk.GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
       }
     }
     
-    Vector3 playerPosition;
-    public Vector3 deltaPosition;
+    public Vector3 deltaPosition; //Used to calculate movement between frames
     private void Update(){
       if(isLocalPlayer) {
         transform.GetChild(0).gameObject.SetActive(true);
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
         float mouseX = Input.GetAxis("Mouse X");
+        //Forward backward movement
         Vector3 longMovement = transform.forward*verticalInput*Time.deltaTime*playerSpeed;
+        //Strafing movement
         Vector3 latMovement =  transform.right*horizontalInput*Time.deltaTime*playerSpeed;
+        //Combine the two
         transform.position += longMovement + latMovement;
+        //Rotation control
         transform.Rotate(Vector3.up * mouseX * Time.deltaTime * mouseSensitivity);
-        new Vector3(horizontalInput*playerSpeed*Time.deltaTime,0f,verticalInput*playerSpeed*Time.deltaTime);
         
         if(!isServer)
+          //Remote commands server to move
           CmdSyncMove(transform.position, transform.rotation);
         else {
-        networkPlayerNextPosition = transform.position;
-        networkPlayerRotation = transform.rotation;
+          //else, server moves anyway
+          networkPlayerNextPosition = transform.position;
+          networkPlayerRotation = transform.rotation;
         }
         if(Input.GetAxis("Fire1") == 1) {
-          if(!isServer) CmdFire(gameObject, playerCamera);
-          else Fire(gameObject, playerCamera);
+          //Using CmdFire and Fire cause idk which one to use, and it works as is :) 
+          CmdFire(gameObject, playerCamera);
+          Fire(gameObject, playerCamera);
+          //Tell client to use RpcFire function if server
+          if(isServer) RpcFire(gameObject, playerCamera);
         }
       }
       else {
@@ -118,16 +142,33 @@ public class PlayerController : NetworkBehaviour {
     }
 
     void Fire (GameObject player, GameObject mainCam) {
+        print("[SERVER] WE'RE FIRING!");
         objDisk.transform.rotation = playerCamera.transform.rotation;
-        diskController.networkDiskDirection = transform.forward;
-        diskController.networkDiskFired = true;
-        diskController.gameObject.transform.parent = null;      
+        networkDiskDirection = transform.forward;
+        networkDiskFired = true;
+        objDisk.transform.SetParent(null);      
     }
     [Command]
     void CmdFire (GameObject player, GameObject mainCam) {
+        print("[CMD] WE'RE FIRING!");
         objDisk.transform.rotation = playerCamera.transform.rotation;
-        diskController.networkDiskDirection = transform.forward;
-        diskController.networkDiskFired = true;
-        diskController.gameObject.transform.parent = null;  
+        networkDiskDirection = transform.forward;
+        networkDiskFired = true;
+        objDisk.transform.SetParent(null);  
     }
+    [ClientRpc]
+    void RpcFire (GameObject player, GameObject mainCam) {
+        print("[Rpc] WE'RE FIRING!");
+        objDisk.transform.rotation = playerCamera.transform.rotation;
+        networkDiskDirection = transform.forward;
+        networkDiskFired = true;
+        objDisk.transform.SetParent(null);  
+    }
+	[Command]
+	public void CmdUpdateVector(Vector3 pos, Vector3 dir, float mag){
+    print("UPDATING!");
+    networkDiskDeparturePosition = pos;
+    networkDiskDirection = dir;
+    networkDiskMagnitude = mag;
+	}
 }
