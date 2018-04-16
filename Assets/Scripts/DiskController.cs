@@ -23,6 +23,10 @@ public class DiskController : MonoBehaviour {
 	Vector3 currentVelocity;
 	public float throwThreshold = 1f;
 	GameObject anchorObj;
+
+	Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f);
+	public float slerpSpeed = 0.1f;
+	public float lerpSpeed = 0.5f;
     //
     //////////////////
 
@@ -40,75 +44,73 @@ public class DiskController : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate () {
-		if(diskFired) {
+		if (diskFired) {
 
-            Vector3 orig = transform.position;
-            RaycastHit hit;            
-            float frameDistance = diskSpeed * Time.fixedDeltaTime;
-            int counter = 0;
+			Vector3 orig = transform.position;
+			RaycastHit hit;            
+			float frameDistance = diskSpeed * Time.fixedDeltaTime;
+			int counter = 0;
 
 			// Checking for collisions on next frame
-            while(rb.SweepTest(transform.forward, out hit, diskSpeed*Time.fixedDeltaTime) ) {
-                counter++;
-                Vector3 reflect = Vector3.Reflect(transform.forward, hit.normal);
-                transform.position = hit.point + transform.forward * 0.5f * transform.localScale.x * Mathf.Cos(Vector3.Angle(transform.forward, hit.normal)* Mathf.Deg2Rad);
-                transform.forward = reflect;
-                frameDistance -= hit.distance;
+			while (rb.SweepTest (transform.forward, out hit, diskSpeed * Time.fixedDeltaTime)) {
+				counter++;
+				Vector3 reflect = Vector3.Reflect (transform.forward, hit.normal);
+				transform.position = hit.point + transform.forward * 0.5f * transform.localScale.x * Mathf.Cos (Vector3.Angle (transform.forward, hit.normal) * Mathf.Deg2Rad);
+				transform.forward = reflect;
+				frameDistance -= hit.distance;
 
-                ///////////////////
-                // Additions for player/dummy collision
-                // -- Cam 3/13/2018
-                if (hit.transform.gameObject.name == "DummyPlayer")  // If we've hit the dummy
-                {
-                    // Call the hit player's DiskHit method.
-                    hit.transform.gameObject.GetComponent<DummyController>().DiskHit();
-                    print("Dummy Hit Confirm");
+				///////////////////
+				// Additions for player/dummy collision
+				// -- Cam 3/13/2018
+				if (hit.transform.gameObject.name == "DummyPlayer") {  // If we've hit the dummy
+					// Call the hit player's DiskHit method.
+					hit.transform.gameObject.GetComponent<DummyController> ().DiskHit ();
+					print ("Dummy Hit Confirm");
 
-                    // Call the disk's DestroyDisk method
-                    DestroyDisk();
+					// Call the disk's DestroyDisk method
+					DestroyDisk ();
 
-                    // hit.Transform.gameObject.playerScript.DiskHit();  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
-                }
+					// hit.Transform.gameObject.playerScript.DiskHit();  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
+				} else if (hit.transform.gameObject.CompareTag ("Player") && hit.transform.gameObject != diskOwner) { // If we've hit the other player...
+					// Call the hit player's DiskHit method.
+					// hit.transform.gameObject.GetComponent<PlayerController>().DiskHit();
 
-                else if (hit.transform.gameObject.CompareTag("Player") && hit.transform.gameObject != diskOwner) // If we've hit the other player...
-                {
-                    // Call the hit player's DiskHit method.
-                    // hit.transform.gameObject.GetComponent<PlayerController>().DiskHit();
+					// Call the disk's DestroyDisk method
+					DestroyDisk ();
 
-                    // Call the disk's DestroyDisk method
-                    DestroyDisk();
-
-                    // hit.Transform.gameObject.playerScript.DiskHit();  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
-                }
+					// hit.Transform.gameObject.playerScript.DiskHit();  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
+				}
 				//
 				///////
-            } 
-			transform.Translate(Vector3.forward * frameDistance);
+			} 
+			transform.Translate (Vector3.forward * frameDistance);
 			orig = transform.position;
-			Debug.DrawRay(orig+transform.forward*0.5f*transform.localScale.x,transform.forward*diskSpeed*Time.deltaTime,Color.red);
-			
-			
+			Debug.DrawRay (orig + transform.forward * 0.5f * transform.localScale.x, transform.forward * diskSpeed * Time.deltaTime, Color.red);
 		}
-
 
 		/////////////
 		/// Added by Cam -- 4/9/2018
-		/// last edited -- 4/13/2018
+		/// last edited -- 4/16/2018
         /// 
-		if (grabbed) 
+		else if (grabbed) {
+
+			if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchorObj.transform.eulerAngles) {
+				// record motion
+				currentVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
+				lastPosition = transform.position;
+			} else {
+				// increment transform.position and transform.eulerAngles toward anchorObj
+
+			}
+		} 
+		else // disk is idle - level out the eulerAngles (x & z) and maybe a float animation? 
 		{
-
-            if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchormObj.transform.eulerAngles)
-            {
-                // record motion
-                currentVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
-                lastPosition = transform.position;
-            }
-            // else
-            // increment transform.position and transform.eulerAngles toward anchorObj
-        }
-        // else  // idle - level out the eulerAngles and maybe a float animation?
-
+			// Smooth Lerp to level out.
+			if (transform.rotation != targetRotation) {
+				transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.time * slerpSpeed);
+			}
+		}  
+			
 		///
 		///
 		/////////////
@@ -171,6 +173,7 @@ public class DiskController : MonoBehaviour {
         // Stop, re-orient, and reposition to spawnPoint.
         transform.position = spawnPoint;
         transform.eulerAngles = new Vector3(0, 0, 0);
+        targetRotation = Quaternion.Euler(0f, 0f, 0f);
         rb.velocity = new Vector3(0, 0, 0);
 
         // Set Active
@@ -215,11 +218,6 @@ public class DiskController : MonoBehaviour {
 		rb.velocity = new Vector3(0f,0f,0f);    // Stop the disk
 
         // Snap to hand
-        /*
-        transform.position = newParent.transform.position; // newPosition;
-        transform.eulerAngles = newParent.transform.eulerAngles; // newAngle;
-        gameObject.transform.parent = newParent.transform;	// Set hand as parent
-        */
         transform.position = anchor.position; // newPosition;
         transform.eulerAngles = anchor.eulerAngles; // newAngle;
         gameObject.transform.parent = newParent.transform;	// Set hand as parent
@@ -247,11 +245,6 @@ public class DiskController : MonoBehaviour {
         rb.velocity = new Vector3(0f, 0f, 0f);  // Stop the disk
 
         // Snap to hand
-        /*
-        transform.position = newParent.transform.position; // newPosition;
-        transform.eulerAngles = newParent.transform.eulerAngles; // newAngle;
-        gameObject.transform.parent = newParent.transform;	// Set hand as parent
-        */
         transform.position = anchor.transform.position; // newPosition;
         transform.eulerAngles = anchor.transform.eulerAngles; // newAngle;
         gameObject.transform.parent = newParent.transform;	// Set hand as parent
@@ -269,16 +262,29 @@ public class DiskController : MonoBehaviour {
 		gameObject.transform.parent = null;
 		grabbed = false;
 
-		if (currentVelocity.magnitude > throwThreshold) 
-		{
-            diskFired = true;
-            diskSpeed = currentVelocity.magnitude;
+		if (currentVelocity.magnitude > throwThreshold) {
+			diskFired = true;
+			diskSpeed = currentVelocity.magnitude;
 
-            // rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
-            transform.forward = currentVelocity;  // option 2: use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
-        }
-		// else
-		// release idle
+			// rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
+			transform.forward = currentVelocity;  // option 2: use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
+		} 
+		else
+			SetIdle();
+	}
+	
+	public void SetIdle() 
+	{
+		grabbed = false;
+		diskFired = false;
+		Vector3 targetEuler = new Vector3(0, transform.eulerAngles.y, 0);
+
+		if (transform.eulerAngles.x > 90 && transform.eulerAngles.x < 270)
+			targetRotation.x = 180f;
+		if (transform.eulerAngles.z > 90 && transform.eulerAngles.z < 270)
+			targetRotation.z = 180f;
+
+		targetRotation = Quaternion.Euler(targetEuler);
 	}
 
 	//
