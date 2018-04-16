@@ -9,6 +9,12 @@ public class DiskController : MonoBehaviour {
     SphereCollider collider;
     Rigidbody rb;
 
+    // Variables for sound FX:
+    AudioSource wall_hit_sound1;
+    AudioSource wall_hit_sound2;
+    AudioSource player_hit_sound1;
+    AudioSource[] wallsSoundFX;
+
     ///////////////////
     // Additions for game functionality and disk movement
     // -- Cam 3/13/2018
@@ -33,6 +39,11 @@ public class DiskController : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 
         spawnPoint = transform.position;   // -- Added by Cam 3/14/2018
+
+        //Queue sounds attached to Game Object
+        wallsSoundFX = GetComponents<AudioSource>();
+        wall_hit_sound1 = wallsSoundFX[0];
+        wall_hit_sound2 = wallsSoundFX[1];
     }
     
 
@@ -54,6 +65,12 @@ public class DiskController : MonoBehaviour {
                 transform.position = hit.point + transform.forward * 0.5f * transform.localScale.x * Mathf.Cos(Vector3.Angle(transform.forward, hit.normal)* Mathf.Deg2Rad);
                 transform.forward = reflect;
                 frameDistance -= hit.distance;
+
+                // Play sound on collision
+                // Picks random sound from array for variety
+                int index = Random.Range(0, wallsSoundFX.Length);
+                wallsSoundFX[index].Play();
+
 
                 ///////////////////
                 // Additions for player/dummy collision
@@ -98,7 +115,7 @@ public class DiskController : MonoBehaviour {
 		if (grabbed) 
 		{
 
-            if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchormObj.transform.eulerAngles)
+            if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchorObj.transform.eulerAngles)
             {
                 // record motion
                 currentVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
