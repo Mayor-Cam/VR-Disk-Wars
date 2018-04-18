@@ -87,7 +87,6 @@ public class DiskController : MonoBehaviour {
 	      transform.Translate(Vector3.forward * ownerController.networkDiskSpeed * Time.deltaTime); //Move disk at the networkDiskSpeed
 	      diskDeparturePosition = ownerController.networkDiskDeparturePosition; //Update diskDepartuerPosition
 	    }
->>>>>>> d9ce0167eae354a82bff7efbc8c6edbc717aff1f
 		}
 
 		/////////////
