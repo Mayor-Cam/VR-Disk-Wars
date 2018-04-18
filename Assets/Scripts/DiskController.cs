@@ -21,12 +21,13 @@ public class DiskController : MonoBehaviour {
     Vector3 spawnPoint;
 	Vector3 lastPosition;
 	Vector3 currentVelocity;
-	public float throwThreshold = 1f;
+	public float throwThreshold = 1.5f;
 	GameObject anchorObj;
+    Transform anchorTrans;
 
 	Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f);
-	public float slerpSpeed = 0.1f;
-	public float lerpSpeed = 0.5f;
+	public float slerpSpeed = 0.01f;
+	public float lerpSpeed = 0.1f;
     //
     //////////////////
 
@@ -94,12 +95,15 @@ public class DiskController : MonoBehaviour {
         /// 
 		else if (grabbed) {
 
-			if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchorObj.transform.eulerAngles) {
-				// record motion
-				currentVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
+            // if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchorObj.transform.eulerAngles)  // anchorObj version
+            if (transform.position == anchorTrans.position && transform.eulerAngles == anchorTrans.eulerAngles)  // anchorTrans version
+            {
+                // record motion
+                currentVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
 				lastPosition = transform.position;
-			} else {
-				// increment transform.position and transform.eulerAngles toward anchorObj
+			}
+            else  // increment transform.position and transform.eulerAngles toward anchorObj
+            {  
 
 			}
 		} 
@@ -206,7 +210,8 @@ public class DiskController : MonoBehaviour {
 	{
 		grabbed = true;
 		diskFired = false;
-		
+        anchorTrans = anchor;
+
 		// If it's already grabbed by a hand...
 		if(gameObject.transform.parent != null)
 		{
@@ -277,7 +282,7 @@ public class DiskController : MonoBehaviour {
 	{
 		grabbed = false;
 		diskFired = false;
-		Vector3 targetEuler = new Vector3(0, transform.eulerAngles.y, 0);
+		Vector3 targetEuler = new Vector3(0f, transform.eulerAngles.y, 0f);
 
 		if (transform.eulerAngles.x > 90 && transform.eulerAngles.x < 270)
 			targetRotation.x = 180f;
