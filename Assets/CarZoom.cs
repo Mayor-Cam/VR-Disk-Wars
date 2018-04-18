@@ -22,7 +22,7 @@ public class CarZoom : MonoBehaviour {
         if(dir==true){
             timer += Time.deltaTime;
             posx+=10;
-            this.transform.position=new Vector3((posx+speed),posY,posZ);
+            this.transform.position=new Vector3((posx+speed*(Time.time)),posY,posZ);
             if(posx>=1000f){
                 posx=-1000;
             }  
@@ -30,7 +30,7 @@ public class CarZoom : MonoBehaviour {
         else {
             timer += Time.deltaTime;
             posx-=10;
-            this.transform.position=new Vector3((posx-speed),posY,posZ);
+            this.transform.position=new Vector3((posx-(speed*Time.time)),posY,posZ);
             if(posx<=-1000f){
                 posx=1000;
             }
