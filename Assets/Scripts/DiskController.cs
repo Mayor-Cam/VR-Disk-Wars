@@ -131,7 +131,7 @@ public class DiskController : MonoBehaviour {
   public void Respawn()
   {
     gameObject.SetActive(false);  // Set inactive in case this disk is currently active
-    diskFired = false;
+    ownerController.networkDiskFired = false;
 
     // Stop, re-orient, and reposition to spawnPoint.
     transform.position = spawnPoint;
@@ -168,7 +168,7 @@ public class DiskController : MonoBehaviour {
 	public void Grab(GameObject newParent, Transform anchor) // Vector3 newPosition, Vector3 newAngle) 
 	{
 		grabbed = true;
-		diskFired = false;
+		ownerController.networkDiskFired = false;
         anchorTrans = anchor;
 
 		// If it's already grabbed by a hand...
@@ -196,7 +196,7 @@ public class DiskController : MonoBehaviour {
   public void Grab(GameObject newParent, GameObject anchor) // Vector3 newPosition, Vector3 newAngle) 
   {
       grabbed = true;
-      diskFired = false;
+      ownerController.networkDiskFired = false;
 
       // If it's already grabbed by a hand...
       if (gameObject.transform.parent != null)
@@ -227,8 +227,8 @@ public class DiskController : MonoBehaviour {
 		grabbed = false;
 
 		if (currentVelocity.magnitude > throwThreshold) {
-			diskFired = true;
-			diskSpeed = currentVelocity.magnitude;
+			ownerController.networkDiskFired = true;
+			ownerController.networkDiskSpeed = currentVelocity.magnitude;
 
 			// rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
 			transform.forward = currentVelocity;  // option 2: use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
@@ -240,7 +240,7 @@ public class DiskController : MonoBehaviour {
 	public void SetIdle() 
 	{
 		grabbed = false;
-		diskFired = false;
+		ownerController.networkDiskFired = false;
 		Vector3 targetEuler = new Vector3(0f, transform.eulerAngles.y, 0f);
 
 		if (transform.eulerAngles.x > 90 && transform.eulerAngles.x < 270)
