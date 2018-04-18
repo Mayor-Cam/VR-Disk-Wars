@@ -1,0 +1,15 @@
+Sound Usage: 
+
+Disk colliding with wall - wall_hit_sound1 AND wall_hit_sound3 (randomize)
+Disk colliding with player - player_hit_sound1 OR player_hit_sound2 OR explosion_sound1
+
+Game starts - game_start_mix(2)
+
+Crowd sounds - crowd_cheer1 AND crowd_cheer2
+
+Ambient city sounds - ambient_sound1 AND ambient_sound2 AND ambient_sound3 
+AND city_sound_loop1 AND drone_sound1 AND drone_sound2 AND drone_sound3
+(Use whatever combination of sounds you like)
+
+Player wins game - game_win
+Player loses game - powerup_sound1

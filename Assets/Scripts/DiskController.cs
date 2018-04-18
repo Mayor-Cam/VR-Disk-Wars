@@ -8,11 +8,17 @@ public class DiskController : MonoBehaviour {
   public PlayerController ownerController;
   Rigidbody rb;
   public Vector3 diskDeparturePosition;
-	
-  ///////////////////
-  // Additions for game functionality and disk movement
-  // -- Cam 3/13/2018
-  public GameObject gameController;   // Reference to gameController object.  Needed to communicate hits for points.  (may instead implement into player objects)
+
+    // Variables for sound FX:
+    AudioSource wall_hit_sound1;
+    AudioSource wall_hit_sound2;
+    AudioSource player_hit_sound1;
+    AudioSource[] wallsSoundFX;
+
+    ///////////////////
+    // Additions for game functionality and disk movement
+    // -- Cam 3/13/2018
+    public GameObject gameController;   // Reference to gameController object.  Needed to communicate hits for points.  (may instead implement into player objects)
   public GameObject diskOwner;  // Identifier for which player this disk belongs to.  
   // public PlayerController playerScript;  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
   // public DummyController dummyController;
@@ -32,7 +38,12 @@ public class DiskController : MonoBehaviour {
     rb = GetComponent<Rigidbody>(); //Grab rigidbody (Needed for sweeptest)
     owner = transform.parent.parent.gameObject; //Get parent object
     ownerController = owner.GetComponent<PlayerController>(); //Get the controller for parent object
-	}
+        
+        //Queue sounds attached to Game Object
+        wallsSoundFX = GetComponents<AudioSource>();
+        wall_hit_sound1 = wallsSoundFX[0];
+        wall_hit_sound2 = wallsSoundFX[1];
+    }
 
   void Update () {
     if(ownerController.networkDiskFired) {
@@ -48,10 +59,16 @@ public class DiskController : MonoBehaviour {
 	        transform.position = transform.position + hit.distance * transform.forward; //Move the disk to where it would be during the collision
 	        transform.forward = reflect; //change the disk's direction to its reflect vector (collision exit vector)
 	        frameDistance = Mathf.Clamp(frameDistance - hit.distance,0f, frameDistance); //Reduce frameDistance to what is left for calculation
-          ///////////////////
-          // Additions for player/dummy collision
-          // -- Cam 3/13/2018
-          if (hit.transform.gameObject.name == "DummyPlayer") {  // If we've hit the dummy
+
+                    // Play sound on collision
+                    // Picks random sound from array for variety
+                    int index = Random.Range(0, wallsSoundFX.Length);
+                    wallsSoundFX[index].Play();
+
+                    ///////////////////
+                    // Additions for player/dummy collision
+                    // -- Cam 3/13/2018
+                    if (hit.transform.gameObject.name == "DummyPlayer") {  // If we've hit the dummy
             // Call the hit player's DiskHit method.
             hit.transform.gameObject.GetComponent<DummyController> ().DiskHit ();
             print ("Dummy Hit Confirm");
@@ -131,7 +148,7 @@ public class DiskController : MonoBehaviour {
   public void Respawn()
   {
     gameObject.SetActive(false);  // Set inactive in case this disk is currently active
-    diskFired = false;
+        ownerController.networkDiskFired = false;
 
     // Stop, re-orient, and reposition to spawnPoint.
     transform.position = spawnPoint;
@@ -168,7 +185,7 @@ public class DiskController : MonoBehaviour {
 	public void Grab(GameObject newParent, Transform anchor) // Vector3 newPosition, Vector3 newAngle) 
 	{
 		grabbed = true;
-		diskFired = false;
+        ownerController.networkDiskFired = false;
         anchorTrans = anchor;
 
 		// If it's already grabbed by a hand...
@@ -196,7 +213,7 @@ public class DiskController : MonoBehaviour {
   public void Grab(GameObject newParent, GameObject anchor) // Vector3 newPosition, Vector3 newAngle) 
   {
       grabbed = true;
-      diskFired = false;
+        ownerController.networkDiskFired = false;
 
       // If it's already grabbed by a hand...
       if (gameObject.transform.parent != null)
@@ -227,8 +244,8 @@ public class DiskController : MonoBehaviour {
 		grabbed = false;
 
 		if (currentVelocity.magnitude > throwThreshold) {
-			diskFired = true;
-			diskSpeed = currentVelocity.magnitude;
+            ownerController.networkDiskFired = true;
+            ownerController.networkDiskSpeed = currentVelocity.magnitude;
 
 			// rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
 			transform.forward = currentVelocity;  // option 2: use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
@@ -240,7 +257,7 @@ public class DiskController : MonoBehaviour {
 	public void SetIdle() 
 	{
 		grabbed = false;
-		diskFired = false;
+        ownerController.networkDiskFired = false;
 		Vector3 targetEuler = new Vector3(0f, transform.eulerAngles.y, 0f);
 
 		if (transform.eulerAngles.x > 90 && transform.eulerAngles.x < 270)

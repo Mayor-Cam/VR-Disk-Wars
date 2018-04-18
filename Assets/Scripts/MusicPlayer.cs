@@ -28,7 +28,7 @@ public class MusicPlayer : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-    
+
         //songArr = GetComponents<AudioSource>();
         //song1 = songArr[0];
         //song2 = songArr[1];
