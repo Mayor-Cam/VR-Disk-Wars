@@ -3,51 +3,53 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DiskController : MonoBehaviour {
-    public float diskSpeed = 10;
-    bool diskFired = false;
-    SphereCollider collider;
-    Rigidbody rb;
-    // Use this for initialization
+  public GameObject owner;
+  public PlayerController ownerController;
+  Rigidbody rb;
+  public Vector3 diskDeparturePosition;
+	
 	void Start () {
-    collider = GetComponent<SphereCollider>();
-    rb = GetComponent<Rigidbody>();
+    rb = GetComponent<Rigidbody>(); //Grab rigidbody (Needed for sweeptest)
+    owner = transform.parent.parent.gameObject; //Get parent object
+    ownerController = owner.GetComponent<PlayerController>(); //Get the controller for parent object
 	}
-    // Update is called once per frame
-    void FixedUpdate () {
-		if(diskFired) {
 
-            Vector3 orig = transform.position;
-            RaycastHit hit;            
-            float frameDistance = diskSpeed * Time.fixedDeltaTime;
-            int counter = 0;
-            while(rb.SweepTest(transform.forward, out hit, diskSpeed*Time.fixedDeltaTime) ) {
-                counter++;
-                Vector3 reflect = Vector3.Reflect(transform.forward, hit.normal);
-                transform.position = hit.point + transform.forward * 0.5f * transform.localScale.x * Mathf.Cos(Vector3.Angle(transform.forward, hit.normal)* Mathf.Deg2Rad);
-                transform.forward = reflect;
-                frameDistance -= hit.distance;
-            } 
-        transform.Translate(Vector3.forward * frameDistance);
-        orig = transform.position;
-        Debug.DrawRay(orig+transform.forward*0.5f*transform.localScale.x,transform.forward*diskSpeed*Time.deltaTime,Color.red);
+  void Update () {
+    if(ownerController.networkDiskFired) {
+      if(ownerController.isLocalPlayer){ //if this disk belongs to the local player
+      //Collision detection
+				Vector3 startPosition = transform.position; // Position of disk at start of the frame
+				RaycastHit hit;           
+	      float frameDistance = ownerController.networkDiskSpeed * Time.deltaTime; //The distance the disk is projected to travel in one frame
+	      bool isHit = false;
+	      while(rb.SweepTest(transform.forward, out hit, frameDistance)) {  //While the Sweeptest actually hits something (Collides)
+	        isHit = true; //hit condition boolean
+	        Vector3 reflect = Vector3.Reflect(transform.forward, hit.normal); //Get the reflect vector from collision point
+	        transform.position = transform.position + hit.distance * transform.forward; //Move the disk to where it would be during the collision
+	        transform.forward = reflect; //change the disk's direction to its reflect vector (collision exit vector)
+	        frameDistance = Mathf.Clamp(frameDistance - hit.distance,0f, frameDistance); //Reduce frameDistance to what is left for calculation
+	      } //Basically this while loop will exit when the disk doesn't hit anything (or if the frameDistance = 0)
+	      transform.Translate(Vector3.forward * frameDistance); //Basically, if frameDistance is still positive, but since it's out of the rb.Sweeptest loop (nothing hits), just move the disk forward for the remainder of frameDistance
+	      if(isHit) { //if the disk hit something this frame we can assume the disk's vector changed, so definitely update the ownercontroller's variablesi
+	        ownerController.CmdUpdateVector(transform.position, transform.forward, ownerController.networkDiskSpeed); 
+	        ownerController.networkDiskDeparturePosition = transform.position;
+	        ownerController.networkDiskDirection = transform.forward;
+	        ownerController.networkDiskMagnitude = ownerController.networkDiskSpeed;
+	      }
+	    }
+	    else { //disk doesn't belong to the local player
+				if(diskDeparturePosition != ownerController.networkDiskDeparturePosition) { //if the diskDeparturePosition has changed (Means the disk has hit something since the last frame, and vector has changed)
+	        diskDeparturePosition = ownerController.networkDiskDeparturePosition; //Change the new diskDeparturePosition, and
+	        transform.position = diskDeparturePosition; //move the disk there (basically this also serves to resync the disks over the network, since its fresh data
+	      }
+	      transform.forward = ownerController.networkDiskDirection; //use the network info to point the disk in the direction that was given by the network (server)
+	      transform.Translate(Vector3.forward * ownerController.networkDiskSpeed * Time.deltaTime); //Move disk at the networkDiskSpeed
+	      diskDeparturePosition = ownerController.networkDiskDeparturePosition; //Update diskDepartuerPosition
+	    }
 		}
 	}
-	
-	public bool GetFired() {
-    return diskFired;
+
+	bool GetFired() { //Returns if the disk is fired
+    return ownerController.networkDiskFired;
 	}
-	
-	public void Fire(GameObject player, GameObject playerCamera) {
-    transform.rotation = playerCamera.transform.rotation;
-    diskFired = true;
-    gameObject.transform.parent = null;
-	}
-	
-    public void Catch(GameObject hand)
-    {
-        transform.position = hand.transform.position;
-        transform.rotation = hand.transform.rotation;
-        gameObject.transform.parent = hand.transform;
-        diskFired = false;
-    }
 }
