@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 108371830543027248}
   - component: {fileID: 114854185614535076}
   m_Layer: 0
-  m_Name: Disk
+  m_Name: OldDisk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
