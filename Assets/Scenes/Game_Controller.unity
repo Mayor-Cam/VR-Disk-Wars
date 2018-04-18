@@ -1230,6 +1230,11 @@ Prefab:
       propertyPath: throwThreshold
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114470195620180334, guid: c0c986af060bf2043886dac6bdeb6fcc,
+        type: 2}
+      propertyPath: slerpSpeed
+      value: 0.01
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 135954907342510402, guid: c0c986af060bf2043886dac6bdeb6fcc, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: c0c986af060bf2043886dac6bdeb6fcc, type: 2}
@@ -1509,6 +1514,7 @@ MonoBehaviour:
   GrabTag: Grab
   ThrowMultiplier: 1.5
   triggerInput: 0
+  anchor: {fileID: 1861876767}
   anchorObj: {fileID: 1861876766}
 --- !u!23 &1575518347
 MeshRenderer:
@@ -1942,6 +1948,7 @@ MonoBehaviour:
   GrabTag: Grab
   ThrowMultiplier: 1.5
   triggerInput: 0
+  anchor: {fileID: 521905565}
   anchorObj: {fileID: 521905564}
 --- !u!23 &2103816364
 MeshRenderer:

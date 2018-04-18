@@ -20,7 +20,7 @@ public class HandGrabbing : MonoBehaviour
     bool isLeftHand;  // Identifies which hand this object is.  Using a boolean instead of a string for the sake of efficiency.
     public float triggerInput; // Value of the corresponding hand's input.  Range from 0 to 1.
 	DiskController diskController;
-	private Transform anchor;
+	public Transform anchor;
     public GameObject anchorObj;
 
     private Transform _currentObject;
@@ -48,8 +48,7 @@ public class HandGrabbing : MonoBehaviour
         }
         else isLeftHand = false;
 
-		Transform[] childTransforms = transform.GetComponentsInChildren<Transform>();
-		anchor = childTransforms[0];
+		// anchor = transform.GetChild[0].transform;
 
 		//
 		///////
@@ -94,7 +93,7 @@ public class HandGrabbing : MonoBehaviour
                     print("HandGrabbing Hand position:" + gameObject.transform.position);
                     print("HandGrabbing Anchor position:" + anchor.position);
 
-                    diskController.Grab(gameObject, anchorObj); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
+                    diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
 					grabbing = true;
                 }
             }
