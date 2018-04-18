@@ -67,4 +67,4 @@ sysinfo.txt
 *.apk
 
 *.unitypackage
-Library/*
+Library/
