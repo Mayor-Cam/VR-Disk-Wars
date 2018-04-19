@@ -46,6 +46,7 @@ public class CitySound : MonoBehaviour
     private IEnumerator PlaySound()
     {
         beingPlayed = true;
+        currentSound.volume = 0.10f;  // keep it quiet since it's background noise
 
         if (!currentSound.isPlaying)
         {
@@ -75,11 +76,19 @@ public class CitySound : MonoBehaviour
             {
                 float[] validIndex = {0.0f, 1.0f, 3.0f, 4.0f, 5.0f, 6.0f};
                 index = (int)validIndex[Random.Range(0, validIndex.Length)];
-                print("prevIndex = 3, changing...");
+                print("prevIndex = 2, changing...");
                 print("index = " + index);
             }
 
             if (prevIndex == index && prevIndex == 4)
+            {
+                float[] validIndex = { 0.0f, 1.0f, 2.0f, 4.0f, 5.0f, 6.0f };
+                index = (int)validIndex[Random.Range(0, validIndex.Length)];
+                print("prevIndex = 3, changing...");
+                print("index = " + index);
+            }
+
+            if (prevIndex == index && prevIndex == 5)
             {
                 float[] validIndex = { 0.0f, 1.0f, 2.0f, 3.0f, 5.0f, 6.0f };
                 index = (int)validIndex[Random.Range(0, validIndex.Length)];
@@ -87,7 +96,7 @@ public class CitySound : MonoBehaviour
                 print("index = " + index);
             }
 
-            if (prevIndex == index && prevIndex == 5)
+            if (prevIndex == index && prevIndex == 6)
             {
                 float[] validIndex = { 0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 6.0f };
                 index = (int)validIndex[Random.Range(0, validIndex.Length)];
@@ -110,7 +119,7 @@ public class CitySound : MonoBehaviour
             currentSound.Play();
         }
 
-        var waitTime = new WaitForSeconds((int)Mathf.Round(Random.Range(2.0f, 5.0f)));
+        var waitTime = new WaitForSeconds((int)Mathf.Round(Random.Range(2.0f, 4.0f)));
         yield return waitTime;
         beingPlayed = false;
     }
