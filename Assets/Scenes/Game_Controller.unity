@@ -302,23 +302,11 @@ MonoBehaviour:
   leftHand: {fileID: 2103816361}
   rightHand: {fileID: 1575518344}
   objDisk: {fileID: 735144175}
-  prefDisk: {fileID: 0}
   diskController: {fileID: 735144176}
   playerSpeed: 10
-  mouseSensitivity: 10
   playerTurnSpeed: 5
   leftClicked: 0
   catchDistanceThreshold: 1
-  deltaPosition: {x: 0, y: 0, z: 0}
-  networkPlayerNextPosition: {x: 0, y: 0, z: 0}
-  networkPlayerRotation: {x: 0, y: 0, z: 0, w: 0}
-  networkPlayerVelocity: {x: 0, y: 0, z: 0}
-  networkPlayerNewTimestamp: 0
-  networkDiskSpeed: 10
-  networkDiskFired: 0
-  networkDiskDeparturePosition: {x: 0, y: 0, z: 0}
-  networkDiskDirection: {x: 0, y: 0, z: 0}
-  networkDiskMagnitude: 0
 --- !u!1 &448158681
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,7 +1475,6 @@ GameObject:
   - component: {fileID: 1575518348}
   - component: {fileID: 1575518347}
   - component: {fileID: 1575518346}
-  - component: {fileID: 1575518349}
   m_Layer: 0
   m_Name: rightHand
   m_TagString: Untagged
@@ -1529,7 +1516,6 @@ MonoBehaviour:
   triggerInput: 0
   anchor: {fileID: 1861876767}
   anchorObj: {fileID: 1861876766}
-  diskObj: {fileID: 0}
 --- !u!23 &1575518347
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1571,75 +1557,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1575518344}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!135 &1575518349
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1575518344}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!1001 &1577695314
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4828972184953454, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -1.436
-      objectReference: {fileID: 0}
-    - target: {fileID: 4828972184953454, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.966
-      objectReference: {fileID: 0}
-    - target: {fileID: 4828972184953454, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -2.712
-      objectReference: {fileID: 0}
-    - target: {fileID: 4828972184953454, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4828972184953454, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4828972184953454, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4828972184953454, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4828972184953454, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
-      propertyPath: m_RootOrder
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 114658325953298672, guid: 47fcff8b0dfc0f94dbadfa10a40163c8,
-        type: 2}
-      propertyPath: gameController
-      value: 
-      objectReference: {fileID: 1801711306}
-    - target: {fileID: 114245514104101574, guid: 47fcff8b0dfc0f94dbadfa10a40163c8,
-        type: 2}
-      propertyPath: owner
-      value: 
-      objectReference: {fileID: 233653869}
-    - target: {fileID: 114658325953298672, guid: 47fcff8b0dfc0f94dbadfa10a40163c8,
-        type: 2}
-      propertyPath: owner
-      value: 
-      objectReference: {fileID: 233653869}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1603020857
 GameObject:
   m_ObjectHideFlags: 0
@@ -1880,7 +1797,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1801711308
 MonoBehaviour:
@@ -1992,7 +1909,6 @@ GameObject:
   - component: {fileID: 2103816365}
   - component: {fileID: 2103816364}
   - component: {fileID: 2103816363}
-  - component: {fileID: 2103816366}
   m_Layer: 0
   m_Name: leftHand
   m_TagString: Untagged
@@ -2034,7 +1950,6 @@ MonoBehaviour:
   triggerInput: 0
   anchor: {fileID: 521905565}
   anchorObj: {fileID: 521905564}
-  diskObj: {fileID: 0}
 --- !u!23 &2103816364
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2076,15 +1991,3 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2103816361}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!135 &2103816366
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2103816361}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}

@@ -23,7 +23,7 @@ public class HandGrabbing : MonoBehaviour
 	public Transform anchor;
     public GameObject anchorObj;
 
-    private Transform currentObject;
+    private Transform _currentObject;
     private Vector3 _lastFramePosition;
 
     
@@ -41,11 +41,9 @@ public class HandGrabbing : MonoBehaviour
         triggerHold = false;
         triggerRelease = false;
 
-        diskController = diskObj.GetComponent<DiskController>();  /// 4/18/2018 --- Cam: Direct DiskObject reference
-
-        ////////
-        ///  Added by Cam -- 3/26/2018
-        /// 
+		////////
+		///  Added by Cam -- 3/26/2018
+		/// 
 
         // Determine which hand this object is.
         if (string.Compare(gameObject.name, "leftHand") == 1)
@@ -54,7 +52,7 @@ public class HandGrabbing : MonoBehaviour
         }
         else isLeftHand = false;
 
-        // anchor = transform.GetChild[0].transform;
+		// anchor = transform.GetChild[0].transform;
 
 		//
 		///////
@@ -74,10 +72,8 @@ public class HandGrabbing : MonoBehaviour
 
         GetInput();
 
-        /* // Open-ended grabbing implementation
-         
 		// Grabbing a disk
-        if (triggerPress &&  currentObject == null)
+        if (triggerPress &&  _currentObject == null /*!grabbing*/)
         {
             //check for colliders in proximity
             Collider[] colliders = Physics.OverlapSphere(transform.position, GrabDistance);
@@ -88,12 +84,12 @@ public class HandGrabbing : MonoBehaviour
                 // If the collided object is a disk
                 if (string.Compare(colliders[0].transform.gameObject.name, "disk") == 1)
                 {
-					currentObject = colliders[0].transform;
-					diskController = currentObject.gameObject.GetComponent<DiskController>();
+					_currentObject = colliders[0].transform;
+					diskController = _currentObject.gameObject.GetComponent<DiskController>();
 
 					// If it's already being grabbed by your other hand, release it.
-					if (currentObject.transform.parent != null) {
-						HandGrabbing handScript = currentObject.transform.parent.GetComponent<HandGrabbing>();
+					if (_currentObject.transform.parent != null) {
+						HandGrabbing handScript = _currentObject.transform.parent.GetComponent<HandGrabbing>();
 						handScript.Release();
 						// diskController.Release();  // Removed this because handScript.Release() should do this for us.
 					}
@@ -107,10 +103,8 @@ public class HandGrabbing : MonoBehaviour
             }
         }
 
-        */
-
-        // Releasing a disk
-        if (triggerRelease && currentObject != null /* grabbing */) 
+		// Releasing a disk
+		if (triggerRelease && _currentObject != null /* grabbing */) 
 		{
 			Release();
 		}
@@ -175,6 +169,10 @@ public class HandGrabbing : MonoBehaviour
 
     */
 
+                diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
+                grabbing = true;
+            }
+        }    
     }
 
 	///////////////
@@ -221,36 +219,9 @@ public class HandGrabbing : MonoBehaviour
 	{
 		diskController.Release();
 		grabbing = false;
-		currentObject = null;
+		_currentObject = null;
 	}
 
-    ////////////////////
-    /// Added by Cam -- 4/18/2018
-    /// Direct DiskObject reference  
-
-    void OnTriggerStay(Collider other)
-    {
-        // If we're not currently grabbing a disk
-        if (triggerPress && !grabbing)
-        {
-            // If we're colliding with the disk
-            if (GameObject.ReferenceEquals(other.gameObject, diskObj))
-            {
-                // If it's already being grabbed by your other hand, release it.
-                if (diskObj.transform.parent != null)
-                {
-                    HandGrabbing handScript = diskObj.transform.parent.GetComponent<HandGrabbing>();
-                    handScript.Release();
-                    // diskController.Release();  // Removed this because handScript.Release() should do this for us.
-                }
-
-                diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
-                grabbing = true;
-            }
-        }    
-    }
-
-    ///
-    ///
-    //////////////////
+	//
+	/////
 }

@@ -102,7 +102,7 @@ public class PlayerController : NetworkBehaviour {
         networkPlayerNextPosition = transform.position;
         networkPlayerRotation = transform.rotation;
       }
-      if(Input.GetAxis("Fire1") == 1) {
+      if(Input.GetAxis("Fire1") == 1 && !networkDiskFired) {
         //Using CmdFire and Fire cause idk which one to use, and it works as is :) 
         CmdFire(gameObject, playerCamera);
         Fire(gameObject, playerCamera);

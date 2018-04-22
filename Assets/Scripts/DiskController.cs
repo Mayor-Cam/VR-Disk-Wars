@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DiskController : MonoBehaviour {
   bool grabbed = false; 	// Added by Cam - 4/9/2918
-  public GameObject owner;  // Identifier for which player this disk belongs to.  
+  public GameObject owner;
   public PlayerController ownerController;
   Rigidbody rb;
   public Vector3 diskDeparturePosition;
@@ -13,6 +13,7 @@ public class DiskController : MonoBehaviour {
   // Additions for game functionality and disk movement
   // -- Cam 3/13/2018
   public GameObject gameController;   // Reference to gameController object.  Needed to communicate hits for points.  (may instead implement into player objects)
+  public GameObject diskOwner;  // Identifier for which player this disk belongs to.  
   // public PlayerController playerScript;  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
   // public DummyController dummyController;
   Vector3 spawnPoint;
@@ -30,7 +31,7 @@ public class DiskController : MonoBehaviour {
 	void Start () {
     rb = GetComponent<Rigidbody>(); //Grab rigidbody (Needed for sweeptest)
     owner = transform.parent.parent.gameObject; //Get parent object
-    ownerController = owner.GetComponent<PlayerController>(); //Get the controller for player object
+    ownerController = owner.GetComponent<PlayerController>(); //Get the controller for parent object
 	}
 
   void Update () {
@@ -57,7 +58,7 @@ public class DiskController : MonoBehaviour {
             // Call the disk's DestroyDisk method
             DestroyDisk ();
             //hit.Transform.gameObject.playerScript.DiskHit();  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
-            } else if (hit.transform.gameObject.CompareTag ("Player") && hit.transform.gameObject != owner) { // If we've hit the other player...
+            } else if (hit.transform.gameObject.CompareTag ("Player") && hit.transform.gameObject != diskOwner) { // If we've hit the other player...
               // Call the hit player's DiskHit method.
               //hit.transform.gameObject.GetComponent<PlayerController>().DiskHit();
               // Call the disk's DestroyDisk method
