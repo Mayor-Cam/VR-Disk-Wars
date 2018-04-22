@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 135954907342510402}
   - component: {fileID: 114470195620180334}
   m_Layer: 0
-  m_Name: Disk
+  m_Name: Disk_trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3cf2cff911680a47827df523859721a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diskSpeed: 10
+  owner: {fileID: 0}
+  ownerController: {fileID: 0}
+  diskDeparturePosition: {x: 0, y: 0, z: 0}
+  gameController: {fileID: 0}
+  throwThreshold: 1.5
+  slerpSpeed: 0.01
+  lerpSpeed: 0.1
 --- !u!135 &135954907342510402
 SphereCollider:
   m_ObjectHideFlags: 1
