@@ -175,6 +175,10 @@ public class HandGrabbing : MonoBehaviour
 
     */
 
+                diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
+                grabbing = true;
+            }
+        }    
     }
 
 	///////////////
