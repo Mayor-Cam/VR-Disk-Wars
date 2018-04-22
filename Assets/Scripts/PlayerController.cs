@@ -62,6 +62,8 @@ public class PlayerController : NetworkBehaviour {
     objDisk.transform.localPosition = Vector3.zero;
     //grab disk's controller
     diskController = objDisk.GetComponent<DiskController>();
+    diskController.diskOwner = this.gameObject;
+        diskController.ownerController = this.gameObject.GetComponent<PlayerController>();
     if (isServer){
       //Server is put on one side of the room and flipped around
       transform.position = new Vector3(0f, 1f, 2.5f);
