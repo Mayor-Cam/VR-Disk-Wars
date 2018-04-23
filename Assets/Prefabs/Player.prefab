@@ -172,6 +172,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd41f287e38e8f142ab3c65402e9ef12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefHead: {fileID: 1219116334759538, guid: 01056ded866ac774ba0931a36337bcfd, type: 2}
+  prefLHand: {fileID: 1882294539136528, guid: 9cfcdeddbdb359049a0f52935e6aec1d, type: 2}
+  prefRHand: {fileID: 1766499988414298, guid: 677cdebfe11c59d49ae0f8aacaf708c6, type: 2}
   playerHead: {fileID: 0}
   playerCamera: {fileID: 1193613951200992}
   leftHand: {fileID: 0}

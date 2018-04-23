@@ -32,7 +32,7 @@ public class DiskController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>(); //Grab rigidbody (Needed for sweeptest)
-        owner = transform.parent.parent.gameObject; //Get parent object
+        //owner = transform.parent.parent.gameObject; //Get parent object
         ownerController = owner.GetComponent<PlayerController>(); //Get the controller for player object
     }
 

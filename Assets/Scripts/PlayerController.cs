@@ -204,6 +204,14 @@ public class PlayerController : NetworkBehaviour
         NetworkServer.Spawn(leftHand);
         NetworkServer.Spawn(rightHand);
         NetworkServer.Spawn(playerHead);
+
+        leftHand.GetComponent<HandGrabbing>().diskObj = objDisk;
+        rightHand.GetComponent<HandGrabbing>().diskObj = objDisk;
+        leftHand.GetComponent<HandGrabbing>().otherHand = rightHand;
+        rightHand.GetComponent<HandGrabbing>().otherHand = leftHand;
+
+        leftHand.transform.parent = gameObject.transform;
+        rightHand.transform.parent = gameObject.transform;
     }
 
     [Command]

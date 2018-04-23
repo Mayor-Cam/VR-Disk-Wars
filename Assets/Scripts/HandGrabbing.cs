@@ -25,6 +25,7 @@ public class HandGrabbing : MonoBehaviour
 
     public Transform currentObject;
     private Vector3 _lastFramePosition;
+    public GameObject otherHand;
 
 
     public GameObject diskObj;  /// 4/18/2018 --  Cam: Direct DiskObject reference
@@ -40,7 +41,7 @@ public class HandGrabbing : MonoBehaviour
         triggerPress = false;
         triggerHold = false;
         triggerRelease = false;
-        diskObj = transform.parent.GetComponent<PlayerController>().objDisk;
+        //diskObj = transform.parent.GetComponent<PlayerController>().objDisk;
         diskController = diskObj.GetComponent<DiskController>();  /// 4/18/2018 --- Cam: Direct DiskObject reference
 
         ////////
@@ -249,8 +250,8 @@ public class HandGrabbing : MonoBehaviour
                 // If it's already being grabbed by your other hand, release it.
                 if (diskObj.transform.parent != null)
                 {
-                    HandGrabbing handScript = diskObj.transform.parent.GetComponent<HandGrabbing>();
-                    handScript.Release();
+                    //HandGrabbing handScript = diskObj.transform.parent.GetComponent<HandGrabbing>();
+                    otherHand.GetComponent<HandGrabbing>().Release();
                     // diskController.Release();  // Removed this because handScript.Release() should do this for us.
                 }
 
