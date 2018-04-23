@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33098778692548398}
   - component: {fileID: 135680281148120770}
   - component: {fileID: 23227836541016088}
+  - component: {fileID: 114355929058241204}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -156,6 +157,38 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1219116334759538}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114355929058241204
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1219116334759538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 1
+    i1: 5
+    i2: 109
+    i3: 237
+    i4: 134
+    i5: 106
+    i6: 199
+    i7: 116
+    i8: 186
+    i9: 9
+    i10: 49
+    i11: 163
+    i12: 99
+    i13: 55
+    i14: 188
+    i15: 253
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!135 &135680281148120770
 SphereCollider:
   m_ObjectHideFlags: 1

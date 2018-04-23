@@ -41,7 +41,7 @@ public class HandGrabbing : MonoBehaviour
         triggerPress = false;
         triggerHold = false;
         triggerRelease = false;
-        //diskObj = transform.parent.GetComponent<PlayerController>().objDisk;
+        diskObj = transform.parent.GetComponent<PlayerController>().objDisk;
         diskController = diskObj.GetComponent<DiskController>();  /// 4/18/2018 --- Cam: Direct DiskObject reference
 
         ////////
