@@ -29,6 +29,12 @@ public class DiskController : MonoBehaviour
     //
     //////////////////
 
+    // Variables for sound FX:
+    AudioSource wall_hit_sound1;
+    AudioSource wall_hit_sound2;
+    AudioSource player_hit_sound1;
+    AudioSource[] wallsSoundFX;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>(); //Grab rigidbody (Needed for sweeptest)
@@ -37,6 +43,11 @@ public class DiskController : MonoBehaviour
 
         transform.position = new Vector3(0f, 0.75f, -2f);  // temporary hardcode of position
         spawnPoint = transform.position;
+
+        //Queue sounds attached to Game Object
+        wallsSoundFX = GetComponents<AudioSource>();
+        wall_hit_sound1 = wallsSoundFX[0];
+        wall_hit_sound2 = wallsSoundFX[1];
     }
 
     void Update()
@@ -57,6 +68,7 @@ public class DiskController : MonoBehaviour
                     transform.position = transform.position + hit.distance * transform.forward; //Move the disk to where it would be during the collision
                     transform.forward = reflect; //change the disk's direction to its reflect vector (collision exit vector)
                     frameDistance = Mathf.Clamp(frameDistance - hit.distance, 0f, frameDistance); //Reduce frameDistance to what is left for calculation
+
 
                     ///////////////////
                     // Additions for player/dummy collision
@@ -85,6 +97,10 @@ public class DiskController : MonoBehaviour
                     ownerController.networkDiskDeparturePosition = transform.position;
                     ownerController.networkDiskDirection = transform.forward;
                     ownerController.networkDiskMagnitude = ownerController.networkDiskSpeed;
+                    // Play sound on collision
+                    // Picks random sound from array for variety
+                    int index = Random.Range(0, wallsSoundFX.Length);
+                    wallsSoundFX[index].Play();
                 }
             }
             else
