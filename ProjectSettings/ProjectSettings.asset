@@ -628,7 +628,6 @@ PlayerSettings:
   XboxOneSplashScreen: {fileID: 0}
   XboxOneAllowedProductIds: []
   XboxOnePersistentLocalStorageSize: 0
-  XboxOneXTitleMemory: 8
   xboxOneScriptCompiler: 0
   vrEditorSettings:
     daydream:
@@ -638,9 +637,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: e8e47720-d821-407f-ab4e-0e0b0f217a29
+  cloudProjectId: 6d313107-f657-4cb5-a1eb-e34295b621e0
   projectName: VR-Disk-Wars-Unity
-  organizationId: daxiongmao87
+  organizationId: cmoore37
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

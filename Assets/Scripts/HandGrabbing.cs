@@ -11,22 +11,22 @@ public class HandGrabbing : MonoBehaviour
     public Vector3 ObjectGrabOffset;
     public float GrabDistance = 0.1f;
     public string GrabTag = "Grab";
-    public float ThrowMultiplier=1.5f;
+    public float ThrowMultiplier = 1.5f;
 
     bool grabbing;
-    bool triggerPress;
-    bool triggerHold;
-    bool triggerRelease;
+    public bool triggerPress;
+    public bool triggerHold;
+    public bool triggerRelease;
     bool isLeftHand;  // Identifies which hand this object is.  Using a boolean instead of a string for the sake of efficiency.
     public float triggerInput; // Value of the corresponding hand's input.  Range from 0 to 1.
-	DiskController diskController;
-	public Transform anchor;
+    public DiskController diskController;
+    public Transform anchor;
     public GameObject anchorObj;
 
-    private Transform currentObject;
+    public Transform currentObject;
     private Vector3 _lastFramePosition;
 
-    
+
     public GameObject diskObj;  /// 4/18/2018 --  Cam: Direct DiskObject reference
     DiskController diskcontroller;
 
@@ -40,7 +40,7 @@ public class HandGrabbing : MonoBehaviour
         triggerPress = false;
         triggerHold = false;
         triggerRelease = false;
-
+        diskObj = transform.parent.GetComponent<PlayerController>().objDisk;
         diskController = diskObj.GetComponent<DiskController>();  /// 4/18/2018 --- Cam: Direct DiskObject reference
 
         ////////
@@ -56,8 +56,8 @@ public class HandGrabbing : MonoBehaviour
 
         // anchor = transform.GetChild[0].transform;
 
-		//
-		///////
+        //
+        ///////
     }
 
     // Update is called once per frame
@@ -70,9 +70,9 @@ public class HandGrabbing : MonoBehaviour
         ///////////////
         // Added by Cam - 3/26/2018
         // Last updated - 4/2/2018 
-		//
+        //
 
-        GetInput();
+        // GetInput();
 
         /* // Open-ended grabbing implementation
          
@@ -110,10 +110,7 @@ public class HandGrabbing : MonoBehaviour
         */
 
         // Releasing a disk
-        if (triggerRelease && currentObject != null /* grabbing */) 
-		{
-			Release();
-		}
+
 
         //
         /////////
@@ -174,17 +171,14 @@ public class HandGrabbing : MonoBehaviour
         _lastFramePosition = transform.position;
 
     */
-
-                diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
-                grabbing = true;
-            }
-        }    
+        //diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
+        //grabbing = true;
     }
 
-	///////////////
-	// Added by Cam - 3/26/2018
-	// Last updated - 4/2/2018 
-	//
+    ///////////////
+    // Added by Cam - 3/26/2018
+    // Last updated - 4/2/2018 
+    //
 
     // Records input for the controller that corresponds to this hand object.
     void GetInput()
@@ -195,7 +189,7 @@ public class HandGrabbing : MonoBehaviour
             triggerInput = Input.GetAxis("TriggerLeft");
         }
         else triggerInput = Input.GetAxis("TriggerRight");
-
+        print(triggerInput);
         // If-statements for declaring triggerPress, triggerHold, triggerRelease booleans.
         if (triggerInput == 1.0f)  // Pressed  -- May want to fiddle with the threshold
         {
@@ -221,12 +215,12 @@ public class HandGrabbing : MonoBehaviour
         }
     }
 
-	public void Release()
-	{
-		diskController.Release();
-		grabbing = false;
-		currentObject = null;
-	}
+    public void Release()
+    {
+        diskController.Release();
+        grabbing = false;
+        currentObject = null;
+    }
 
     ////////////////////
     /// Added by Cam -- 4/18/2018
@@ -234,8 +228,20 @@ public class HandGrabbing : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
+        GetInput();
+
         // If we're not currently grabbing a disk
-        if (triggerPress && !grabbing)
+        print(other.name);
+
+        if (grabbing)
+        {
+            if (triggerRelease)
+            {
+                print("RELEASING");
+                Release();
+            }
+        }
+        else if (triggerPress) // Not currently grabbing, but pressing the trigger
         {
             // If we're colliding with the disk
             if (GameObject.ReferenceEquals(other.gameObject, diskObj))
@@ -251,7 +257,7 @@ public class HandGrabbing : MonoBehaviour
                 diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
                 grabbing = true;
             }
-        }    
+        }
     }
 
     ///

@@ -30,7 +30,7 @@ public class DummyController : MonoBehaviour {
 
         // Send point info to gamecontroller
         gameControllerScript.Score(this.gameObject);
-
+        
         // Set inactive
         gameObject.SetActive(false);
 	}

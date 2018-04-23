@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Created by Cam 3/13/2018
-// Last edited 3/14/2018
-
+// Last edited 4/22/2018
 public class GameControllerScript : MonoBehaviour {
 
     public GameObject disk;
+	public GameObject clientPlayer;
     public GameObject hostPlayer;
-	// public GameObject clientPlayer;
     public GameObject dummyPlayer;
 
     // Scripts
-    DiskController diskController;
-    PlayerController playerController;
-    PlayerController clientController;
+    DiskController clientDiskController;
+    DiskController hostDiskController;
+    public PlayerController clientController;
+    public PlayerController hostController;
     DummyController dummyController;
 
 	// public GameObject hostSpawn;
@@ -33,10 +33,10 @@ public class GameControllerScript : MonoBehaviour {
         respTimer = -1;
 
         // Assign scripts
-        diskController = disk.GetComponent<DiskController>();
-        playerController = hostPlayer.GetComponent<PlayerController>();
-        // clientController = clientPlayer.GetComponent<PlayerController>();
-        dummyController = dummyPlayer.GetComponent<DummyController>();
+        //diskController = disk.GetComponent<DiskController>();
+        //clientController = hostPlayer.GetComponent<PlayerController>();
+        //hostController = clientPlayer.GetComponent<PlayerController>();
+        //dummyController = dummyPlayer.GetComponent<DummyController>();
     }
 	
 	// Update is called once per frame
@@ -49,11 +49,14 @@ public class GameControllerScript : MonoBehaviour {
         {
             respTimer--;
 
-            // Restore players, Respawn disks
-            dummyController.Restore();
-            // hostPlayer.playerController.Restore();
-            // clientPlayer.playerController.Restore();
-            diskController.Respawn();
+            // Restore players
+            //dummyController.Restore();
+            clientController.Restore();
+            hostController.Restore();
+
+            // Respawn disks
+            clientDiskController.Respawn();
+            hostDiskController.Respawn();
         }
 
     }
@@ -68,9 +71,7 @@ public class GameControllerScript : MonoBehaviour {
 		if (GameObject.ReferenceEquals(hitPlayer, hostPlayer))  // If the hostPlayer was hit, score 1 for the clientPlayer.
 			clientScore++;
 		else  hostScore++;  // If not, score 1 for the hostPlayer.
-
         // 
-
         SetTimer();
 	}
     
