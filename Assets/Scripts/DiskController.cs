@@ -19,10 +19,10 @@ public class DiskController : MonoBehaviour
     // public DummyController dummyController;
     Vector3 spawnPoint;
     Vector3 lastPosition;
-    Vector3 currentVelocity;
+    public Vector3 currentVelocity;
     public float throwThreshold = 1.5f;
     GameObject anchorObj;
-    Transform anchorTrans;
+    public Transform anchorTrans;
     Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f);
     public float slerpSpeed = 0.01f;
     public float lerpSpeed = 0.1f;
@@ -61,12 +61,14 @@ public class DiskController : MonoBehaviour
                     ///////////////////
                     // Additions for player/dummy collision
                     // -- Cam 3/13/2018
-
+                    print(hit.transform.gameObject.tag);
                     if (hit.transform.gameObject.tag == "Player" && hit.transform.gameObject != owner)  // If we've hit the dummy
                     {
 
-                        if (hit.transform.gameObject.tag == "DummyPlayer")     // if we've hit the dummy
+                        if (hit.transform.gameObject.name == "DummyPlayer") {    // if we've hit the dummy
                             hit.transform.gameObject.GetComponent<DummyController>().DiskHit();
+                            print("HIT THE DUMMY");
+                            }
                         else // We've hit the opposing player
                             hit.transform.gameObject.GetComponent<PlayerController>().DiskHit();
                         DestroyDisk();    // Call the disk's DestroyDisk method
