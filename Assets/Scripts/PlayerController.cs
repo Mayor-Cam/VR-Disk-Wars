@@ -17,6 +17,10 @@ public class PlayerController : NetworkBehaviour
     }
     Body body;
     //Body Objects
+    public GameObject prefHead;
+    public GameObject prefLHand;
+    public GameObject prefRHand;
+
     public GameObject playerHead;
     //Camera Object for Looking
     public GameObject playerCamera;
@@ -91,6 +95,8 @@ public class PlayerController : NetworkBehaviour
         diskController = objDisk.GetComponent<DiskController>();
         diskController.owner = this.gameObject;
         diskController.ownerController = this.gameObject.GetComponent<PlayerController>();
+
+        CmdInstantiateBodyParts();
         if (isServer)
         {
             gameControllerScript.hostPlayer = this.gameObject;
@@ -186,6 +192,18 @@ public class PlayerController : NetworkBehaviour
                 deltaPosition += networkPlayerVelocity * Time.deltaTime; //accumulated deltaposition over time (in between network frames)
             }
         }
+    }
+
+    [Command]
+    void CmdInstantiateBodyParts()
+    {
+        leftHand = Instantiate(prefLHand);
+        rightHand = Instantiate(prefRHand);
+        playerHead = Instantiate(prefHead);
+
+        NetworkServer.Spawn(leftHand);
+        NetworkServer.Spawn(rightHand);
+        NetworkServer.Spawn(playerHead);
     }
 
     [Command]
