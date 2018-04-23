@@ -118,7 +118,7 @@ public class DiskController : MonoBehaviour
             // Smooth Lerp to level out.
             if (transform.rotation != targetRotation)
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.time * slerpSpeed);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * slerpSpeed);
             }
         }
 
@@ -239,7 +239,7 @@ public class DiskController : MonoBehaviour
         if (currentVelocity.magnitude > throwThreshold)
         {
             ownerController.networkDiskFired = true;
-            ownerController.networkDiskSpeed = currentVelocity.magnitude;
+            ownerController.networkDiskSpeed = Mathf.Clamp(currentVelocity.magnitude, 0f, 5f);
 
             // rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
             transform.forward = currentVelocity;  // option 2: use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
