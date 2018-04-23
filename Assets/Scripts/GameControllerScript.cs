@@ -16,7 +16,7 @@ public class GameControllerScript : MonoBehaviour {
     DiskController hostDiskController;
     public PlayerController clientController;
     public PlayerController hostController;
-    DummyController dummyController;
+    public DummyController dummyController;
 
 	// public GameObject hostSpawn;
 	// public GameObject clientSpawn;

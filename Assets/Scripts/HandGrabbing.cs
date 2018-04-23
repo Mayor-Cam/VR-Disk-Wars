@@ -17,7 +17,7 @@ public class HandGrabbing : MonoBehaviour
     public bool triggerPress;
     public bool triggerHold;
     public bool triggerRelease;
-    bool isLeftHand;  // Identifies which hand this object is.  Using a boolean instead of a string for the sake of efficiency.
+    public bool isLeftHand;  // Identifies which hand this object is.  Using a boolean instead of a string for the sake of efficiency.
     public float triggerInput; // Value of the corresponding hand's input.  Range from 0 to 1.
     public DiskController diskController;
     public Transform anchor;
@@ -26,7 +26,7 @@ public class HandGrabbing : MonoBehaviour
     public Transform currentObject;
     private Vector3 _lastFramePosition;
     public GameObject otherHand;
-
+    public bool isLocal;
 
     public GameObject diskObj;  /// 4/18/2018 --  Cam: Direct DiskObject reference
     DiskController diskcontroller;
@@ -41,7 +41,7 @@ public class HandGrabbing : MonoBehaviour
         triggerPress = false;
         triggerHold = false;
         triggerRelease = false;
-        diskObj = transform.parent.GetComponent<PlayerController>().objDisk;
+        //diskObj = transform.parent.GetComponent<PlayerController>().objDisk;
         diskController = diskObj.GetComponent<DiskController>();  /// 4/18/2018 --- Cam: Direct DiskObject reference
 
         ////////
@@ -49,11 +49,11 @@ public class HandGrabbing : MonoBehaviour
         /// 
 
         // Determine which hand this object is.
-        if (string.Compare(gameObject.name, "leftHand") == 1)
-        {
-            isLeftHand = true;
-        }
-        else isLeftHand = false;
+       // if (string.Compare(gameObject.name, "leftHand") == 1)
+       // {
+       //     isLeftHand = true;
+       // }
+       // else isLeftHand = false;
 
         // anchor = transform.GetChild[0].transform;
 
@@ -65,8 +65,12 @@ public class HandGrabbing : MonoBehaviour
     void Update()
     {
         //update hand position and rotation
-        transform.localPosition = InputTracking.GetLocalPosition(NodeType);
-        transform.localRotation = InputTracking.GetLocalRotation(NodeType);
+        if (isLocal)
+        {
+            transform.localPosition = InputTracking.GetLocalPosition(NodeType);
+            transform.localRotation = InputTracking.GetLocalRotation(NodeType);
+        }
+        
 
         ///////////////
         // Added by Cam - 3/26/2018

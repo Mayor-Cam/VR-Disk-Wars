@@ -81,7 +81,9 @@ public class PlayerController : NetworkBehaviour
 
     void Start()
     {
-
+        leftHand = Instantiate(prefLHand);
+        rightHand = Instantiate(prefRHand);
+        playerHead = Instantiate(prefHead);
         spawnPoint = transform.position;  // Set initial position as spawnPoint.
         gameController = GameObject.Find("GameController");
         gameControllerScript = gameController.GetComponent<GameControllerScript>();
@@ -95,14 +97,15 @@ public class PlayerController : NetworkBehaviour
         diskController = objDisk.GetComponent<DiskController>();
         diskController.owner = this.gameObject;
         diskController.ownerController = this.gameObject.GetComponent<PlayerController>();
-
+        leftHand.GetComponent<HandGrabbing>().isLocal = isLocalPlayer;
+        rightHand.GetComponent<HandGrabbing>().isLocal = isLocalPlayer;
         CmdInstantiateBodyParts();
         if (isServer)
         {
             gameControllerScript.hostPlayer = this.gameObject;
             gameControllerScript.hostController = this;
             //Server is put on one side of the room and flipped around
-            transform.position = new Vector3(0f, 0f, 2.5f);
+            transform.position = new Vector3(0f, 0f, -3f);
             transform.Rotate(Vector3.up * 180);
         }
         else
@@ -146,11 +149,11 @@ public class PlayerController : NetworkBehaviour
                 CmdSyncMove(
                     transform.position,
                     transform.rotation,
-                    playerHead.transform.position,
+                    playerHead.transform.localPosition,
                     playerHead.transform.rotation,
-                    leftHand.transform.position,
+                    leftHand.transform.localPosition,
                     leftHand.transform.rotation,
-                    rightHand.transform.position,
+                    rightHand.transform.localPosition,
                     rightHand.transform.rotation
                     );
             }
@@ -161,13 +164,13 @@ public class PlayerController : NetworkBehaviour
                 networkPlayerNextPosition = transform.position;
                 networkPlayerRotation = transform.rotation;
 
-                // networkHeadNextPosition = playerHead.transform.position;
-                //networkLeftHandNextPosition = leftHand.transform.position;
-                //networkRightHandNextPosition = rightHand.transform.position;
+                networkHeadNextPosition = playerHead.transform.localPosition;
+                networkLeftHandNextPosition = leftHand.transform.localPosition;
+                networkRightHandNextPosition = rightHand.transform.localPosition;
 
-                //networkHeadRotation = playerHead.transform.rotation;
-                //networkLeftHandRotation = leftHand.transform.rotation;
-                //networkRightHandRotation = rightHand.transform.rotation;
+                networkHeadRotation = playerHead.transform.rotation;
+                networkLeftHandRotation = leftHand.transform.rotation;
+                networkRightHandRotation = rightHand.transform.rotation;
 
             }
             if (Input.GetAxis("Fire1") == 1 && !networkDiskFired)
@@ -197,9 +200,7 @@ public class PlayerController : NetworkBehaviour
     [Command]
     void CmdInstantiateBodyParts()
     {
-        leftHand = Instantiate(prefLHand);
-        rightHand = Instantiate(prefRHand);
-        playerHead = Instantiate(prefHead);
+
 
         NetworkServer.Spawn(leftHand);
         NetworkServer.Spawn(rightHand);
@@ -212,6 +213,8 @@ public class PlayerController : NetworkBehaviour
 
         leftHand.transform.parent = gameObject.transform;
         rightHand.transform.parent = gameObject.transform;
+        leftHand.GetComponent<HandGrabbing>().diskObj = objDisk;
+        rightHand.GetComponent<HandGrabbing>().diskObj = objDisk;
     }
 
     [Command]

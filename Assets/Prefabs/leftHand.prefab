@@ -99,7 +99,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1882294539136528}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2.5}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 4135159998274736}
@@ -264,12 +264,14 @@ MonoBehaviour:
   triggerPress: 0
   triggerHold: 0
   triggerRelease: 0
+  isLeftHand: 1
   triggerInput: 0
   diskController: {fileID: 0}
   anchor: {fileID: 4135159998274736}
   anchorObj: {fileID: 0}
   currentObject: {fileID: 0}
   otherHand: {fileID: 0}
+  isLocal: 0
   diskObj: {fileID: 0}
 --- !u!114 &114871772212439380
 MonoBehaviour:

@@ -9,14 +9,21 @@ public class DummyController : MonoBehaviour {
 
 	public GameObject gameController;
 	GameControllerScript gameControllerScript;
-	
+
+    public float xMin = -2f;
+    public float xMax = 2f;
+    public float zMin = 0.75f;
+    public float zMax = 4.75f;
+
 	Vector3 spawnPoint;
 	
 	// Use this for initialization
 	void Start () {
-		spawnPoint = transform.position;  // Set initial position as spawnPoint.
+        spawnPoint = transform.position;  // Set initial position as spawnPoint.
 
         gameControllerScript = gameController.GetComponent<GameControllerScript>();
+
+        
 	}
 	
 	// Update is called once per frame
@@ -39,7 +46,8 @@ public class DummyController : MonoBehaviour {
 	public void Restore() {
         // Reset position to spawn
         // 
-        transform.position = spawnPoint;
+        // transform.position = spawnPoint;
+        transform.position = new Vector3(Random.Range(xMin, xMax), spawnPoint.y, Random.Range(zMin, zMax));
 		
 		// Spawn animation.  Reverse explosion?
 		

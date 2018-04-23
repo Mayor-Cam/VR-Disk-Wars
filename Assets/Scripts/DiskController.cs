@@ -34,6 +34,9 @@ public class DiskController : MonoBehaviour
         rb = GetComponent<Rigidbody>(); //Grab rigidbody (Needed for sweeptest)
         //owner = transform.parent.parent.gameObject; //Get parent object
         ownerController = owner.GetComponent<PlayerController>(); //Get the controller for player object
+
+        transform.position = new Vector3(0f, 0.75f, -2f);  // temporary hardcode of position
+        spawnPoint = transform.position;
     }
 
     void Update()
@@ -62,7 +65,7 @@ public class DiskController : MonoBehaviour
                     if (hit.transform.gameObject.tag == "Player" && hit.transform.gameObject != owner)  // If we've hit the dummy
                     {
 
-                        if (hit.transform.gameObject.name == "DummyPlayer")     // if we've hit the dummy
+                        if (hit.transform.gameObject.tag == "DummyPlayer")     // if we've hit the dummy
                             hit.transform.gameObject.GetComponent<DummyController>().DiskHit();
                         else // We've hit the opposing player
                             hit.transform.gameObject.GetComponent<PlayerController>().DiskHit();
@@ -239,7 +242,7 @@ public class DiskController : MonoBehaviour
         if (currentVelocity.magnitude > throwThreshold)
         {
             ownerController.networkDiskFired = true;
-            ownerController.networkDiskSpeed = Mathf.Clamp(currentVelocity.magnitude, 0f, 5f);
+              ownerController.networkDiskSpeed = Mathf.Clamp(currentVelocity.magnitude,0f,5f);
 
             // rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
             transform.forward = currentVelocity;  // option 2: use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
