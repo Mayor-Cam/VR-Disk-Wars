@@ -5,7 +5,12 @@ licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - disk: {instanceID: 0}
+  - hostPlayer: {instanceID: 0}
+  - dummyPlayer: {instanceID: 0}
+  - Jumbotron: {fileID: 1615008634724698, guid: f3356bde9b8bb194a873cd5c4e9b1817,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
