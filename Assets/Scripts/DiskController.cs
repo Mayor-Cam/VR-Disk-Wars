@@ -217,9 +217,10 @@ public class DiskController : MonoBehaviour
         rb.velocity = new Vector3(0f, 0f, 0f);    // Stop the disk
 
         // Snap to hand
-        transform.position = anchor.position; // newPosition;
-        transform.eulerAngles = anchor.eulerAngles; // newAngle;
+        // transform.position = anchor.position; // newPosition;
+        // transform.eulerAngles = anchor.eulerAngles; // newAngle;
         // gameObject.transform.parent = newParent.transform;	// Set hand as parent
+
         print("GRABBING");
         //print("DiskController Hand position:" + newParent.transform.position);
         //print("DiskController Anchor position:" + anchor.position);
