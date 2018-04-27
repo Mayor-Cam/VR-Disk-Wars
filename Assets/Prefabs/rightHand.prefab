@@ -300,7 +300,7 @@ MonoBehaviour:
   triggerInput: 0
   diskController: {fileID: 0}
   anchor: {fileID: 4637421827380416}
-  anchorObj: {fileID: 0}
+  anchorObj: {fileID: 1361898342115400}
   currentObject: {fileID: 0}
   otherHand: {fileID: 0}
   isLocal: 0

@@ -70,19 +70,19 @@ public class HandGrabbing : MonoBehaviour
             transform.localPosition = InputTracking.GetLocalPosition(NodeType);
             transform.localRotation = InputTracking.GetLocalRotation(NodeType);
         }
-        
+
 
         ///////////////
         // Added by Cam - 3/26/2018
         // Last updated - 4/2/2018 
         //
 
-        // GetInput();
+        // Open-ended grabbing implementation
 
-        /* // Open-ended grabbing implementation
-         
-		// Grabbing a disk
-        if (triggerPress &&  currentObject == null)
+        GetInput();
+
+        // Grabbing a disk
+        if (triggerPress && currentObject == null)
         {
             //check for colliders in proximity
             Collider[] colliders = Physics.OverlapSphere(transform.position, GrabDistance);
@@ -103,8 +103,8 @@ public class HandGrabbing : MonoBehaviour
 						// diskController.Release();  // Removed this because handScript.Release() should do this for us.
 					}
 
-                    print("HandGrabbing Hand position:" + gameObject.transform.position);
-                    print("HandGrabbing Anchor position:" + anchor.position);
+                    // print("HandGrabbing Hand position:" + gameObject.transform.position);
+                    // print("HandGrabbing Anchor position:" + anchor.position);
 
                     diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
 					grabbing = true;
@@ -112,10 +112,15 @@ public class HandGrabbing : MonoBehaviour
             }
         }
 
-        */
-
         // Releasing a disk
-
+        if (grabbing)
+        {
+            if (triggerRelease)
+            {
+                print("RELEASING");
+                Release();
+            }
+        }
 
         //
         /////////
@@ -231,6 +236,8 @@ public class HandGrabbing : MonoBehaviour
     /// Added by Cam -- 4/18/2018
     /// Direct DiskObject reference  
 
+    /*
+    // Trigger collider grabbing implementation.
     void OnTriggerStay(Collider other)
     {
         GetInput();
@@ -264,6 +271,7 @@ public class HandGrabbing : MonoBehaviour
             }
         }
     }
+    */
 
     ///
     ///
