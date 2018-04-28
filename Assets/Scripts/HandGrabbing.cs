@@ -82,7 +82,7 @@ public class HandGrabbing : MonoBehaviour
         GetInput();
 
         // Grabbing a disk
-        if (triggerPress && currentObject == null)
+        if (triggerPress && !grabbing)
         {
             //check for colliders in proximity
             Collider[] colliders = Physics.OverlapSphere(transform.position, GrabDistance);
@@ -199,7 +199,7 @@ public class HandGrabbing : MonoBehaviour
             triggerInput = Input.GetAxis("TriggerLeft");
         }
         else triggerInput = Input.GetAxis("TriggerRight");
-        print(triggerInput);
+
         // If-statements for declaring triggerPress, triggerHold, triggerRelease booleans.
         if (triggerInput == 1.0f)  // Pressed  -- May want to fiddle with the threshold
         {
@@ -207,6 +207,7 @@ public class HandGrabbing : MonoBehaviour
             {
                 triggerPress = true;
                 triggerHold = true;
+                // print("TriggerPress");
             }
             else triggerPress = false;
 
@@ -218,6 +219,7 @@ public class HandGrabbing : MonoBehaviour
             {
                 triggerRelease = true;
                 triggerHold = false;
+                // print("TriggerRelease");
             }
             else triggerRelease = false;
 

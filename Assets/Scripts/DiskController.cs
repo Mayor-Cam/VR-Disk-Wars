@@ -122,22 +122,24 @@ public class DiskController : MonoBehaviour
         /// 
         else if (grabbed)
         {
-            if (transform.parent != null)  // if we're currently attached to the anchor
+            if (gameObject.transform.parent != null)  // if we're currently attached to the anchor
             {
                 // record motion
                 currentVelocity = (transform.position - lastPosition) / Time.deltaTime;
                 lastPosition = transform.position;
             }
+            /*
             // If the disk aligned with the anchor...
             else if (transform.position == anchorTrans.position && transform.eulerAngles == anchorTrans.eulerAngles)  // anchorTrans version         // if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchorObj.transform.eulerAngles)  // anchorObj version
             {
-                transform.parent = anchorTrans.parent;
+                gameObject.transform.parent = anchorTrans.parent;
             }
             else  // lerp transform.position and transform.eulerAngles toward anchor position
             {
                 transform.position = Vector3.Lerp(transform.position, anchorTrans.position, Time.deltaTime * lerpSpeed);
                 transform.rotation = Quaternion.Slerp(transform.rotation, anchorTrans.rotation, Time.deltaTime * lerpSpeed);
             }
+            */
         }
         else // disk is idle - level out the eulerAngles (x & z) and maybe a float animation? 
         {
@@ -217,9 +219,9 @@ public class DiskController : MonoBehaviour
         rb.velocity = new Vector3(0f, 0f, 0f);    // Stop the disk
 
         // Snap to hand
-        // transform.position = anchor.position; // newPosition;
-        // transform.eulerAngles = anchor.eulerAngles; // newAngle;
-        // gameObject.transform.parent = newParent.transform;	// Set hand as parent
+        transform.position = anchor.position; // newPosition;
+        transform.eulerAngles = anchor.eulerAngles; // newAngle;
+        gameObject.transform.parent = newParent.transform;	// Set hand as parent
 
         print("GRABBING");
         //print("DiskController Hand position:" + newParent.transform.position);
