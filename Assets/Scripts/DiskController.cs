@@ -26,7 +26,7 @@ public class DiskController : MonoBehaviour
     Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f);
     public float slerpSpeed = 5f;
     public float lerpSpeed = 20f;
-    public float grabThreshold = 0.5f;
+    public float lerpSnap = 0.5f; // The distance the at which the disk will stop lerping and snap to the anchor.
     //
     //////////////////
 
@@ -130,11 +130,12 @@ public class DiskController : MonoBehaviour
                 lastPosition = transform.position;
             }
             // If the disk close enough to being aligned with the anchor...
-            else if (Mathf.Abs(transform.position.magnitude - anchorTrans.position.magnitude) < grabThreshold && Mathf.Abs(transform.eulerAngles.magnitude - anchorTrans.eulerAngles.magnitude) < grabThreshold)    // (transform.position == anchorTrans.position && transform.eulerAngles == anchorTrans.eulerAngles)  // anchorTrans version         // if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchorObj.transform.eulerAngles)  // anchorObj version
+            else if (Mathf.Abs(transform.position.magnitude - anchorTrans.position.magnitude) < lerpSnap && Mathf.Abs(transform.eulerAngles.magnitude - anchorTrans.eulerAngles.magnitude) < lerpSnap)    // (transform.position == anchorTrans.position && transform.eulerAngles == anchorTrans.eulerAngles)  // anchorTrans version         // if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchorObj.transform.eulerAngles)  // anchorObj version
             {
                 transform.position = anchorTrans.position; // newPosition;
                 transform.rotation = anchorTrans.rotation; // newAngle
                 gameObject.transform.parent = anchorTrans.parent;
+                lastPosition = transform.position;
             }
             else  // lerp transform.position and transform.eulerAngles toward anchor position
             {
@@ -204,7 +205,7 @@ public class DiskController : MonoBehaviour
         gameObject.transform.parent = newParent.transform;
     }
 
-    public void Grab(GameObject newParent, Transform anchor) // Vector3 newPosition, Vector3 newAngle) 
+    public void Grab(Transform anchor) // Vector3 newPosition, Vector3 newAngle) 
     {
         grabbed = true;
         ownerController.networkDiskFired = false;
@@ -223,21 +224,21 @@ public class DiskController : MonoBehaviour
         // Snap to hand
         // transform.position = anchor.position; // newPosition;
         // transform.eulerAngles = anchor.eulerAngles; // newAngle;
-        // gameObject.transform.parent = newParent.transform;	// Set hand as parent
+        // gameObject.transform.parent = anchor.parent.transform;	// Set hand as parent
+        // lastPosition = transform.position;
 
         print("GRABBING");
-        //print("DiskController Hand position:" + newParent.transform.position);
+        //print("DiskController Hand position:" + anchor.parent.transform.position);
         //print("DiskController Anchor position:" + anchor.position);
-
-
-        lastPosition = transform.position;
     }
 
-    public void Grab(GameObject newParent, GameObject anchor) // Vector3 newPosition, Vector3 newAngle) 
+    public void Grab(GameObject anchor) // Vector3 newPosition, Vector3 newAngle) 
     {
         print("Grabbing");
         grabbed = true;
         ownerController.networkDiskFired = false;
+        anchorObj = anchor;
+        anchorTrans = anchor.transform;
 
         // If it's already grabbed by a hand...
         if (gameObject.transform.parent != null)
@@ -250,16 +251,13 @@ public class DiskController : MonoBehaviour
         rb.velocity = new Vector3(0f, 0f, 0f);  // Stop the disk
 
         // Snap to hand
-        transform.position = anchor.transform.position; // newPosition;
-        transform.eulerAngles = anchor.transform.eulerAngles; // newAngle;
-        gameObject.transform.parent = newParent.transform;  // Set hand as parent
-        anchorObj = anchor;
+        // transform.position = anchor.transform.position; // newPosition;
+        // transform.eulerAngles = anchor.transform.eulerAngles; // newAngle;
+        // gameObject.transform.parent = anchor.transform.parent.transform;  // Set hand as parent
+        // lastPosition = transform.position;
 
-        print("DiskController Hand position:" + newParent.transform.position);
-        print("DiskController Anchor position:" + anchor.transform.position);
-
-
-        lastPosition = transform.position;
+        // print("DiskController Hand position:" + anchor.transform.parent.transform.position);
+        // print("DiskController Anchor position:" + anchor.transform.position);
     }
 
     public void Release()
