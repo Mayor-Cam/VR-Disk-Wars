@@ -12,7 +12,7 @@ public class DiskController : MonoBehaviour
 
     ///////////////////
     // Additions for game functionality and disk movement
-    // -- Cam 3/13/2018 -- Updated 4/22/2018
+    // -- Cam 3/13/2018 -- Updated 4/28/2018
 
     public GameObject gameController;   // Reference to gameController object.  Needed to communicate hits for points.  (may instead implement into player objects)
     // public PlayerController playerScript;  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
@@ -24,8 +24,9 @@ public class DiskController : MonoBehaviour
     GameObject anchorObj;
     public Transform anchorTrans;
     Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f);
-    public float slerpSpeed = 0.01f;
-    public float lerpSpeed = 0.1f;
+    public float slerpSpeed = 5f;
+    public float lerpSpeed = 20f;
+    public float grabThreshold = 0.5f;
     //
     //////////////////
 
@@ -128,10 +129,11 @@ public class DiskController : MonoBehaviour
                 currentVelocity = (transform.position - lastPosition) / Time.deltaTime;
                 lastPosition = transform.position;
             }
-            /*
-            // If the disk aligned with the anchor...
-            else if (transform.position == anchorTrans.position && transform.eulerAngles == anchorTrans.eulerAngles)  // anchorTrans version         // if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchorObj.transform.eulerAngles)  // anchorObj version
+            // If the disk close enough to being aligned with the anchor...
+            else if (Mathf.Abs(transform.position.magnitude - anchorTrans.position.magnitude) < grabThreshold && Mathf.Abs(transform.eulerAngles.magnitude - anchorTrans.eulerAngles.magnitude) < grabThreshold)    // (transform.position == anchorTrans.position && transform.eulerAngles == anchorTrans.eulerAngles)  // anchorTrans version         // if (transform.position == anchorObj.transform.position && transform.eulerAngles == anchorObj.transform.eulerAngles)  // anchorObj version
             {
+                transform.position = anchorTrans.position; // newPosition;
+                transform.rotation = anchorTrans.rotation; // newAngle
                 gameObject.transform.parent = anchorTrans.parent;
             }
             else  // lerp transform.position and transform.eulerAngles toward anchor position
@@ -139,7 +141,7 @@ public class DiskController : MonoBehaviour
                 transform.position = Vector3.Lerp(transform.position, anchorTrans.position, Time.deltaTime * lerpSpeed);
                 transform.rotation = Quaternion.Slerp(transform.rotation, anchorTrans.rotation, Time.deltaTime * lerpSpeed);
             }
-            */
+            
         }
         else // disk is idle - level out the eulerAngles (x & z) and maybe a float animation? 
         {
@@ -219,9 +221,9 @@ public class DiskController : MonoBehaviour
         rb.velocity = new Vector3(0f, 0f, 0f);    // Stop the disk
 
         // Snap to hand
-        transform.position = anchor.position; // newPosition;
-        transform.eulerAngles = anchor.eulerAngles; // newAngle;
-        gameObject.transform.parent = newParent.transform;	// Set hand as parent
+        // transform.position = anchor.position; // newPosition;
+        // transform.eulerAngles = anchor.eulerAngles; // newAngle;
+        // gameObject.transform.parent = newParent.transform;	// Set hand as parent
 
         print("GRABBING");
         //print("DiskController Hand position:" + newParent.transform.position);

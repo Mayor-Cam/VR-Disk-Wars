@@ -335,7 +335,8 @@ MonoBehaviour:
   throwThreshold: 1.5
   anchorTrans: {fileID: 0}
   slerpSpeed: 5
-  lerpSpeed: 0.1
+  lerpSpeed: 20
+  grabThreshold: 0.5
 --- !u!114 &114854185614535076
 MonoBehaviour:
   m_ObjectHideFlags: 1
