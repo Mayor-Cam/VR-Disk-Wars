@@ -194,7 +194,7 @@ public class PlayerController : NetworkBehaviour
         else
         { //if not local player go ahead and perform calculations based on network-synced variables
             //transform.position = Vector3.Lerp(transform.position, networkPlayerNextPosition + deltaPosition, Time.deltaTime * playerSpeed);
-            //transform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime * 60f);
+            //ztransform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime * 60f);
             print(networkHeadNextPosition + " :::: " + playerHead.transform.position);
             leftHand.transform.position = networkLeftHandNextPosition;
             rightHand.transform.position = networkRightHandNextPosition;
@@ -238,13 +238,13 @@ public class PlayerController : NetworkBehaviour
         networkPlayerRotation = playerRot;
         networkPlayerNewTimestamp = Time.time;
 
-        //networkHeadNextPosition = headPos;
-        //networkLeftHandNextPosition = lHandPos;
-        //networkRightHandNextPosition = rHandPos;
+        networkHeadNextPosition = headPos;
+        networkLeftHandNextPosition = lHandPos;
+        networkRightHandNextPosition = rHandPos;
 
-        //networkHeadRotation = headRot;
-        //networkLeftHandRotation = lHandRot;
-        //networkRightHandRotation = rHandRot;
+        networkHeadRotation = headRot;
+        networkLeftHandRotation = lHandRot;
+        networkRightHandRotation = rHandRot;
 
 
     }
