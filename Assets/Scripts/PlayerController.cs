@@ -200,7 +200,7 @@ public class PlayerController : NetworkBehaviour
                 networkHeadRotation = InputTracking.GetLocalRotation(xrHead);//playerHead.transform.rotation;
                 networkLeftHandRotation = InputTracking.GetLocalRotation(xrLeftHand);//leftHand.transform.rotation;
                 networkRightHandRotation = InputTracking.GetLocalRotation(xrRightHand);//rightHand.transform.rotation;
-
+                networkPlayerNewTimestamp = Time.time;
             }
             if (Input.GetAxis("Fire1") == 1 && !networkDiskFired)
             {
