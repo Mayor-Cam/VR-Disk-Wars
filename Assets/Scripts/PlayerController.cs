@@ -108,6 +108,7 @@ public class PlayerController : NetworkBehaviour
         print("XRDevice: " + (XRDevice.isPresent ? XRDevice.model : "Not Present"));
         if (isServer)
         {
+            gameObject.name = "Server Player";
             gameControllerScript.hostPlayer = this.gameObject;
             gameControllerScript.hostController = this;
             gameControllerScript.hostDiskController = diskController;
@@ -118,6 +119,7 @@ public class PlayerController : NetworkBehaviour
         else
         {
             //gameControllerScript.clientPlayer = this.gameObject;
+            gameObject.name = "Client Player";
             gameControllerScript.clientController = this;
 
             //If client, put player on other side
@@ -232,13 +234,13 @@ public class PlayerController : NetworkBehaviour
         networkPlayerRotation = playerRot;
         networkPlayerNewTimestamp = Time.time;
 
-        //networkHeadNextPosition = headPos;
-        //networkLeftHandNextPosition = lHandPos;
-        //networkRightHandNextPosition = rHandPos;
+        networkHeadNextPosition = headPos;
+        networkLeftHandNextPosition = lHandPos;
+        networkRightHandNextPosition = rHandPos;
 
-        //networkHeadRotation = headRot;
-        //networkLeftHandRotation = lHandRot;
-        //networkRightHandRotation = rHandRot;
+        networkHeadRotation = headRot;
+        networkLeftHandRotation = lHandRot;
+        networkRightHandRotation = rHandRot;
 
 
     }
