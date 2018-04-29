@@ -35,6 +35,11 @@ public class PlayerController : NetworkBehaviour
     public GameObject objDisk;
     public GameObject prefDisk;
     public DiskController diskController;
+    
+    //Materials for other player
+    public Material otherPlayerColor;
+    public Material otherDiskColor;
+    public Color32 otherLightColor;
     // Player Speed Scalar Variable
     public float playerSpeed = 1f;
     public float mouseSensitivity = 10f;
@@ -126,11 +131,13 @@ public class PlayerController : NetworkBehaviour
             gameControllerScript.hostDiskController = diskController;
             //Server is put on one side of the room and flipped around
             if(isLocalPlayer){
-              transform.position = new Vector3(0f, 0f, -2.5f);
+              transform.position = new Vector3(0f, 0f, -3f);
+              objDisk.transform.position = new Vector3(0f, 1f, -2f);
               }
             else {
-              transform.position = new Vector3(0f, 0f, 2.5f);
+              transform.position = new Vector3(0f, 0f, 3f);
               transform.Rotate(Vector3.up*180);
+              objDisk.transform.position = new Vector3(0f, 1f, 2f);
               }
             
         }
@@ -141,22 +148,25 @@ public class PlayerController : NetworkBehaviour
 
             //If client, put player on other side
             if(isLocalPlayer){
-              transform.position = new Vector3(0f, 0f, 2.5f);
+              transform.position = new Vector3(0f, 0f, 3f);
               transform.Rotate(Vector3.up*180);
-
+              objDisk.transform.position = new Vector3(0f, 1f, 2f);
               }
             else {
-              transform.position = new Vector3(0f, 0f, -2.5f);
+              transform.position = new Vector3(0f, 0f, -3f);
+              objDisk.transform.position = new Vector3(0f, 1f, -2f);
               }
             
         }
         //Set OTHER player a different color
-        if (!isLocalPlayer)
+        if (isLocalPlayer)
         {
-            GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
-            GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
-            objDisk.GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
-            objDisk.GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
+            playerHead.GetComponent<MeshRenderer>().material = otherPlayerColor;
+            playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().material = otherPlayerColor;
+            leftHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
+            rightHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
+            objDisk.GetComponent<MeshRenderer>().material = otherDiskColor;
+            objDisk.GetComponent<Light>().color = otherLightColor;
         }
     }
 

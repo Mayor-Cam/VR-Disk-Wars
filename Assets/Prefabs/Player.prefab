@@ -175,6 +175,9 @@ MonoBehaviour:
   prefHead: {fileID: 1219116334759538, guid: 01056ded866ac774ba0931a36337bcfd, type: 2}
   prefLHand: {fileID: 1882294539136528, guid: 9cfcdeddbdb359049a0f52935e6aec1d, type: 2}
   prefRHand: {fileID: 1766499988414298, guid: 677cdebfe11c59d49ae0f8aacaf708c6, type: 2}
+  xrHead: 0
+  xrLeftHand: 0
+  xrRightHand: 0
   playerHead: {fileID: 0}
   playerCamera: {fileID: 1193613951200992}
   leftHand: {fileID: 0}
@@ -182,12 +185,19 @@ MonoBehaviour:
   objDisk: {fileID: 0}
   prefDisk: {fileID: 1800443872324012, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
   diskController: {fileID: 0}
+  otherPlayerColor: {fileID: 2100000, guid: 456bb1eee9bf36f46b4f3a61b433b884, type: 2}
+  otherDiskColor: {fileID: 2100000, guid: 456bb1eee9bf36f46b4f3a61b433b884, type: 2}
+  otherLightColor:
+    serializedVersion: 2
+    rgba: 4286382013
   playerSpeed: 10
   mouseSensitivity: 100
   playerTurnSpeed: 5
   leftClicked: 0
   catchDistanceThreshold: 1
-  deltaPosition: {x: 0, y: 0, z: 0}
+  headDeltaPosition: {x: 0, y: 0, z: 0}
+  lHandDeltaPosition: {x: 0, y: 0, z: 0}
+  rHandDeltaPosition: {x: 0, y: 0, z: 0}
   gameController: {fileID: 0}
   networkPlayerNextPosition: {x: 0, y: 0, z: 0}
   networkPlayerRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -204,6 +214,9 @@ MonoBehaviour:
   networkRightHandRotation: {x: 0, y: 0, z: 0, w: 0}
   networkHeadNextPosition: {x: 0, y: 0, z: 0}
   networkHeadRotation: {x: 0, y: 0, z: 0, w: 0}
+  networkHeadVelocity: {x: 0, y: 0, z: 0}
+  networkLeftHandVelocity: {x: 0, y: 0, z: 0}
+  networkRightHandVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &114318504342751332
 MonoBehaviour:
   m_ObjectHideFlags: 1

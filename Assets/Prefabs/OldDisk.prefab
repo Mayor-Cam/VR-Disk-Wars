@@ -60,7 +60,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 30abf72cbf0444b4da99586777a06731, type: 2}
   - {fileID: 2100000, guid: b255802e81eb8e344aa1ff52eea8020b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -169,7 +168,9 @@ MonoBehaviour:
   ownerController: {fileID: 0}
   diskDeparturePosition: {x: 0, y: 0, z: 0}
   gameController: {fileID: 0}
+  currentVelocity: {x: 0, y: 0, z: 0}
   throwThreshold: 1.5
+  anchorTrans: {fileID: 0}
   slerpSpeed: 5
   lerpSpeed: 0.1
 --- !u!114 &114854185614535076

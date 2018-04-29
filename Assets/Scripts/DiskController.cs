@@ -35,7 +35,7 @@ public class DiskController : MonoBehaviour
         //owner = transform.parent.parent.gameObject; //Get parent object
         ownerController = owner.GetComponent<PlayerController>(); //Get the controller for player object
 
-        transform.position = new Vector3(0f, 0.75f, -2f);  // temporary hardcode of position
+        //transform.position = new Vector3(0f, 0.75f, -2f);  // temporary hardcode of position
         spawnPoint = transform.position;
     }
 
