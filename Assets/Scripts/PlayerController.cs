@@ -148,19 +148,20 @@ public class PlayerController : NetworkBehaviour
 
             //If client, put player on other side
             if(isLocalPlayer){
-              transform.position = new Vector3(0f, 0f, 3f);
+              transform.position = new Vector3(0f, 0f, 5f);
               transform.Rotate(Vector3.up*180);
-              objDisk.transform.position = new Vector3(0f, 1f, 2f);
+              objDisk.transform.position = new Vector3(0f, 1f, 4f);
               }
             else {
-              transform.position = new Vector3(0f, 0f, -3f);
-              objDisk.transform.position = new Vector3(0f, 1f, -2f);
+              transform.position = new Vector3(0f, 0f, -5f);
+              objDisk.transform.position = new Vector3(0f, 1f, -4f);
               }
             
         }
         //Set OTHER player a different color
         if (isLocalPlayer)
         {
+            if(!XRDevice.isPresent) transform.Translate(Vector3.up * 1.5f);
             playerHead.GetComponent<MeshRenderer>().material = otherPlayerColor;
             playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().material = otherPlayerColor;
             leftHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
@@ -178,19 +179,21 @@ public class PlayerController : NetworkBehaviour
             playerHead.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
             leftHand.transform.position = InputTracking.GetLocalPosition(xrLeftHand);
             rightHand.transform.position = InputTracking.GetLocalPosition(xrRightHand);
-            
-            float horizontalInput = Input.GetAxis("Horizontal");
-            float verticalInput = Input.GetAxis("Vertical");
-            float mouseX = Input.GetAxis("Mouse X");
-            //Forward backward movement
-            Vector3 longMovement = transform.forward * verticalInput * Time.deltaTime * playerSpeed;
-            //Strafing movement
-            Vector3 latMovement = transform.right * horizontalInput * Time.deltaTime * playerSpeed;
-            //Combine the two
-            transform.position += longMovement + latMovement;
-            //Rotation control
-            transform.Rotate(Vector3.up * mouseX * Time.deltaTime * mouseSensitivity);
+            if(!XRDevice.isPresent) {
+              float horizontalInput = Input.GetAxis("Horizontal");
+              float verticalInput = Input.GetAxis("Vertical");
+              float mouseX = Input.GetAxis("Mouse X");
+              //Forward backward movement
+              Vector3 longMovement = transform.forward * verticalInput * Time.deltaTime * playerSpeed;
+              //Strafing movement
+              Vector3 latMovement = transform.right * horizontalInput * Time.deltaTime * playerSpeed;
+              //Combine the two
+              transform.position += longMovement + latMovement;
+              //Rotation control
+              transform.Rotate(Vector3.up * mouseX * Time.deltaTime * mouseSensitivity);
+            }
             if (!isServer)
+
             {
                 //Remote commands server to move
                 CmdSyncMove(
@@ -237,12 +240,6 @@ public class PlayerController : NetworkBehaviour
         }
         else
         { //if not local player go ahead and perform calculations based on network-synced variables
-            //transform.position = Vector3.Lerp(transform.position, networkPlayerNextPosition + deltaPosition, Time.deltaTime * playerSpeed);
-            //transform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime * 60f);
-            
-            //leftHand.transform.localPosition = networkLeftHandNextPosition;
-            //rightHand.transform.localPosition = networkRightHandNextPosition;
-            //playerHead.transform.localPosition = networkHeadNextPosition;
             
             playerHead.transform.localPosition = Vector3.Lerp(playerHead.transform.localPosition, networkHeadNextPosition + headDeltaPosition, Time.deltaTime * 60f);
             leftHand.transform.localPosition = Vector3.Lerp(leftHand.transform.localPosition, networkLeftHandNextPosition + lHandDeltaPosition, Time.deltaTime * 60f);
@@ -252,7 +249,6 @@ public class PlayerController : NetworkBehaviour
                 headDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
                 lHandDeltaPosition = Vector3.zero;
                 rHandDeltaPosition = Vector3.zero;
-                print("SYNCING");
                 leftHand.transform.localPosition = networkLeftHandNextPosition;
                 rightHand.transform.localPosition = networkRightHandNextPosition;
                 playerHead.transform.localPosition = networkHeadNextPosition;
