@@ -213,13 +213,13 @@ public class PlayerController : NetworkBehaviour
             //transform.position = Vector3.Lerp(transform.position, networkPlayerNextPosition + deltaPosition, Time.deltaTime * playerSpeed);
             //transform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime * 60f);
             
-            //leftHand.transform.localPosition = networkLeftHandNextPosition;
-            //rightHand.transform.localPosition = networkRightHandNextPosition;
-            //playerHead.transform.localPosition = networkHeadNextPosition;
+            leftHand.transform.localPosition = networkLeftHandNextPosition;
+            rightHand.transform.localPosition = networkRightHandNextPosition;
+            playerHead.transform.localPosition = networkHeadNextPosition;
             
-            playerHead.transform.localPosition = Vector3.Lerp(playerHead.transform.localPosition, networkHeadNextPosition + headDeltaPosition, Time.deltaTime * 60f);
-            leftHand.transform.localPosition = Vector3.Lerp(leftHand.transform.localPosition, networkLeftHandNextPosition + lHandDeltaPosition, Time.deltaTime * 60f);
-            rightHand.transform.localPosition = Vector3.Lerp(rightHand.transform.localPosition, networkRightHandNextPosition + rHandDeltaPosition, Time.deltaTime * 60f);
+           // playerHead.transform.localPosition = Vector3.Lerp(playerHead.transform.localPosition, networkHeadNextPosition + headDeltaPosition, Time.deltaTime * 60f);
+           // leftHand.transform.localPosition = Vector3.Lerp(leftHand.transform.localPosition, networkLeftHandNextPosition + lHandDeltaPosition, Time.deltaTime * 60f);
+           // rightHand.transform.localPosition = Vector3.Lerp(rightHand.transform.localPosition, networkRightHandNextPosition + rHandDeltaPosition, Time.deltaTime * 60f);
             if (NetworkUpdated())
             { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
                 headDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
