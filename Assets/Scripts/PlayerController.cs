@@ -114,6 +114,7 @@ public class PlayerController : NetworkBehaviour
         CmdInstantiateBodyParts();
         leftHand.transform.parent = gameObject.transform;
         rightHand.transform.parent = gameObject.transform;
+        playerHead.transform.parent = gameObject.transform;
         print("XRDevice: " + (XRDevice.isPresent ? XRDevice.model : "Not Present"));
         if (isServer)
         {
@@ -146,7 +147,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            playerHead.transform.localPosition = playerCamera.transform.position;
+            //playerHead.transform.localPosition = playerCamera.transform.position;
             transform.GetChild(0).gameObject.SetActive(true);
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
@@ -246,8 +247,10 @@ public class PlayerController : NetworkBehaviour
         leftHand.GetComponent<HandGrabbing>().otherHand = rightHand;
         rightHand.GetComponent<HandGrabbing>().otherHand = leftHand;
 
+        playerHead.transform.parent = gameObject.transform;
         leftHand.transform.parent = gameObject.transform;
         rightHand.transform.parent = gameObject.transform;
+        
         leftHand.GetComponent<HandGrabbing>().diskObj = objDisk;
         rightHand.GetComponent<HandGrabbing>().diskObj = objDisk;
     }
