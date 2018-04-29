@@ -212,9 +212,9 @@ public class PlayerController : NetworkBehaviour
             //rightHand.transform.position = networkRightHandNextPosition;
             //playerHead.transform.position = networkHeadNextPosition;
             
-            Vector3.Lerp(playerHead.transform.position, networkHeadNextPosition + headDeltaPosition, Time.deltaTime);
-            Vector3.Lerp(leftHand.transform.position, networkLeftHandNextPosition + lHandDeltaPosition, Time.deltaTime);
-            Vector3.Lerp(rightHand.transform.position, networkRightHandNextPosition + rHandDeltaPosition, Time.deltaTime);
+            playerHead.transform.position = Vector3.Lerp(playerHead.transform.position, networkHeadNextPosition + headDeltaPosition, Time.deltaTime);
+            leftHand.transform.position = Vector3.Lerp(leftHand.transform.position, networkLeftHandNextPosition + lHandDeltaPosition, Time.deltaTime);
+            rightHand.transform.position = Vector3.Lerp(rightHand.transform.position, networkRightHandNextPosition + rHandDeltaPosition, Time.deltaTime);
             if (NetworkUpdated())
             { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
                 headDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
