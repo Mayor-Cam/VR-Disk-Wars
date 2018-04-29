@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
+using UnityEngine.XR;
 /*
 Player Controller handles all player controls, to include movement and disk manipulation
 */
@@ -21,6 +22,10 @@ public class PlayerController : NetworkBehaviour
     public GameObject prefLHand;
     public GameObject prefRHand;
 
+    public XRNode xrHead = XRNode.Head;
+    public XRNode xrLeftHand = XRNode.LeftHand;
+    public XRNode xrRightHand = XRNode.RightHand; 
+    
     public GameObject playerHead;
     //Camera Object for Looking
     public GameObject playerCamera;
@@ -100,6 +105,7 @@ public class PlayerController : NetworkBehaviour
         leftHand.GetComponent<HandGrabbing>().isLocal = isLocalPlayer;
         rightHand.GetComponent<HandGrabbing>().isLocal = isLocalPlayer;
         CmdInstantiateBodyParts();
+        print("XRDevice: " + (XRDevice.isPresent ? XRDevice.model : "Not Present"));
         if (isServer)
         {
             gameControllerScript.hostPlayer = this.gameObject;
@@ -150,12 +156,12 @@ public class PlayerController : NetworkBehaviour
                 CmdSyncMove(
                     transform.position,
                     transform.rotation,
-                    playerHead.transform.localPosition,
-                    playerHead.transform.rotation,
-                    leftHand.transform.localPosition,
-                    leftHand.transform.rotation,
-                    rightHand.transform.localPosition,
-                    rightHand.transform.rotation
+                    InputTracking.GetLocalPosition(xrHead),
+                    InputTracking.GetLocalRotation(xrHead),
+                    InputTracking.GetLocalPosition(xrLeftHand),
+                    InputTracking.GetLocalRotation(xrLeftHand),
+                    InputTracking.GetLocalPosition(xrRightHand),
+                    InputTracking.GetLocalRotation(xrRightHand)
                     );
             }
 
@@ -165,13 +171,13 @@ public class PlayerController : NetworkBehaviour
                 networkPlayerNextPosition = transform.position;
                 networkPlayerRotation = transform.rotation;
 
-                networkHeadNextPosition = playerHead.transform.localPosition;
-                networkLeftHandNextPosition = leftHand.transform.localPosition;
-                networkRightHandNextPosition = rightHand.transform.localPosition;
+                networkHeadNextPosition = InputTracking.GetLocalPosition(xrHead); //playerHead.transform.localPosition;
+                networkLeftHandNextPosition = InputTracking.GetLocalPosition(xrLeftHand); //leftHand.transform.localPosition;
+                networkRightHandNextPosition = InputTracking.GetLocalPosition(xrRightHand); //rightHand.transform.localPosition;
 
-                networkHeadRotation = playerHead.transform.rotation;
-                networkLeftHandRotation = leftHand.transform.rotation;
-                networkRightHandRotation = rightHand.transform.rotation;
+                networkHeadRotation = InputTracking.GetLocalRotation(xrHead);//playerHead.transform.rotation;
+                networkLeftHandRotation = InputTracking.GetLocalRotation(xrLeftHand);//leftHand.transform.rotation;
+                networkRightHandRotation = InputTracking.GetLocalRotation(xrRightHand);//rightHand.transform.rotation;
 
             }
             if (Input.GetAxis("Fire1") == 1 && !networkDiskFired)
