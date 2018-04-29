@@ -228,6 +228,9 @@ public class PlayerController : NetworkBehaviour
                 headDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
                 lHandDeltaPosition = Vector3.zero;
                 rHandDeltaPosition = Vector3.zero;
+                leftHand.transform.localPosition = networkLeftHandNextPosition;
+                rightHand.transform.localPosition = networkRightHandNextPosition;
+                playerHead.transform.localPosition = networkHeadNextPosition;
             }
             else
             {
