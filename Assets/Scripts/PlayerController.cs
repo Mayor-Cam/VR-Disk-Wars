@@ -180,7 +180,11 @@ public class PlayerController : NetworkBehaviour
                 networkPlayerVelocity = (transform.position - networkPlayerNextPosition) / Time.deltaTime;
                 networkPlayerNextPosition = transform.position;
                 networkPlayerRotation = transform.rotation;
-
+                
+                networkHeadVelocity = (InputTracking.GetLocalPosition(xrHead) - networkHeadVelocity) / Time.deltaTime;
+                networkLeftHandVelocity = (InputTracking.GetLocalPosition(xrLeftHand) - networkLeftHandVelocity) / Time.deltaTime;
+                networkRightHandVelocity = (InputTracking.GetLocalPosition(xrRightHand) - networkRightHandVelocity) / Time.deltaTime;
+                
                 networkHeadNextPosition = InputTracking.GetLocalPosition(xrHead); //playerHead.transform.localPosition;
                 networkLeftHandNextPosition = InputTracking.GetLocalPosition(xrLeftHand); //leftHand.transform.localPosition;
                 networkRightHandNextPosition = InputTracking.GetLocalPosition(xrRightHand); //rightHand.transform.localPosition;
