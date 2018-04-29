@@ -126,6 +126,7 @@ public class PlayerController : NetworkBehaviour
             gameControllerScript.hostDiskController = diskController;
             //Server is put on one side of the room and flipped around
             transform.position = new Vector3(0f, 0f, -2.5f);
+            
         }
         else
         {
@@ -133,7 +134,8 @@ public class PlayerController : NetworkBehaviour
             gameControllerScript.clientController = this;
 
             //If client, put player on other side
-            transform.position = new Vector3(0f, 0f, -2.5f);
+            transform.position = new Vector3(0f, 0f, 2.5f);
+            transform.Rotate(Vector3.up*180);
         }
         //Set OTHER player a different color
         if (!isLocalPlayer)
@@ -149,10 +151,11 @@ public class PlayerController : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
+            transform.GetChild(0).gameObject.SetActive(true);
             playerHead.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
             leftHand.transform.position = InputTracking.GetLocalPosition(xrLeftHand);
             rightHand.transform.position = InputTracking.GetLocalPosition(xrRightHand);
-            transform.GetChild(0).gameObject.SetActive(true);
+            
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
             float mouseX = Input.GetAxis("Mouse X");
@@ -164,7 +167,6 @@ public class PlayerController : NetworkBehaviour
             transform.position += longMovement + latMovement;
             //Rotation control
             transform.Rotate(Vector3.up * mouseX * Time.deltaTime * mouseSensitivity);
-            print(isServer);
             if (!isServer)
             {
                 //Remote commands server to move
