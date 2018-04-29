@@ -177,6 +177,7 @@ public class PlayerController : NetworkBehaviour
             else
             {
                 //else, server moves anyway
+                networkPlayerVelocity = (transform.position - networkPlayerNextPosition) / Time.deltaTime;
                 networkPlayerNextPosition = transform.position;
                 networkPlayerRotation = transform.rotation;
 
