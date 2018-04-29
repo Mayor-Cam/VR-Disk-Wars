@@ -126,24 +126,10 @@ public class PlayerController : NetworkBehaviour
         //Set OTHER player a different color
         if (!isLocalPlayer)
         {
-            if(isServer) {
-              gameObject.name = "Client Player";
-            }
-            else {
-              gameObject.name = "Server Player";
-            }
             GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
             GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
             objDisk.GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
             objDisk.GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
-        }
-        else {
-            if(isServer) {
-              gameObject.name = "Server Player";
-            }
-            else {
-              gameObject.name = "Client Player";
-            }        
         }
     }
 
@@ -177,6 +163,10 @@ public class PlayerController : NetworkBehaviour
                     InputTracking.GetLocalPosition(xrRightHand),
                     InputTracking.GetLocalRotation(xrRightHand)
                     );
+                    
+                leftHand.transform.position = networkLeftHandNextPosition;
+                rightHand.transform.position = networkRightHandNextPosition;
+                playerHead.transform.position = networkHeadNextPosition;
             }
 
             else
@@ -246,13 +236,13 @@ public class PlayerController : NetworkBehaviour
         networkPlayerRotation = playerRot;
         networkPlayerNewTimestamp = Time.time;
 
-        networkHeadNextPosition = headPos;
-        networkLeftHandNextPosition = lHandPos;
-        networkRightHandNextPosition = rHandPos;
+        //networkHeadNextPosition = headPos;
+        //networkLeftHandNextPosition = lHandPos;
+        //networkRightHandNextPosition = rHandPos;
 
-        networkHeadRotation = headRot;
-        networkLeftHandRotation = lHandRot;
-        networkRightHandRotation = rHandRot;
+        //networkHeadRotation = headRot;
+        //networkLeftHandRotation = lHandRot;
+        //networkRightHandRotation = rHandRot;
 
 
     }
