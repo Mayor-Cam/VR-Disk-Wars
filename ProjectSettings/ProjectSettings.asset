@@ -637,9 +637,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 6d313107-f657-4cb5-a1eb-e34295b621e0
-  projectName: VR-Disk-Wars-Unity
-  organizationId: cmoore37
+  cloudProjectId: 415ccc4d-66e2-4a65-a8f4-f4735c35085a
+  projectName: VR-Disk-Wars
+  organizationId: daxiongmao87
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
