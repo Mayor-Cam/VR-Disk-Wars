@@ -43,7 +43,7 @@ public class PlayerController : NetworkBehaviour
     public bool leftClicked = false;
     bool rightClicked = false;
     public float catchDistanceThreshold = 1;
-    public Vector3 deltaPosition; //Used to calculate movement between frames
+    public Vector3 headDeltaPosition, lHandDeltaPosition, rHandDeltaPosition; //Used to calculate movement between frames
     float networkPlayerOldTimestamp;
     public GameObject gameController;
     GameControllerScript gameControllerScript;
@@ -84,6 +84,13 @@ public class PlayerController : NetworkBehaviour
     [SyncVar]
     public Quaternion networkHeadRotation;
 
+    [SyncVar]
+    public Vector3 networkHeadVelocity;
+    [SyncVar]
+    public Vector3 networkLeftHandVelocity;
+    [SyncVar]
+    public Vector3 networkRightHandVelocity;
+    
     void Start()
     {
         leftHand = Instantiate(prefLHand);
@@ -194,18 +201,26 @@ public class PlayerController : NetworkBehaviour
         else
         { //if not local player go ahead and perform calculations based on network-synced variables
             //transform.position = Vector3.Lerp(transform.position, networkPlayerNextPosition + deltaPosition, Time.deltaTime * playerSpeed);
-            //ztransform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime * 60f);
-            print(networkHeadNextPosition + " :::: " + playerHead.transform.position);
-            leftHand.transform.position = networkLeftHandNextPosition;
-            rightHand.transform.position = networkRightHandNextPosition;
-            playerHead.transform.position = networkHeadNextPosition;
+            //transform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime * 60f);
+            
+            //leftHand.transform.position = networkLeftHandNextPosition;
+            //rightHand.transform.position = networkRightHandNextPosition;
+            //playerHead.transform.position = networkHeadNextPosition;
+            
+            Vector3.Lerp(playerHead.transform.position, networkHeadNextPosition + headDeltaPosition, Time.deltaTime);
+            Vector3.Lerp(leftHand.transform.position, networkLeftHandNextPosition + lHandDeltaPosition, Time.deltaTime);
+            Vector3.Lerp(rightHand.transform.position, networkRightHandNextPosition + rHandDeltaPosition, Time.deltaTime);
             if (NetworkUpdated())
             { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
-                deltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
+                headDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
+                lHandDeltaPosition = Vector3.zero;
+                rHandDeltaPosition = Vector3.zero;
             }
             else
             {
-                deltaPosition += networkPlayerVelocity * Time.deltaTime; //accumulated deltaposition over time (in between network frames)
+                headDeltaPosition += networkHeadVelocity * Time.deltaTime; //accumulated deltaposition over time (in between network frames)
+                lHandDeltaPosition += networkLeftHandVelocity * Time.deltaTime;
+                rHandDeltaPosition += networkRightHandVelocity * Time.deltaTime;
             }
         }
     }
@@ -238,8 +253,11 @@ public class PlayerController : NetworkBehaviour
         networkPlayerRotation = playerRot;
         networkPlayerNewTimestamp = Time.time;
 
+        networkHeadVelocity = (headPos - networkHeadVelocity) / Time.deltaTime;
         networkHeadNextPosition = headPos;
+        networkLeftHandVelocity = (lHandPos - networkLeftHandVelocity) / Time.deltaTime;
         networkLeftHandNextPosition = lHandPos;
+        networkRightHandVelocity = (rHandPos - networkRightHandVelocity) / Time.deltaTime;
         networkRightHandNextPosition = rHandPos;
 
         networkHeadRotation = headRot;
