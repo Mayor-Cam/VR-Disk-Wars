@@ -125,7 +125,13 @@ public class PlayerController : NetworkBehaviour
             gameControllerScript.hostController = this;
             gameControllerScript.hostDiskController = diskController;
             //Server is put on one side of the room and flipped around
-            transform.position = new Vector3(0f, 0f, -2.5f);
+            if(isLocalPlayer){
+              transform.position = new Vector3(0f, 0f, -2.5f);
+              }
+            else {
+              transform.position = new Vector3(0f, 0f, 2.5f);
+              transform.Rotate(Vector3.up*180);
+              }
             
         }
         else
@@ -134,8 +140,15 @@ public class PlayerController : NetworkBehaviour
             gameControllerScript.clientController = this;
 
             //If client, put player on other side
-            transform.position = new Vector3(0f, 0f, 2.5f);
-            transform.Rotate(Vector3.up*180);
+            if(isLocalPlayer){
+              transform.position = new Vector3(0f, 0f, 2.5f);
+              transform.Rotate(Vector3.up*180);
+
+              }
+            else {
+              transform.position = new Vector3(0f, 0f, -2.5f);
+              }
+            
         }
         //Set OTHER player a different color
         if (!isLocalPlayer)
