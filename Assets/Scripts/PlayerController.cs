@@ -150,6 +150,7 @@ public class PlayerController : NetworkBehaviour
             transform.position += longMovement + latMovement;
             //Rotation control
             transform.Rotate(Vector3.up * mouseX * Time.deltaTime * mouseSensitivity);
+            print(isServer);
             if (!isServer)
             {
                 //Remote commands server to move
@@ -163,10 +164,7 @@ public class PlayerController : NetworkBehaviour
                     InputTracking.GetLocalPosition(xrRightHand),
                     InputTracking.GetLocalRotation(xrRightHand)
                     );
-                    
-                leftHand.transform.position = networkLeftHandNextPosition;
-                rightHand.transform.position = networkRightHandNextPosition;
-                playerHead.transform.position = networkHeadNextPosition;
+
             }
 
             else
@@ -195,8 +193,12 @@ public class PlayerController : NetworkBehaviour
         }
         else
         { //if not local player go ahead and perform calculations based on network-synced variables
-            transform.position = Vector3.Lerp(transform.position, networkPlayerNextPosition + deltaPosition, Time.deltaTime * playerSpeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime * 60f);
+            //transform.position = Vector3.Lerp(transform.position, networkPlayerNextPosition + deltaPosition, Time.deltaTime * playerSpeed);
+            //transform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime * 60f);
+            print(networkHeadNextPosition + " :::: " + playerHead.transform.position);
+            leftHand.transform.position = networkLeftHandNextPosition;
+            rightHand.transform.position = networkRightHandNextPosition;
+            playerHead.transform.position = networkHeadNextPosition;
             if (NetworkUpdated())
             { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
                 deltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
