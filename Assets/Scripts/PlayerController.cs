@@ -125,8 +125,7 @@ public class PlayerController : NetworkBehaviour
             gameControllerScript.hostController = this;
             gameControllerScript.hostDiskController = diskController;
             //Server is put on one side of the room and flipped around
-            transform.position = new Vector3(0f, 0f, -3f);
-            transform.Rotate(Vector3.up * 180);
+            transform.position = new Vector3(0f, 0f, -2.5f);
         }
         else
         {
