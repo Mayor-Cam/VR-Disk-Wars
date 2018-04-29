@@ -108,7 +108,6 @@ public class PlayerController : NetworkBehaviour
         print("XRDevice: " + (XRDevice.isPresent ? XRDevice.model : "Not Present"));
         if (isServer)
         {
-            gameObject.name = "Server Player";
             gameControllerScript.hostPlayer = this.gameObject;
             gameControllerScript.hostController = this;
             gameControllerScript.hostDiskController = diskController;
@@ -119,7 +118,6 @@ public class PlayerController : NetworkBehaviour
         else
         {
             //gameControllerScript.clientPlayer = this.gameObject;
-            gameObject.name = "Client Player";
             gameControllerScript.clientController = this;
 
             //If client, put player on other side
@@ -128,10 +126,24 @@ public class PlayerController : NetworkBehaviour
         //Set OTHER player a different color
         if (!isLocalPlayer)
         {
+            if(isServer) {
+              gameObject.name = "Client Player";
+            }
+            else {
+              gameObject.name = "Server Player";
+            }
             GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
             GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
             objDisk.GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
             objDisk.GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
+        }
+        else {
+            if(isServer) {
+              gameObject.name = "Server Player";
+            }
+            else {
+              gameObject.name = "Client Player";
+            }        
         }
     }
 
