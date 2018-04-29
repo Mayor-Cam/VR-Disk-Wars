@@ -115,6 +115,9 @@ public class PlayerController : NetworkBehaviour
         leftHand.transform.parent = gameObject.transform;
         rightHand.transform.parent = gameObject.transform;
         playerHead.transform.parent = gameObject.transform;
+        leftHand.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
+        rightHand.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
+        playerHead.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
         print("XRDevice: " + (XRDevice.isPresent ? XRDevice.model : "Not Present"));
         if (isServer)
         {
