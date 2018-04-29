@@ -112,6 +112,8 @@ public class PlayerController : NetworkBehaviour
         leftHand.GetComponent<HandGrabbing>().isLocal = isLocalPlayer;
         rightHand.GetComponent<HandGrabbing>().isLocal = isLocalPlayer;
         CmdInstantiateBodyParts();
+        leftHand.transform.parent = gameObject.transform;
+        rightHand.transform.parent = gameObject.transform;
         print("XRDevice: " + (XRDevice.isPresent ? XRDevice.model : "Not Present"));
         if (isServer)
         {
@@ -144,7 +146,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            playerHead.transform.position = playerCamera.transform.position;
+            playerHead.transform.localPosition = playerCamera.transform.position;
             transform.GetChild(0).gameObject.SetActive(true);
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
@@ -208,13 +210,13 @@ public class PlayerController : NetworkBehaviour
             //transform.position = Vector3.Lerp(transform.position, networkPlayerNextPosition + deltaPosition, Time.deltaTime * playerSpeed);
             //transform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime * 60f);
             
-            //leftHand.transform.position = networkLeftHandNextPosition;
-            //rightHand.transform.position = networkRightHandNextPosition;
-            //playerHead.transform.position = networkHeadNextPosition;
+            //leftHand.transform.localPosition = networkLeftHandNextPosition;
+            //rightHand.transform.localPosition = networkRightHandNextPosition;
+            //playerHead.transform.localPosition = networkHeadNextPosition;
             
-            playerHead.transform.position = Vector3.Lerp(playerHead.transform.position, networkHeadNextPosition + headDeltaPosition, Time.deltaTime);
-            leftHand.transform.position = Vector3.Lerp(leftHand.transform.position, networkLeftHandNextPosition + lHandDeltaPosition, Time.deltaTime);
-            rightHand.transform.position = Vector3.Lerp(rightHand.transform.position, networkRightHandNextPosition + rHandDeltaPosition, Time.deltaTime);
+            playerHead.transform.localPosition = Vector3.Lerp(playerHead.transform.localPosition, networkHeadNextPosition + headDeltaPosition, Time.deltaTime * 60f);
+            leftHand.transform.localPosition = Vector3.Lerp(leftHand.transform.localPosition, networkLeftHandNextPosition + lHandDeltaPosition, Time.deltaTime * 60f);
+            rightHand.transform.localPosition = Vector3.Lerp(rightHand.transform.localPosition, networkRightHandNextPosition + rHandDeltaPosition, Time.deltaTime * 60f);
             if (NetworkUpdated())
             { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
                 headDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
