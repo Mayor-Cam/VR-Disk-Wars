@@ -267,9 +267,9 @@ public class PlayerController : NetworkBehaviour
 
         networkHeadVelocity = (headPos - networkHeadNextPosition) / Time.deltaTime;
         networkHeadNextPosition = headPos;
-        networkLeftHandVelocity = (lHandPos - networkLefthandNextPosition) / Time.deltaTime;
+        networkLeftHandVelocity = (lHandPos - networkLeftHandNextPosition) / Time.deltaTime;
         networkLeftHandNextPosition = lHandPos;
-        networkRightHandVelocity = (rHandPos - nnetworkRightHandNextPosition) / Time.deltaTime;
+        networkRightHandVelocity = (rHandPos - networkRightHandNextPosition) / Time.deltaTime;
         networkRightHandNextPosition = rHandPos;
 
         networkHeadRotation = headRot;
