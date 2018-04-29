@@ -147,7 +147,9 @@ public class PlayerController : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            //playerHead.transform.localPosition = playerCamera.transform.position;
+            playerHead.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
+            leftHand.transform.position = InputTracking.GetLocalPosition(xrLeftHand);
+            rightHand.transform.position = InputTracking.GetLocalPosition(xrRightHand);
             transform.GetChild(0).gameObject.SetActive(true);
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
@@ -238,9 +240,9 @@ public class PlayerController : NetworkBehaviour
     {
 
 
-        NetworkServer.Spawn(leftHand);
-        NetworkServer.Spawn(rightHand);
-        NetworkServer.Spawn(playerHead);
+        //NetworkServer.Spawn(leftHand);
+        //NetworkServer.Spawn(rightHand);
+        //NetworkServer.Spawn(playerHead);
 
         leftHand.GetComponent<HandGrabbing>().diskObj = objDisk;
         rightHand.GetComponent<HandGrabbing>().diskObj = objDisk;
