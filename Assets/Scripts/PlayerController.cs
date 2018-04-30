@@ -22,6 +22,8 @@ public class PlayerController : NetworkBehaviour
     public GameObject prefRHand;
 
     public GameObject playerHead;
+    public GameObject playerTorso; // Added by Cam for diskHit function - 4/30/2018
+    public Renderer torsoRenderer; // Added by Cam for diskHit function - 4/30/2018
     //Camera Object for Looking
     public GameObject playerCamera;
     //Disk object and prefab
@@ -328,6 +330,35 @@ public class PlayerController : NetworkBehaviour
         // Reset position to spawn
         // 
         transform.position = spawnPoint;
+
+        // Spawn animation.  Reverse explosion?
+
+        // Set active (might need to move this to animation method, so it won't appear until animation is over)
+        gameObject.SetActive(true);
+    }
+
+    // Called when this player is hit by the disk.  Called by the disk upon collision.
+    public void DiskHit()
+    {
+        // Hit animation.  Probably spawn some kind of explosion?
+
+        int index = Random.Range(0, soundFX.Length);
+        soundFX[index].Play();
+
+        // Send point info to gamecontroller
+        gameControllerScript.Score(this.gameObject);
+
+        // Set inactive
+        // gameObject.SetActive(false);
+    }
+
+    // Resores player if they are destroyed. Called by gameController object.
+    public void Restore()
+    {
+        // Reset position to spawn
+        // 
+        // transform.position = spawnPoint;
+        transform.position = new Vector3(Random.Range(xMin, xMax), spawnPoint.y, Random.Range(zMin, zMax));
 
         // Spawn animation.  Reverse explosion?
 

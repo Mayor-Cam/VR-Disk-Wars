@@ -84,6 +84,7 @@ public class DiskController : MonoBehaviour
                             }
                         else // We've hit the opposing player
                             hit.transform.gameObject.GetComponent<PlayerController>().DiskHit();
+
                         DestroyDisk();    // Call the disk's DestroyDisk method
                     }
 
