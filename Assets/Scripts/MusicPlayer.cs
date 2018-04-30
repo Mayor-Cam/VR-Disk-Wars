@@ -5,7 +5,6 @@ using UnityEngine;
 
 /*
 Matthew Spedale
-
 This script handles the music playing for the game. 
 It works by checking if a song is playing, and if it isn't, 
 generating a random number to pick a new song out of the array of song files, then playing the song in that element.
@@ -26,7 +25,7 @@ public class MusicPlayer : MonoBehaviour
     private bool beingPlayed = false;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
 
         //songArr = GetComponents<AudioSource>();
@@ -34,9 +33,9 @@ public class MusicPlayer : MonoBehaviour
         //song2 = songArr[1];
         //song3 = songArr[2];
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
 
         // If nothing is being played, run the PlaySong() method to play one

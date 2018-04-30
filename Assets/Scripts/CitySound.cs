@@ -5,7 +5,6 @@ using UnityEngine;
 
 /*
 Matthew Spedale
-
 This script handles playing ambient sounds to make the city sound "alive". 
 It works by checking if a sound is playing, and if it isn't, 
 generating a random number to pick a new sound out of the array of song files, then playing the sound in that element.
@@ -74,7 +73,7 @@ public class CitySound : MonoBehaviour
 
             if (prevIndex == index && prevIndex == 2)
             {
-                float[] validIndex = {0.0f, 1.0f, 3.0f, 4.0f, 5.0f, 6.0f};
+                float[] validIndex = { 0.0f, 1.0f, 3.0f, 4.0f, 5.0f, 6.0f };
                 index = (int)validIndex[Random.Range(0, validIndex.Length)];
                 print("prevIndex = 2, changing...");
                 print("index = " + index);
