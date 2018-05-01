@@ -45,17 +45,24 @@ public class CitySound : MonoBehaviour
     private IEnumerator PlaySound()
     {
         beingPlayed = true;
-        currentSound.volume = 0.10f;  // keep it quiet since it's background noise
+        currentSound.volume = 0.010f;  // keep it quiet since it's background noise
 
         if (!currentSound.isPlaying)
         {
             // Generates a random number to use to pick an element in the sound array
             // use Mathf.Round to ensure we can round up to 2, otherwise only sound[0] and [1] will ever play
-            int index = (int)Mathf.Round(Random.Range(0.0f, 6.0f));
+            int index = (int)Mathf.Round(Random.Range(0.0f, (float)sound.Length-1f));
 
             // Three loops that check to see if the same index has been generated twice in a row.
             // If it has, then it picks a new index that will not be the same as the previous one
-
+            
+            while(prevIndex == index){
+                index = (int)Mathf.Round(Random.Range(0.0f, (float)sound.Length-1f));
+                print("prevIndex = " + prevIndex + ", changing...");
+                print("index = " + index);
+            }
+            /*
+            prevIndex = index;
             if (prevIndex == index && prevIndex == 0)
             {
                 index = (int)Mathf.Round(Random.Range(1.0f, 6.0f));
@@ -110,7 +117,7 @@ public class CitySound : MonoBehaviour
                 print("prevIndex = 6, changing...");
                 print("index = " + index);
             }
-
+            */
             // Stores the previous index so we can check if the same number is picked twice, then plays the sound in that element.
             prevIndex = index;
             currentSound.clip = sound[index];

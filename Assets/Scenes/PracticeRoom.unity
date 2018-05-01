@@ -779,7 +779,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.45
+  m_Volume: 0.01
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1427,13 +1427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sound:
-  - {fileID: 8300000, guid: 2dbbafac0b0e7fa499a79d56e7cecc19, type: 3}
-  - {fileID: 8300000, guid: b8888246bf0373b4dbd6df96b94fe133, type: 3}
-  - {fileID: 8300000, guid: 245b5dfd3b0599a44840b2eef3112d48, type: 3}
-  - {fileID: 8300000, guid: 9e896c7ec05bf6343a520728835d985e, type: 3}
-  - {fileID: 8300000, guid: 79d23e3bb182fb8499bbdec578e3351d, type: 3}
-  - {fileID: 8300000, guid: 265dd80b211adad428ad3eb341660754, type: 3}
-  - {fileID: 8300000, guid: 94a9804cf76e99340ba0edbb5603fc89, type: 3}
+  - {fileID: 8300000, guid: f9c0523302779554386eb7ae777bb016, type: 3}
+  - {fileID: 8300000, guid: f9c0523302779554386eb7ae777bb016, type: 3}
   currentSound: {fileID: 1801892714}
   prevIndex: 0
 --- !u!4 &1801892716
