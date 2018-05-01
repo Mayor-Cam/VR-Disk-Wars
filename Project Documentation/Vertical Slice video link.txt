@@ -1,0 +1,8 @@
+The video for our vertical slice can be downloaded from this link since it exceeds the Moodle
+file limit.
+
+Link: https://www.youtube.com/watch?v=uXsz1kWjR1M
+
+For our vertical slice, we wanted to show off the disk physics in a very basic scene
+since that is an integral part of the gameplay. From here, we can begin incorporating
+the actual gameplay aspects around this for our future milestones.
