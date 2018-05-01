@@ -37,6 +37,9 @@ public class PlayerController : NetworkBehaviour
     public DiskController diskController;
     
     //Materials for other player
+    public Material otherPlayerBaseColor;
+    public Material otherPlayerHeadColor;
+    public Material otherPlayerBodyColor;
     public Material otherPlayerColor;
     public Material otherDiskColor;
     public Color32 otherLightColor;
@@ -162,8 +165,10 @@ public class PlayerController : NetworkBehaviour
         if (isLocalPlayer)
         {
             if(!XRDevice.isPresent) transform.Translate(Vector3.up * 1.5f);
-            playerHead.GetComponent<MeshRenderer>().material = otherPlayerColor;
-            playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().material = otherPlayerColor;
+            playerHead.GetComponent<MeshRenderer>().materials[0] = otherPlayerBaseColor;
+            playerHead.GetComponent<MeshRenderer>().materials[1] = otherPlayerHeadColor;
+            playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0] = otherPlayerBaseColor;
+            playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1] = otherPlayerBodyColor;
             leftHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
             rightHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
             objDisk.GetComponent<MeshRenderer>().material = otherDiskColor;
