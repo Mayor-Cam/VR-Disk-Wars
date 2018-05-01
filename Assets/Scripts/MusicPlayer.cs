@@ -94,7 +94,8 @@ public class MusicPlayer : MonoBehaviour
             currentSong.Play();
         }
 
-        var waitTime = new WaitForSeconds((int)Mathf.Round(Random.Range(2.0f, 5.0f)));
+        // waits a few seconds before starting the next song
+        var waitTime = new WaitForSeconds((int)Mathf.Round(Random.Range(4.0f, 6.0f)));
         yield return waitTime;
         beingPlayed = false;
     }

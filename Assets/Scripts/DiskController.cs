@@ -31,9 +31,12 @@ public class DiskController : MonoBehaviour
     //////////////////
 
     // Variables for sound FX:
+    // these three statements instantiate sources for three specific audio clips:
     AudioSource wall_hit_sound1;
     AudioSource wall_hit_sound2;
     AudioSource player_hit_sound1;
+    
+    //and this is an array we can keep them in:
     AudioSource[] wallsSoundFX;
 
     void Start()
@@ -47,6 +50,7 @@ public class DiskController : MonoBehaviour
 
         //Queue sounds attached to Game Object
         wallsSoundFX = GetComponents<AudioSource>();
+        //put the sounds into an array
         wall_hit_sound1 = wallsSoundFX[0];
         wall_hit_sound2 = wallsSoundFX[1];
         player_hit_sound1 = wallsSoundFX[2];

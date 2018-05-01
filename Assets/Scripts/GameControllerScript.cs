@@ -90,18 +90,7 @@ public class GameControllerScript : MonoBehaviour {
         int index = Random.Range(0, 1);
         soundFX[index].Play();
 
-        /*
-        if (index == 0)
-        {
-            soundFX[2].Play();
-        }
-        else
-        {
-            soundFX[3].Play();
-        }
-        print("Playing hit sound");
-        */
-
+        // this prevents the same sound from being played multiple times for a single action
         if (!beingPlayed)
         {
             StartCoroutine(PlaySound());
@@ -129,10 +118,9 @@ public class GameControllerScript : MonoBehaviour {
         if (!soundFX[2].isPlaying && !soundFX[3].isPlaying)
         {
             int index = Random.Range(2, 3);
-            // Generates a random number to use to pick an element in the song array
 
-            // Three loops that check to see if the same index has been generated twice in a row.
-            // If it has, then it picks a new index that will not be the same as the previous one
+            // Generates a random number to use to pick an element in the sound array
+
             if (index == 0)
             {
                 soundFX[2].Play();
@@ -141,7 +129,6 @@ public class GameControllerScript : MonoBehaviour {
             {
                 soundFX[3].Play();
             }
-            print("Playing hit sound");
         }
         var waitTime = new WaitForSeconds((int)Mathf.Round(Random.Range(2.0f, 5.0f)));
         yield return waitTime;
