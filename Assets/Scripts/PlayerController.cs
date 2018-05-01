@@ -27,6 +27,7 @@ public class PlayerController : NetworkBehaviour
     public XRNode xrRightHand = XRNode.RightHand; 
     
     public GameObject playerHead;
+    public GameObject playerBody;
     //Camera Object for Looking
     public GameObject playerCamera;
     //Disk object and prefab
@@ -107,6 +108,8 @@ public class PlayerController : NetworkBehaviour
         spawnPoint = transform.position;  // Set initial position as spawnPoint.
         gameController = GameObject.Find("GameController");
         gameControllerScript = gameController.GetComponent<GameControllerScript>();
+        playerBody = playerHead.transform.GetChild(0).gameObject;
+        playerBody.transform.SetParent(gameObject.transform);
         //instantiate body 'object'
         body = new Body();
         //instantiate disk and put it in the body's left hand
@@ -165,10 +168,18 @@ public class PlayerController : NetworkBehaviour
         if (isLocalPlayer)
         {
             if(!XRDevice.isPresent) transform.Translate(Vector3.up * 1.5f);
-            playerHead.GetComponent<MeshRenderer>().materials[0] = otherPlayerBaseColor;
-            playerHead.GetComponent<MeshRenderer>().materials[1] = otherPlayerHeadColor;
-            playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0] = otherPlayerBaseColor;
-            playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1] = otherPlayerBodyColor;
+            /*
+            Material[] tempMats = playerHead.GetComponent<MeshRenderer>().materials;
+            tempMats[0] = otherPlayerBaseColor;
+            tempMats[1] = otherPlayerHeadColor;
+            playerHead.GetComponent<MeshRenderer>().materials = tempMats;
+            tempMats = playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().materials;
+            tempMats[0] = otherPlayerBaseColor;
+            tempMats[1] = otherPlayerBodyColor;
+            playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().materials = tempMats;            
+            */
+            playerHead.GetComponent<MeshRenderer>().enabled = false;
+            playerBody.GetComponent<MeshRenderer>().enabled = false;
             leftHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
             rightHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
             objDisk.GetComponent<MeshRenderer>().material = otherDiskColor;
@@ -178,10 +189,13 @@ public class PlayerController : NetworkBehaviour
 
     private void Update()
     {
+        playerBody.transform.position = new Vector3(playerHead.transform.position.x,playerHead.transform.position.y-0.65f,playerHead.transform.position.z);
+        playerBody.transform.eulerAngles = new Vector3(playerBody.transform.eulerAngles.x,playerHead.transform.eulerAngles.y,playerBody.transform.eulerAngles.z);
         if (isLocalPlayer)
         {
             transform.GetChild(0).gameObject.SetActive(true);
             playerHead.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
+            playerHead.transform.localRotation = InputTracking.GetLocalRotation(xrHead);
             leftHand.transform.position = InputTracking.GetLocalPosition(xrLeftHand);
             rightHand.transform.position = InputTracking.GetLocalPosition(xrRightHand);
             if(!XRDevice.isPresent) {
