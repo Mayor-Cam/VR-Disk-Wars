@@ -25,9 +25,17 @@ public class GameControllerScript : MonoBehaviour {
 	//int clientScore;
     float respTimer;
     public int timerMax = 10;
-	
-	// Use this for initialization
-	void Start () {
+
+    // audio
+    AudioSource sound1;
+    AudioSource sound2;
+    AudioSource sound3;
+    AudioSource sound4;
+    AudioSource[] soundFX;
+    private bool beingPlayed = false;
+
+    // Use this for initialization
+    void Start () {
 		hostScore = 0;
 		//clientScore = 0;
         respTimer = -1;
@@ -37,12 +45,19 @@ public class GameControllerScript : MonoBehaviour {
         //clientController = hostPlayer.GetComponent<PlayerController>();
         //hostController = clientPlayer.GetComponent<PlayerController>();
         //dummyController = dummyPlayer.GetComponent<DummyController>();
+
+        //audio
+        soundFX = GetComponents<AudioSource>();
+        sound1 = soundFX[0]; //playerhit1
+        sound2 = soundFX[1]; //playerhit2
+        sound3 = soundFX[2]; //crowdcheer1
+        sound4 = soundFX[3]; //crowdcheer2
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
     if(hit) {
-      if (respTimer > 0)
+          if (respTimer > 0)
           {
               respTimer+= -Time.deltaTime;
           }
@@ -69,8 +84,30 @@ public class GameControllerScript : MonoBehaviour {
 	the score.
 	*/
 	public void Score(GameObject hitPlayer) {
-	hit = true;
-		if (GameObject.ReferenceEquals(hitPlayer, hostPlayer)){}  // If the hostPlayer was hit, score 1 for the clientPlayer.
+	    hit = true;
+
+        //audio
+        int index = Random.Range(0, 1);
+        soundFX[index].Play();
+
+        /*
+        if (index == 0)
+        {
+            soundFX[2].Play();
+        }
+        else
+        {
+            soundFX[3].Play();
+        }
+        print("Playing hit sound");
+        */
+
+        if (!beingPlayed)
+        {
+            StartCoroutine(PlaySound());
+        }
+
+        if (GameObject.ReferenceEquals(hitPlayer, hostPlayer)){}  // If the hostPlayer was hit, score 1 for the clientPlayer.
 			//clientScore++;
 		else  hostScore++;  // If not, score 1 for the hostPlayer.
         // 
@@ -81,5 +118,33 @@ public class GameControllerScript : MonoBehaviour {
     public void SetTimer()
     {
         respTimer = 1;
+    }
+
+    private IEnumerator PlaySound()
+    {
+
+        beingPlayed = true;
+
+        // Checks if a sound is currently playing, and executes to play a new song if one isn't already.
+        if (!soundFX[2].isPlaying && !soundFX[3].isPlaying)
+        {
+            int index = Random.Range(2, 3);
+            // Generates a random number to use to pick an element in the song array
+
+            // Three loops that check to see if the same index has been generated twice in a row.
+            // If it has, then it picks a new index that will not be the same as the previous one
+            if (index == 0)
+            {
+                soundFX[2].Play();
+            }
+            else
+            {
+                soundFX[3].Play();
+            }
+            print("Playing hit sound");
+        }
+        var waitTime = new WaitForSeconds((int)Mathf.Round(Random.Range(2.0f, 5.0f)));
+        yield return waitTime;
+        beingPlayed = false;
     }
 }

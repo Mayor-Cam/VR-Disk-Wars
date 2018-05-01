@@ -57,7 +57,7 @@ public class MusicPlayer : MonoBehaviour
         {
             // Generates a random number to use to pick an element in the song array
             // use Mathf.Round to ensure we can round up to 2, otherwise only song[0] and [1] will ever play
-            int index = (int)Mathf.Round(Random.Range(0.0f, 2.0f));
+            int index = (int)Mathf.Round(Random.Range(0.0f, 3.0f));
 
             // Three loops that check to see if the same index has been generated twice in a row.
             // If it has, then it picks a new index that will not be the same as the previous one
@@ -69,7 +69,7 @@ public class MusicPlayer : MonoBehaviour
 
             if (prevIndex == index && prevIndex == 1)
             {
-                float[] validIndex = { 0.0f, 2.0f };
+                float[] validIndex = { 0.0f, 2.0f, 3.0f };
                 index = (int)validIndex[Random.Range(0, validIndex.Length)];
                 print("prevIndex = 1, changing...");
             }
@@ -78,6 +78,13 @@ public class MusicPlayer : MonoBehaviour
             {
                 index = (int)Mathf.Round(Random.Range(0.0f, 1.0f));
                 print("prevIndex = 2, changing...");
+            }
+
+            if (prevIndex == index && prevIndex == 3)
+            {
+                float[] validIndex = { 0.0f, 1.0f, 2.0f };
+                index = (int)validIndex[Random.Range(0, validIndex.Length)];
+                print("prevIndex = 3, changing...");
             }
 
             // Stores the previous index so we can check if the same number is picked twice, then plays the song in that element.

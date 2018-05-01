@@ -49,6 +49,7 @@ public class DiskController : MonoBehaviour
         wallsSoundFX = GetComponents<AudioSource>();
         wall_hit_sound1 = wallsSoundFX[0];
         wall_hit_sound2 = wallsSoundFX[1];
+        player_hit_sound1 = wallsSoundFX[2];
     }
 
     void Update()
@@ -81,7 +82,7 @@ public class DiskController : MonoBehaviour
                         if (hit.transform.gameObject.name == "DummyPlayer") {    // if we've hit the dummy
                             hit.transform.gameObject.GetComponent<DummyController>().DiskHit();
                             print("HIT THE DUMMY");
-                            }
+                        }
                         else // We've hit the opposing player
                             hit.transform.gameObject.GetComponent<PlayerController>().DiskHit();
 
@@ -99,6 +100,7 @@ public class DiskController : MonoBehaviour
                     ownerController.networkDiskDeparturePosition = transform.position;
                     ownerController.networkDiskDirection = transform.forward;
                     ownerController.networkDiskMagnitude = ownerController.networkDiskSpeed;
+                    
                     // Play sound on collision
                     // Picks random sound from array for variety
                     int index = Random.Range(0, wallsSoundFX.Length);

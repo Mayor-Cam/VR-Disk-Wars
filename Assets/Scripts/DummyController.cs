@@ -15,22 +15,25 @@ public class DummyController : MonoBehaviour {
     public float zMin = 0.75f;
     public float zMax = 4.75f;
 
-	Vector3 spawnPoint;
+    public Renderer rend;  // renderer variable
+    public PolygonCollider2D poly;
 
-    AudioSource sound1;
-    AudioSource sound2;
-    AudioSource[] soundFX;
+    Vector3 spawnPoint;
+
+    //AudioSource sound1;
+    //AudioSource sound2;
+    //AudioSource[] soundFX;
 
     // Use this for initialization
     void Start () {
         spawnPoint = transform.position;  // Set initial position as spawnPoint.
 
         gameControllerScript = gameController.GetComponent<GameControllerScript>();
-        soundFX = GetComponents<AudioSource>();
-        sound1 = soundFX[0];
-        sound2 = soundFX[1];
 
-
+        //audio
+        //soundFX = GetComponents<AudioSource>();
+        //sound1 = soundFX[0];
+        //sound2 = soundFX[1];
     }
 	
 	// Update is called once per frame
@@ -43,14 +46,16 @@ public class DummyController : MonoBehaviour {
 	public void DiskHit() {
         // Hit animation.  Probably spawn some kind of explosion?
 
-        int index = Random.Range(0, soundFX.Length);
-        soundFX[index].Play();
+        //int index = Random.Range(0, soundFX.Length);
+        //soundFX[index].Play();
+        //print("Playing hit sound");
 
         // Send point info to gamecontroller
         gameControllerScript.Score(this.gameObject);
         
         // Set inactive
         gameObject.SetActive(false);
+
 	}
 	
 	// Resores player if they are destroyed. Called by gameController object.

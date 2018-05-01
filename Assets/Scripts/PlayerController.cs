@@ -46,6 +46,11 @@ public class PlayerController : NetworkBehaviour
     GameControllerScript gameControllerScript;
     Vector3 spawnPoint = new Vector3();
 
+    //audio
+    AudioSource sound1;
+    AudioSource sound2;
+    AudioSource[] soundFX;
+
     //Network synchronization for Player
     [SyncVar]
     public Vector3 networkPlayerNextPosition;
@@ -127,6 +132,11 @@ public class PlayerController : NetworkBehaviour
             objDisk.GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
             objDisk.GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
         }
+
+        //audio
+        soundFX = GetComponents<AudioSource>();
+        sound1 = soundFX[0];
+        sound2 = soundFX[1];
     }
 
     private void Update()
@@ -312,30 +322,6 @@ public class PlayerController : NetworkBehaviour
         networkDiskDirection = dir;
         objDisk.transform.SetParent(null);
     }
-    // Called when this player is hit by the disk.  Called by the disk upon collision. -- Added by Cam 4/22/2018
-    public void DiskHit()
-    {
-        // Hit animation.  Probably spawn some kind of explosion?
-
-        // Send point info to gamecontroller
-        gameControllerScript.Score(this.gameObject);
-
-        // Set inactive
-        gameObject.SetActive(false);
-    }
-
-    // Resores player if they are destroyed. Called by gameController object. -- Added by Cam 4/22/2018
-    public void Restore()
-    {
-        // Reset position to spawn
-        // 
-        transform.position = spawnPoint;
-
-        // Spawn animation.  Reverse explosion?
-
-        // Set active (might need to move this to animation method, so it won't appear until animation is over)
-        gameObject.SetActive(true);
-    }
 
     // Called when this player is hit by the disk.  Called by the disk upon collision.
     public void DiskHit()
@@ -344,6 +330,7 @@ public class PlayerController : NetworkBehaviour
 
         int index = Random.Range(0, soundFX.Length);
         soundFX[index].Play();
+        print("playing hit sound");
 
         // Send point info to gamecontroller
         gameControllerScript.Score(this.gameObject);
@@ -358,7 +345,7 @@ public class PlayerController : NetworkBehaviour
         // Reset position to spawn
         // 
         // transform.position = spawnPoint;
-        transform.position = new Vector3(Random.Range(xMin, xMax), spawnPoint.y, Random.Range(zMin, zMax));
+        // transform.position = new Vector3(Random.Range(xMin, xMax), spawnPoint.y, Random.Range(zMin, zMax));
 
         // Spawn animation.  Reverse explosion?
 
