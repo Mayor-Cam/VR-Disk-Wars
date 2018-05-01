@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
+using UnityEngine.XR;
 /*
 Player Controller handles all player controls, to include movement and disk manipulation
 */
@@ -21,6 +22,10 @@ public class PlayerController : NetworkBehaviour
     public GameObject prefLHand;
     public GameObject prefRHand;
 
+    public XRNode xrHead = XRNode.Head;
+    public XRNode xrLeftHand = XRNode.LeftHand;
+    public XRNode xrRightHand = XRNode.RightHand; 
+    
     public GameObject playerHead;
     public GameObject playerTorso; // Added by Cam for diskHit function - 4/30/2018
     // public Renderer torsoRenderer; // Added by Cam for diskHit function - 4/30/2018
@@ -32,6 +37,14 @@ public class PlayerController : NetworkBehaviour
     public GameObject objDisk;
     public GameObject prefDisk;
     public DiskController diskController;
+    
+    //Materials for other player
+    public Material otherPlayerBaseColor;
+    public Material otherPlayerHeadColor;
+    public Material otherplayerTorsoColor;
+    public Material otherPlayerColor;
+    public Material otherDiskColor;
+    public Color32 otherLightColor;
     // Player Speed Scalar Variable
     public float playerSpeed = 1f;
     public float mouseSensitivity = 10f;
@@ -40,7 +53,7 @@ public class PlayerController : NetworkBehaviour
     public bool leftClicked = false;
     bool rightClicked = false;
     public float catchDistanceThreshold = 1;
-    public Vector3 deltaPosition; //Used to calculate movement between frames
+    public Vector3 headDeltaPosition, lHandDeltaPosition, rHandDeltaPosition; //Used to calculate movement between frames
     float networkPlayerOldTimestamp;
     public GameObject gameController;
     GameControllerScript gameControllerScript;
@@ -84,6 +97,13 @@ public class PlayerController : NetworkBehaviour
     [SyncVar]
     public Quaternion networkHeadRotation;
 
+    [SyncVar]
+    public Vector3 networkHeadVelocity;
+    [SyncVar]
+    public Vector3 networkLeftHandVelocity;
+    [SyncVar]
+    public Vector3 networkRightHandVelocity;
+    
     void Start()
     {
         // Instantiate body parts
@@ -96,6 +116,8 @@ public class PlayerController : NetworkBehaviour
         spawnPoint = transform.position;  // Set initial position as spawnPoint.
         gameController = GameObject.Find("GameController");
         gameControllerScript = gameController.GetComponent<GameControllerScript>();
+        playerTorso = playerHead.transform.GetChild(0).gameObject;
+        playerTorso.transform.SetParent(gameObject.transform);
         //instantiate body 'object'
         body = new Body();
         //instantiate disk and put it in the body's left hand
@@ -109,6 +131,13 @@ public class PlayerController : NetworkBehaviour
         leftHand.GetComponent<HandGrabbing>().isLocal = isLocalPlayer;
         rightHand.GetComponent<HandGrabbing>().isLocal = isLocalPlayer;
         CmdInstantiateBodyParts();
+        leftHand.transform.parent = gameObject.transform;
+        rightHand.transform.parent = gameObject.transform;
+        playerHead.transform.parent = gameObject.transform;
+        leftHand.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
+        rightHand.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
+        playerHead.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
+        print("XRDevice: " + (XRDevice.isPresent ? XRDevice.model : "Not Present"));
         if (isServer)
         {
             gameControllerScript.hostPlayer = this.gameObject;
@@ -117,8 +146,16 @@ public class PlayerController : NetworkBehaviour
             gameControllerScript.hostDiskController = diskController;
 
             //Server is put on one side of the room and flipped around
-            transform.position = new Vector3(0f, 0f, -3f);
-            transform.Rotate(Vector3.up * 180);
+            if(isLocalPlayer){
+              transform.position = new Vector3(0f, 0f, -3f);
+              objDisk.transform.position = new Vector3(0f, 1f, -2f);
+              }
+            else {
+              transform.position = new Vector3(0f, 0f, 3f);
+              transform.Rotate(Vector3.up*180);
+              objDisk.transform.position = new Vector3(0f, 1f, 2f);
+              }
+            
         }
         else
         {
@@ -128,15 +165,37 @@ public class PlayerController : NetworkBehaviour
             gameControllerScript.clientDiskController = diskController;
 
             //If client, put player on other side
-            transform.position = new Vector3(0f, 0f, -2.5f);
+            if(isLocalPlayer){
+              transform.position = new Vector3(0f, 0f, 5f);
+              transform.Rotate(Vector3.up*180);
+              objDisk.transform.position = new Vector3(0f, 1f, 4f);
+              }
+            else {
+              transform.position = new Vector3(0f, 0f, -5f);
+              objDisk.transform.position = new Vector3(0f, 1f, -4f);
+              }
+            
         }
         //Set OTHER player a different color
-        if (!isLocalPlayer)
+        if (isLocalPlayer)
         {
-            GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
-            GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
-            objDisk.GetComponent<MeshRenderer>().material.SetColor("_ColorTint", new Color(1.0f, 0.75f, 0.25f, 1f));
-            objDisk.GetComponent<MeshRenderer>().material.SetColor("_RimColor", new Color(1.0f, 1.0f, 0.5f, 1f));
+            if(!XRDevice.isPresent) transform.Translate(Vector3.up * 1.5f);
+            /*
+            Material[] tempMats = playerHead.GetComponent<MeshRenderer>().materials;
+            tempMats[0] = otherPlayerBaseColor;
+            tempMats[1] = otherPlayerHeadColor;
+            playerHead.GetComponent<MeshRenderer>().materials = tempMats;
+            tempMats = playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().materials;
+            tempMats[0] = otherPlayerBaseColor;
+            tempMats[1] = otherplayerTorsoColor;
+            playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().materials = tempMats;            
+            */
+            playerHead.GetComponent<MeshRenderer>().enabled = false;
+            playerTorso.GetComponent<MeshRenderer>().enabled = false;
+            leftHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
+            rightHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
+            objDisk.GetComponent<MeshRenderer>().material = otherDiskColor;
+            objDisk.GetComponent<Light>().color = otherLightColor;
         }
     }
 
@@ -147,50 +206,65 @@ public class PlayerController : NetworkBehaviour
         {
             if (networkDiskSpeed > diskController.cruiseSpeed) networkDiskSpeed = Mathf.Lerp(networkDiskSpeed, diskController.cruiseSpeed, Time.deltaTime * diskController.decelSpeed);
         }
+
+        playerTorso.transform.position = new Vector3(playerHead.transform.position.x,playerHead.transform.position.y-0.65f,playerHead.transform.position.z);
+        playerTorso.transform.eulerAngles = new Vector3(playerTorso.transform.eulerAngles.x,playerHead.transform.eulerAngles.y,playerTorso.transform.eulerAngles.z);
         if (isLocalPlayer)
         {
-            playerHead.transform.position = playerCamera.transform.position;
             transform.GetChild(0).gameObject.SetActive(true);
-            float horizontalInput = Input.GetAxis("Horizontal");
-            float verticalInput = Input.GetAxis("Vertical");
-            float mouseX = Input.GetAxis("Mouse X");
-            //Forward backward movement
-            Vector3 longMovement = transform.forward * verticalInput * Time.deltaTime * playerSpeed;
-            //Strafing movement
-            Vector3 latMovement = transform.right * horizontalInput * Time.deltaTime * playerSpeed;
-            //Combine the two
-            transform.position += longMovement + latMovement;
-            //Rotation control
-            transform.Rotate(Vector3.up * mouseX * Time.deltaTime * mouseSensitivity);
+            playerHead.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
+            playerHead.transform.localRotation = InputTracking.GetLocalRotation(xrHead);
+            leftHand.transform.position = InputTracking.GetLocalPosition(xrLeftHand);
+            rightHand.transform.position = InputTracking.GetLocalPosition(xrRightHand);
+            if(!XRDevice.isPresent) {
+              float horizontalInput = Input.GetAxis("Horizontal");
+              float verticalInput = Input.GetAxis("Vertical");
+              float mouseX = Input.GetAxis("Mouse X");
+              //Forward backward movement
+              Vector3 longMovement = transform.forward * verticalInput * Time.deltaTime * playerSpeed;
+              //Strafing movement
+              Vector3 latMovement = transform.right * horizontalInput * Time.deltaTime * playerSpeed;
+              //Combine the two
+              transform.position += longMovement + latMovement;
+              //Rotation control
+              transform.Rotate(Vector3.up * mouseX * Time.deltaTime * mouseSensitivity);
+            }
             if (!isServer)
+
             {
                 //Remote commands server to move
                 CmdSyncMove(
                     transform.position,
                     transform.rotation,
-                    playerHead.transform.localPosition,
-                    playerHead.transform.rotation,
-                    leftHand.transform.localPosition,
-                    leftHand.transform.rotation,
-                    rightHand.transform.localPosition,
-                    rightHand.transform.rotation
+                    InputTracking.GetLocalPosition(xrHead),
+                    InputTracking.GetLocalRotation(xrHead),
+                    InputTracking.GetLocalPosition(xrLeftHand),
+                    InputTracking.GetLocalRotation(xrLeftHand),
+                    InputTracking.GetLocalPosition(xrRightHand),
+                    InputTracking.GetLocalRotation(xrRightHand)
                     );
+
             }
 
             else
             {
                 //else, server moves anyway
+                networkPlayerVelocity = (transform.position - networkPlayerNextPosition) / Time.deltaTime;
                 networkPlayerNextPosition = transform.position;
                 networkPlayerRotation = transform.rotation;
+                
+                networkHeadVelocity = (InputTracking.GetLocalPosition(xrHead) - networkHeadNextPosition ) / Time.deltaTime;
+                networkLeftHandVelocity = (InputTracking.GetLocalPosition(xrLeftHand) - networkLeftHandNextPosition) / Time.deltaTime;
+                networkRightHandVelocity = (InputTracking.GetLocalPosition(xrRightHand) - networkRightHandNextPosition) / Time.deltaTime;
+                
+                networkHeadNextPosition = InputTracking.GetLocalPosition(xrHead); //playerHead.transform.localPosition;
+                networkLeftHandNextPosition = InputTracking.GetLocalPosition(xrLeftHand); //leftHand.transform.localPosition;
+                networkRightHandNextPosition = InputTracking.GetLocalPosition(xrRightHand); //rightHand.transform.localPosition;
 
-                networkHeadNextPosition = playerHead.transform.localPosition;
-                networkLeftHandNextPosition = leftHand.transform.localPosition;
-                networkRightHandNextPosition = rightHand.transform.localPosition;
-
-                networkHeadRotation = playerHead.transform.rotation;
-                networkLeftHandRotation = leftHand.transform.rotation;
-                networkRightHandRotation = rightHand.transform.rotation;
-
+                networkHeadRotation = InputTracking.GetLocalRotation(xrHead);//playerHead.transform.rotation;
+                networkLeftHandRotation = InputTracking.GetLocalRotation(xrLeftHand);//leftHand.transform.rotation;
+                networkRightHandRotation = InputTracking.GetLocalRotation(xrRightHand);//rightHand.transform.rotation;
+                networkPlayerNewTimestamp = Time.time;
             }
             if (Input.GetAxis("Fire1") == 1 && !networkDiskFired)
             {
@@ -203,15 +277,24 @@ public class PlayerController : NetworkBehaviour
         }
         else
         { //if not local player go ahead and perform calculations based on network-synced variables
-            transform.position = Vector3.Lerp(transform.position, networkPlayerNextPosition + deltaPosition, Time.deltaTime * playerSpeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, networkPlayerRotation, Time.deltaTime * 60f);
+            
+            playerHead.transform.localPosition = Vector3.Lerp(playerHead.transform.localPosition, networkHeadNextPosition + headDeltaPosition, Time.deltaTime * 60f);
+            leftHand.transform.localPosition = Vector3.Lerp(leftHand.transform.localPosition, networkLeftHandNextPosition + lHandDeltaPosition, Time.deltaTime * 60f);
+            rightHand.transform.localPosition = Vector3.Lerp(rightHand.transform.localPosition, networkRightHandNextPosition + rHandDeltaPosition, Time.deltaTime * 60f);
             if (NetworkUpdated())
             { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
-                deltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
+                headDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
+                lHandDeltaPosition = Vector3.zero;
+                rHandDeltaPosition = Vector3.zero;
+                leftHand.transform.localPosition = networkLeftHandNextPosition;
+                rightHand.transform.localPosition = networkRightHandNextPosition;
+                playerHead.transform.localPosition = networkHeadNextPosition;
             }
             else
             {
-                deltaPosition += networkPlayerVelocity * Time.deltaTime; //accumulated deltaposition over time (in between network frames)
+                headDeltaPosition += networkHeadVelocity * Time.deltaTime; //accumulated deltaposition over time (in between network frames)
+                lHandDeltaPosition += networkLeftHandVelocity * Time.deltaTime;
+                rHandDeltaPosition += networkRightHandVelocity * Time.deltaTime;
             }
         }
     }
@@ -221,17 +304,19 @@ public class PlayerController : NetworkBehaviour
     {
 
 
-        NetworkServer.Spawn(leftHand);
-        NetworkServer.Spawn(rightHand);
-        NetworkServer.Spawn(playerHead);
+        //NetworkServer.Spawn(leftHand);
+        //NetworkServer.Spawn(rightHand);
+        //NetworkServer.Spawn(playerHead);
 
         leftHand.GetComponent<HandGrabbing>().diskObj = objDisk;
         rightHand.GetComponent<HandGrabbing>().diskObj = objDisk;
         leftHand.GetComponent<HandGrabbing>().otherHand = rightHand;
         rightHand.GetComponent<HandGrabbing>().otherHand = leftHand;
 
+        playerHead.transform.parent = gameObject.transform;
         leftHand.transform.parent = gameObject.transform;
         rightHand.transform.parent = gameObject.transform;
+        
         leftHand.GetComponent<HandGrabbing>().diskObj = objDisk;
         rightHand.GetComponent<HandGrabbing>().diskObj = objDisk;
     }
@@ -244,13 +329,16 @@ public class PlayerController : NetworkBehaviour
         networkPlayerRotation = playerRot;
         networkPlayerNewTimestamp = Time.time;
 
-        //networkHeadNextPosition = headPos;
-        //networkLeftHandNextPosition = lHandPos;
-        //networkRightHandNextPosition = rHandPos;
+        networkHeadVelocity = (headPos - networkHeadNextPosition) / Time.deltaTime;
+        networkHeadNextPosition = headPos;
+        networkLeftHandVelocity = (lHandPos - networkLeftHandNextPosition) / Time.deltaTime;
+        networkLeftHandNextPosition = lHandPos;
+        networkRightHandVelocity = (rHandPos - networkRightHandNextPosition) / Time.deltaTime;
+        networkRightHandNextPosition = rHandPos;
 
-        //networkHeadRotation = headRot;
-        //networkLeftHandRotation = lHandRot;
-        //networkRightHandRotation = rHandRot;
+        networkHeadRotation = headRot;
+        networkLeftHandRotation = lHandRot;
+        networkRightHandRotation = rHandRot;
 
 
     }
