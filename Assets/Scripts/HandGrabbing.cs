@@ -106,7 +106,7 @@ public class HandGrabbing : MonoBehaviour
                     // print("HandGrabbing Hand position:" + gameObject.transform.position);
                     // print("HandGrabbing Anchor position:" + anchor.position);
 
-                    diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
+                    diskController.Grab(anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
 					grabbing = true;
                 }
             }
@@ -181,7 +181,7 @@ public class HandGrabbing : MonoBehaviour
         _lastFramePosition = transform.position;
 
     */
-        //diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
+        //diskController.Grab(anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
         //grabbing = true;
     }
 
@@ -268,7 +268,7 @@ public class HandGrabbing : MonoBehaviour
                     // diskController.Release();  // Removed this because handScript.Release() should do this for us.
                 }
 
-                diskController.Grab(gameObject, anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
+                diskController.Grab(anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
                 grabbing = true;
             }
         }

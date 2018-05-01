@@ -23,7 +23,7 @@ public class PlayerController : NetworkBehaviour
 
     public GameObject playerHead;
     public GameObject playerTorso; // Added by Cam for diskHit function - 4/30/2018
-    public Renderer torsoRenderer; // Added by Cam for diskHit function - 4/30/2018
+    // public Renderer torsoRenderer; // Added by Cam for diskHit function - 4/30/2018
     //Camera Object for Looking
     public GameObject playerCamera;
     //Disk object and prefab
@@ -45,6 +45,9 @@ public class PlayerController : NetworkBehaviour
     public GameObject gameController;
     GameControllerScript gameControllerScript;
     Vector3 spawnPoint = new Vector3();
+
+    Color playerColor;
+    Color inactiveColor = new Color(0.75f, 0.75f, 0.75f, 0.5f);
 
     //Network synchronization for Player
     [SyncVar]
@@ -86,6 +89,9 @@ public class PlayerController : NetworkBehaviour
         leftHand = Instantiate(prefLHand);
         rightHand = Instantiate(prefRHand);
         playerHead = Instantiate(prefHead);
+        playerTorso = playerHead.transform.GetChild(0).gameObject;
+        playerColor = playerHead.GetComponent<Renderer>().material.color;
+
         spawnPoint = transform.position;  // Set initial position as spawnPoint.
         gameController = GameObject.Find("GameController");
         gameControllerScript = gameController.GetComponent<GameControllerScript>();
@@ -312,57 +318,33 @@ public class PlayerController : NetworkBehaviour
         networkDiskDirection = dir;
         objDisk.transform.SetParent(null);
     }
-    // Called when this player is hit by the disk.  Called by the disk upon collision. -- Added by Cam 4/22/2018
-    public void DiskHit()
-    {
-        // Hit animation.  Probably spawn some kind of explosion?
-
-        // Send point info to gamecontroller
-        gameControllerScript.Score(this.gameObject);
-
-        // Set inactive
-        gameObject.SetActive(false);
-    }
-
-    // Resores player if they are destroyed. Called by gameController object. -- Added by Cam 4/22/2018
-    public void Restore()
-    {
-        // Reset position to spawn
-        // 
-        transform.position = spawnPoint;
-
-        // Spawn animation.  Reverse explosion?
-
-        // Set active (might need to move this to animation method, so it won't appear until animation is over)
-        gameObject.SetActive(true);
-    }
 
     // Called when this player is hit by the disk.  Called by the disk upon collision.
     public void DiskHit()
     {
         // Hit animation.  Probably spawn some kind of explosion?
 
-        int index = Random.Range(0, soundFX.Length);
-        soundFX[index].Play();
+        // int index = Random.Range(0, soundFX.Length);
+        // soundFX[index].Play();
 
         // Send point info to gamecontroller
         gameControllerScript.Score(this.gameObject);
 
         // Set inactive
-        // gameObject.SetActive(false);
+        playerHead.GetComponent<Renderer>().material.color = inactiveColor;
+        playerTorso.GetComponent<Renderer>().material.color = inactiveColor;
+        leftHand.GetComponent<Renderer>().material.color = inactiveColor;
+        rightHand.GetComponent<Renderer>().material.color = inactiveColor;
     }
 
     // Resores player if they are destroyed. Called by gameController object.
     public void Restore()
     {
-        // Reset position to spawn
-        // 
-        // transform.position = spawnPoint;
-        transform.position = new Vector3(Random.Range(xMin, xMax), spawnPoint.y, Random.Range(zMin, zMax));
-
         // Spawn animation.  Reverse explosion?
 
-        // Set active (might need to move this to animation method, so it won't appear until animation is over)
-        gameObject.SetActive(true);
+        playerHead.GetComponent<Renderer>().material.color = playerColor;
+        playerTorso.GetComponent<Renderer>().material.color = playerColor;
+        leftHand.GetComponent<Renderer>().material.color = playerColor;
+        rightHand.GetComponent<Renderer>().material.color = playerColor;
     }
 }
