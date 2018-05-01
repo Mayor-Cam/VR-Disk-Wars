@@ -86,11 +86,12 @@ public class PlayerController : NetworkBehaviour
 
     void Start()
     {
+        // Instantiate body parts
         leftHand = Instantiate(prefLHand);
         rightHand = Instantiate(prefRHand);
         playerHead = Instantiate(prefHead);
         playerTorso = playerHead.transform.GetChild(0).gameObject;
-        playerColor = playerHead.GetComponent<Renderer>().material.color;
+        playerColor = playerHead.GetComponent<Renderer>().material.GetColor("_ColorTint");
 
         spawnPoint = transform.position;  // Set initial position as spawnPoint.
         gameController = GameObject.Find("GameController");
@@ -112,15 +113,19 @@ public class PlayerController : NetworkBehaviour
         {
             gameControllerScript.hostPlayer = this.gameObject;
             gameControllerScript.hostController = this;
+            gameControllerScript.hostDisk = objDisk;
             gameControllerScript.hostDiskController = diskController;
+
             //Server is put on one side of the room and flipped around
             transform.position = new Vector3(0f, 0f, -3f);
             transform.Rotate(Vector3.up * 180);
         }
         else
         {
-            //gameControllerScript.clientPlayer = this.gameObject;
+            gameControllerScript.clientPlayer = this.gameObject;
             gameControllerScript.clientController = this;
+            gameControllerScript.clientDisk = objDisk;
+            gameControllerScript.clientDiskController = diskController;
 
             //If client, put player on other side
             transform.position = new Vector3(0f, 0f, -2.5f);
@@ -137,6 +142,11 @@ public class PlayerController : NetworkBehaviour
 
     private void Update()
     {
+        // Slow disk to cruise speed
+        if (isServer)
+        {
+            if (networkDiskSpeed > diskController.cruiseSpeed) networkDiskSpeed = Mathf.Lerp(networkDiskSpeed, diskController.cruiseSpeed, Time.deltaTime * diskController.decelSpeed);
+        }
         if (isLocalPlayer)
         {
             playerHead.transform.position = playerCamera.transform.position;
@@ -331,10 +341,10 @@ public class PlayerController : NetworkBehaviour
         gameControllerScript.Score(this.gameObject);
 
         // Set inactive
-        playerHead.GetComponent<Renderer>().material.color = inactiveColor;
-        playerTorso.GetComponent<Renderer>().material.color = inactiveColor;
-        leftHand.GetComponent<Renderer>().material.color = inactiveColor;
-        rightHand.GetComponent<Renderer>().material.color = inactiveColor;
+        playerHead.GetComponent<Renderer>().material.SetColor("_ColorTint", inactiveColor);
+        playerTorso.GetComponent<Renderer>().material.SetColor("_ColorTint", inactiveColor);
+        leftHand.GetComponent<Renderer>().material.SetColor("_ColorTint", inactiveColor);
+        rightHand.GetComponent<Renderer>().material.SetColor("_ColorTint", inactiveColor);
     }
 
     // Resores player if they are destroyed. Called by gameController object.
@@ -342,9 +352,9 @@ public class PlayerController : NetworkBehaviour
     {
         // Spawn animation.  Reverse explosion?
 
-        playerHead.GetComponent<Renderer>().material.color = playerColor;
-        playerTorso.GetComponent<Renderer>().material.color = playerColor;
-        leftHand.GetComponent<Renderer>().material.color = playerColor;
-        rightHand.GetComponent<Renderer>().material.color = playerColor;
+        playerHead.GetComponent<Renderer>().material.SetColor("_ColorTint", playerColor);
+        playerTorso.GetComponent<Renderer>().material.SetColor("_ColorTint", playerColor);
+        leftHand.GetComponent<Renderer>().material.SetColor("_ColorTint", playerColor);
+        rightHand.GetComponent<Renderer>().material.SetColor("_ColorTint", playerColor);
     }
 }

@@ -12,7 +12,7 @@ public class DiskController : MonoBehaviour
 
     ///////////////////
     // Additions for game functionality and disk movement
-    // -- Cam 3/13/2018 -- Updated 4/28/2018
+    // -- Cam 3/13/2018 -- Updated 5/1/2018
 
     public GameObject gameController;   // Reference to gameController object.  Needed to communicate hits for points.  (may instead implement into player objects)
     // public PlayerController playerScript;  // Will be implemented later when Dummy collision/scoring methods are implemented into player object.
@@ -27,6 +27,10 @@ public class DiskController : MonoBehaviour
     public float slerpSpeed = 5f;
     public float lerpSpeed = 20f;
     public float lerpSnap = 0.5f; // The distance the at which the disk will stop lerping and snap to the anchor.
+
+    public float maxSpeed = 15f;  // The disk cannot travel faster than this speed
+    public float cruiseSpeed = 6f; // When the disk is faster than terminal speed, it will slow down to match it.
+    public float decelSpeed = 1.25f;
     //
     //////////////////
 
@@ -55,10 +59,12 @@ public class DiskController : MonoBehaviour
     {
         if (ownerController.networkDiskFired)
         {
+
             if (ownerController.isLocalPlayer)
             { //if this disk belongs to the local player
-              //Collision detection
-                Vector3 startPosition = transform.position; // Position of disk at start of the frame
+                
+               //Collision detection
+               Vector3 startPosition = transform.position; // Position of disk at start of the frame
                 RaycastHit hit;
                 float frameDistance = ownerController.networkDiskSpeed * Time.deltaTime; //The distance the disk is projected to travel in one frame
                 bool isHit = false;
@@ -269,7 +275,7 @@ public class DiskController : MonoBehaviour
         if (currentVelocity.magnitude > throwThreshold)
         {
             ownerController.networkDiskFired = true;
-              ownerController.networkDiskSpeed = Mathf.Clamp(currentVelocity.magnitude,0f,5f);
+              ownerController.networkDiskSpeed = Mathf.Clamp(currentVelocity.magnitude, throwThreshold, maxSpeed);
 
             // rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
             transform.forward = currentVelocity;  // option 2: use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!

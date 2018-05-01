@@ -336,7 +336,10 @@ MonoBehaviour:
   anchorTrans: {fileID: 0}
   slerpSpeed: 5
   lerpSpeed: 20
-  grabThreshold: 0.5
+  lerpSnap: 0.5
+  maxSpeed: 15
+  cruiseSpeed: 6
+  decelSpeed: 1.25
 --- !u!114 &114854185614535076
 MonoBehaviour:
   m_ObjectHideFlags: 1

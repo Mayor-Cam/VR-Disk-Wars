@@ -14,7 +14,7 @@ public class GameControllerScript : MonoBehaviour {
     GameObject lastHitPlayer;  // The player most recently hit by the disk
     bool hit = false;
     // Scripts
-    DiskController clientDiskController;
+    public DiskController clientDiskController;
     public DiskController hostDiskController;
     public PlayerController clientController;
     public PlayerController hostController;
@@ -28,7 +28,7 @@ public class GameControllerScript : MonoBehaviour {
 	int hostScore;
 	int clientScore;
     float respTimer;
-    public int timerMax = 1;
+    public int timerMax = 5;
 	
 	// Use this for initialization
 	void Start () {
@@ -38,7 +38,7 @@ public class GameControllerScript : MonoBehaviour {
 
 
         // Assign Objects
-        hostPlayer = GameObject.Find("Player");
+        // hostPlayer = GameObject.Find("Player");
         // clientPlayer = GameObject.Find("Player(1)");
         // hostDisk = GameObject.Find("OldDisk");
         // clientDisk = GameObject.Find("OldDisk(1)");
@@ -46,7 +46,7 @@ public class GameControllerScript : MonoBehaviour {
 
         // Assign scripts
         // diskController = disk.GetComponent<DiskController>();
-        hostController = clientPlayer.GetComponent<PlayerController>();
+        // hostController = clientPlayer.GetComponent<PlayerController>();
         // clientController = hostPlayer.GetComponent<PlayerController>();
         // dummyController = dummyPlayer.GetComponent<DummyController>();
     }
@@ -73,9 +73,10 @@ public class GameControllerScript : MonoBehaviour {
                 dummyController.Restore();
 
             // Respawn disks
-            clientDiskController.Respawn();
             hostDiskController.Respawn();
-          }
+            if (clientDiskController != null)
+                    clientDiskController.Respawn();
+            }
         }
     }
 	
