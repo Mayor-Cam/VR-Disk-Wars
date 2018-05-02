@@ -238,13 +238,12 @@ public class PlayerController : NetworkBehaviour
         playerTorso.transform.eulerAngles = new Vector3(playerTorso.transform.eulerAngles.x,playerHead.transform.eulerAngles.y,playerTorso.transform.eulerAngles.z);
         if (isLocalPlayer)
         {
-            if (isServer)
+            if (networkDiskSpeed > diskController.cruiseSpeed) networkDiskSpeed = Mathf.Lerp(networkDiskSpeed, diskController.cruiseSpeed, Time.deltaTime * diskController.decelSpeed);
+            if (!isServer)
             {
-                if (networkDiskSpeed > diskController.cruiseSpeed) networkDiskSpeed = Mathf.Lerp(networkDiskSpeed, diskController.cruiseSpeed, Time.deltaTime * diskController.decelSpeed);
-            }
-            else {
                 CmdCruise();
             }
+
 
 
             transform.GetChild(0).gameObject.SetActive(true);
