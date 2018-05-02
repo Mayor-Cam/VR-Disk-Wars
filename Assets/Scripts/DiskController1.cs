@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DiskController : MonoBehaviour
+public class DiskController1 : MonoBehaviour
 {
     public bool grabbed = false;    // Added by Cam - 4/9/2918
     public GameObject owner;  // Identifier for which player this disk belongs to.  
@@ -305,8 +305,8 @@ public class DiskController : MonoBehaviour
 
         if (currentVelocity.magnitude > throwThreshold)
         {
-            ownerController.networkDiskFired = true;
-            if(!ownerController.isServer) ownerController.CmdSetFired(true);
+            if(ownerController.isServer) ownerController.networkDiskFired = true;
+            else ownerController.CmdSetFired(true);
             ownerController.networkDiskSpeed = Mathf.Clamp(currentVelocity.magnitude, throwThreshold, maxSpeed);
 
             // rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity

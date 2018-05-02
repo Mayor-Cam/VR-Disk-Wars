@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 // Created by Cam 3/13/2018
 // Last edited 4/22/2018
 public class GameControllerScript : MonoBehaviour {
@@ -32,13 +32,13 @@ public class GameControllerScript : MonoBehaviour {
 	public int clientScore;
     float respTimer;
     public int timerMax = 5;
-	
 	// Use this for initialization
+    bool switchColor = false;
+    public float exitTimer = 5f;
 	void Start () {
 		hostScore = 0;
 		clientScore = 0;
         respTimer = -1;
-        
     }
 	
 	// Update is called once per frame
@@ -46,10 +46,18 @@ public class GameControllerScript : MonoBehaviour {
     {
         if(hostController != null && clientController != null){
             if(hostController.isLocalPlayer) {
-                localText.text = hostScore.ToString();
-                remoteText.text = clientScore.ToString();
+                localText.text = clientScore.ToString();
+                remoteText.text = hostScore.ToString();
             }
             else {
+                if(!switchColor) {
+                    switchColor = true;
+                    Color tempColor = localText.color;
+                    localText.color = remoteText.color;
+                    localText.transform.parent.GetComponent<TextMesh>().color = remoteText.color;
+                    remoteText.color = tempColor;
+                    remoteText.transform.parent.GetComponent<TextMesh>().color = tempColor;
+                }
                 localText.text = clientScore.ToString();
                 remoteText.text = hostScore.ToString();
             }
@@ -78,8 +86,13 @@ public class GameControllerScript : MonoBehaviour {
                     clientDiskController.Respawn();
             }
         }
+        if(gameOver){
+            exitTimer += -Time.deltaTime;
+            if(exitTimer < 0f) {
+                SceneManager.LoadScene("MenuRoom");
+            }
+        }
     }
-	
 	/*
 	The player object calls this method when it's hit.  
 	It passes itself as a parameter so the gameController 
