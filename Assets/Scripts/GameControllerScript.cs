@@ -20,6 +20,8 @@ public class GameControllerScript : MonoBehaviour {
     public PlayerController hostController;
     public DummyController dummyController;
 
+    public TextMesh remoteText;
+    public TextMesh localText;
     public int winScore;
     bool gameOver= false;
 
@@ -42,6 +44,16 @@ public class GameControllerScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        if(hostController != null && clientController != null){
+            if(hostController.isLocalPlayer) {
+                localText.text = hostScore.ToString();
+                remoteText.text = clientScore.ToString();
+            }
+            else {
+                localText.text = clientScore.ToString();
+                remoteText.text = hostScore.ToString();
+            }
+        }
         if(hit)
         {
           if (respTimer > 0)
@@ -97,9 +109,11 @@ public class GameControllerScript : MonoBehaviour {
                 // Host win state
 
                 // if localplayer is host
-                hostController.Win();
+                if(hostController.isLocalPlayer)
+                    hostController.Win();
                 // else localplayer is client
-                clientController.Lose();
+                else
+                    clientController.Lose();
                 gameOver = true;
             }
             else if (clientScore == winScore)
@@ -107,9 +121,11 @@ public class GameControllerScript : MonoBehaviour {
                 // Client win state
 
                 // if localplayer is host
-                hostController.Lose();
+                if(hostController.isLocalPlayer)
+                    hostController.Lose();
                 // else localplayer is client
-                clientController.Win();
+                else
+                    clientController.Win();
 
                 gameOver = true;
             }

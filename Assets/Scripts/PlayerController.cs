@@ -211,18 +211,18 @@ public class PlayerController : NetworkBehaviour
         if (isLocalPlayer)
         {
             if(!XRDevice.isPresent) transform.Translate(Vector3.up * 1.5f);
-            /*
+            
             Material[] tempMats = playerHead.GetComponent<MeshRenderer>().materials;
             tempMats[0] = otherPlayerBaseColor;
             tempMats[1] = otherPlayerHeadColor;
             playerHead.GetComponent<MeshRenderer>().materials = tempMats;
-            tempMats = playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().materials;
+            tempMats = playerTorso.transform.GetComponent<MeshRenderer>().materials;
             tempMats[0] = otherPlayerBaseColor;
             tempMats[1] = otherplayerTorsoColor;
-            playerHead.transform.GetChild(0).GetComponent<MeshRenderer>().materials = tempMats;            
-            */
-            playerHead.GetComponent<MeshRenderer>().enabled = false;
-            playerTorso.GetComponent<MeshRenderer>().enabled = false;
+            playerTorso.transform.GetComponent<MeshRenderer>().materials = tempMats;            
+            
+            //playerHead.GetComponent<MeshRenderer>().enabled = false;
+            //playerTorso.GetComponent<MeshRenderer>().enabled = false;
             leftHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
             rightHand.GetComponent<MeshRenderer>().material = otherPlayerColor;
             objDisk.GetComponent<MeshRenderer>().material = otherDiskColor;
