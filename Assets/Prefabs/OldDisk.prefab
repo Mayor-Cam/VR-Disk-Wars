@@ -331,7 +331,7 @@ MonoBehaviour:
   diskDeparturePosition: {x: 0, y: 0, z: 0}
   gameController: {fileID: 0}
   currentVelocity: {x: 0, y: 0, z: 0}
-  throwThreshold: 1.5
+  throwThreshold: 2.5
   anchorTrans: {fileID: 0}
   slerpSpeed: 5
   lerpSpeed: 20

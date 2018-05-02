@@ -214,8 +214,8 @@ public class PlayerController : NetworkBehaviour
             transform.GetChild(0).gameObject.SetActive(true);
             playerHead.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
             playerHead.transform.localRotation = InputTracking.GetLocalRotation(xrHead);
-            leftHand.transform.position = InputTracking.GetLocalPosition(xrLeftHand);
-            rightHand.transform.position = InputTracking.GetLocalPosition(xrRightHand);
+            //leftHand.transform.position = InputTracking.GetLocalPosition(xrLeftHand);
+            //rightHand.transform.position = InputTracking.GetLocalPosition(xrRightHand);
             if(!XRDevice.isPresent) {
               float horizontalInput = Input.GetAxis("Horizontal");
               float verticalInput = Input.GetAxis("Vertical");

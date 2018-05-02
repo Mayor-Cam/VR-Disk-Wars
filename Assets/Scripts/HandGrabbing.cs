@@ -26,6 +26,7 @@ public class HandGrabbing : MonoBehaviour
     public Transform currentObject;
     private Vector3 _lastFramePosition;
     public GameObject otherHand;
+
     public bool isLocal;
 
     public GameObject diskObj;  /// 4/18/2018 --  Cam: Direct DiskObject reference
@@ -86,8 +87,10 @@ public class HandGrabbing : MonoBehaviour
         {
             //check for colliders in proximity
             //Collider[] colliders = Physics.OverlapSphere(transform.position, GrabDistance);
+            print(transform.name + ": " + "Disk (" + diskObj.transform.position + ") Hand (" + transform.position + ") :: " + Vector3.Distance(diskObj.transform.position, transform.position) + " <= " + GrabDistance + "?");
             if (Vector3.Distance(diskObj.transform.position, transform.position) <= GrabDistance)
-
+            {
+                print("attempting to grab");
                 // If we collided with something
                 //if (colliders.Length > 0)
                 // {
@@ -96,22 +99,24 @@ public class HandGrabbing : MonoBehaviour
                 // {
                 //currentObject = colliders[0].transform;
                 currentObject = diskObj.transform;
-					diskController = currentObject.gameObject.GetComponent<DiskController>();
+                //diskController = currentObject.gameObject.GetComponent<DiskController>();
 
-					// If it's already being grabbed by your other hand, release it.
-					if (currentObject.transform.parent != null) {
-						HandGrabbing handScript = currentObject.transform.parent.GetComponent<HandGrabbing>();
-						handScript.Release();
-						// diskController.Release();  // Removed this because handScript.Release() should do this for us.
-					}
+                // If it's already being grabbed by your other hand, release it.
+                if (currentObject.parent != null)
+                {
+                    HandGrabbing handScript = currentObject.transform.parent.GetComponent<HandGrabbing>();
+                    handScript.Release();
+                    // diskController.Release();  // Removed this because handScript.Release() should do this for us.
+                }
 
-                    // print("HandGrabbing Hand position:" + gameObject.transform.position);
-                    // print("HandGrabbing Anchor position:" + anchor.position);
+                // print("HandGrabbing Hand position:" + gameObject.transform.position);
+                // print("HandGrabbing Anchor position:" + anchor.position);
 
-                    diskController.Grab(anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
-					grabbing = true;
-           //     }
-            //}
+                diskController.Grab(anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
+                grabbing = true;
+                //     }
+                //}
+            }
         }
 
         // Releasing a disk
