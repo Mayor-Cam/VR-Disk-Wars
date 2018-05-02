@@ -90,7 +90,6 @@ public class GameControllerScript : MonoBehaviour {
 		if (GameObject.ReferenceEquals(hitPlayer, hostPlayer))  // If the hostPlayer was hit, score 1 for the clientPlayer.
 			clientScore++;
 		else  hostScore++;  // If not, score 1 for the hostPlayer.
-        hostController.RpcUpdateScores(hostScore, clientScore);
         if (!gameOver)
         {
             if (hostScore == winScore)
