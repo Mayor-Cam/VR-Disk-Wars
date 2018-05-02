@@ -5335,6 +5335,7 @@ MonoBehaviour:
   rightHand: {fileID: 83178747}
   pointerScript: {fileID: 48104448}
   pointerSelecting: {fileID: 0}
+  manager: {fileID: 0}
 --- !u!4 &971615935 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4043086901031558, guid: f94328585e781c34e9baf03f153b6b1e,
@@ -9518,7 +9519,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1987128852}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -4}
+  m_LocalPosition: {x: 0, y: 2, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1968324878}
