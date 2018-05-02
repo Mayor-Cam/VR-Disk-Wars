@@ -16,7 +16,6 @@ public class menuPlayerController : MonoBehaviour {
 	public NetworkManager manager;
 	bool searchMatch = false;
 	void Start () {
-		manager = GetComponent<NetworkManager>();
 	}
 	
 	// Update is called once per frame
