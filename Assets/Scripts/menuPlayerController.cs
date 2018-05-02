@@ -25,7 +25,7 @@ public class menuPlayerController : MonoBehaviour {
 		leftHand.localPosition = InputTracking.GetLocalPosition(xrLeftHand);
 		leftHand.localRotation = InputTracking.GetLocalRotation(xrLeftHand);
 		rightHand.transform.localPosition = InputTracking.GetLocalPosition(xrRightHand);
-		rightHand.localRotation = InputTracking.GetLocalRotation(xrRightHand);
+		rightHand.localRotation = InputTracking.GetLocalRotation(xrRightHand); 
 		if(pointerScript.selecting.name == "textBackground") {
 			pointerSelecting = pointerScript.selecting.parent;
 		} 
