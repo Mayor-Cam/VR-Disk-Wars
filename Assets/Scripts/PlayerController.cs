@@ -488,18 +488,22 @@ public class PlayerController : NetworkBehaviour
     }
 
     public void SyncHit() {
-        otherPlayerController.DiskHit();
         if(isServer) RpcSyncHit();
-        else CmdSyncHit();
+        else {
+            otherPlayerController.DiskHit();
+            CmdSyncHit();
+        }
 
     }
     [ClientRpc]
     public void RpcSyncHit() {
+        print("RPC HITTING");
         otherPlayerController.DiskHit();
     }
 
     [Command]
     public void CmdSyncHit() {
+        print ("CMD HITTING");
         otherPlayerController.DiskHit();
     }
 }
