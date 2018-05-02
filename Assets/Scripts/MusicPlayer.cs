@@ -5,7 +5,6 @@ using UnityEngine;
 
 /*
 Matthew Spedale
-
 This script handles the music playing for the game. 
 It works by checking if a song is playing, and if it isn't, 
 generating a random number to pick a new song out of the array of song files, then playing the song in that element.
@@ -23,21 +22,34 @@ public class MusicPlayer : MonoBehaviour
     public AudioSource currentSong;
 
     public int prevIndex;
-    
+    private bool beingPlayed = false;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
-    
+
         //songArr = GetComponents<AudioSource>();
         //song1 = songArr[0];
         //song2 = songArr[1];
         //song3 = songArr[2];
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
+
+        // If nothing is being played, run the PlaySong() method to play one
+        if (!beingPlayed)
+        {
+            StartCoroutine(PlaySong());
+        }
+
+    }
+
+    private IEnumerator PlaySong()
+    {
+
+        beingPlayed = true;
 
         // Checks if a song is currently playing, and executes to play a new song if one isn't already.
         // Automatically plays a song as soon as the game starts as well
@@ -57,7 +69,8 @@ public class MusicPlayer : MonoBehaviour
 
             if (prevIndex == index && prevIndex == 1)
             {
-                index--;
+                float[] validIndex = { 0.0f, 2.0f };
+                index = (int)validIndex[Random.Range(0, validIndex.Length)];
                 print("prevIndex = 1, changing...");
             }
 
@@ -73,5 +86,9 @@ public class MusicPlayer : MonoBehaviour
             print("Playing Song: " + currentSong.clip);
             currentSong.Play();
         }
+
+        var waitTime = new WaitForSeconds((int)Mathf.Round(Random.Range(2.0f, 5.0f)));
+        yield return waitTime;
+        beingPlayed = false;
     }
 }

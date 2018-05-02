@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Wall
   - Spawn
+  - Dummy
+  - Disk
   layers:
   - Default
   - TransparentFX
