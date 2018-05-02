@@ -184,7 +184,7 @@ public class DiskController : MonoBehaviour
                 ownerController.networkDiskVelocity = (transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime;
                 ownerController.networkDiskNextPosition = transform.position;
                 if(!ownerController.isServer){
-                    ownerController.CmdDiskPosition(transform.forward, ((transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime),transform.position);
+                    ownerController.CmdDiskPosition(transform.rotation, ((transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime),transform.position);
                 }
 
             }

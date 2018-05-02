@@ -338,7 +338,7 @@ public class PlayerController : NetworkBehaviour
     }
     [Command]
     public void CmdDiskPosition(Vector3 vel, Vector3 dir,Vector3 pos) {
-        networkDiskDirection = dir;
+        networkDiskRotation = dir;
         networkDiskVelocity = vel;
         networkDiskNextPosition = pos;        
     }
