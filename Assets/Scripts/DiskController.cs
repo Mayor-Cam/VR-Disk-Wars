@@ -164,10 +164,12 @@ public class DiskController : MonoBehaviour
         }
         if(!ownerController.networkDiskFired){           
             if(!ownerController.isLocalPlayer) {
-                transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
-
+                //transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
+                transform.position = ownerController.networkDiskNextposition;
+                transform.rotation = ownerController.networkDiskRotation;
                 if (ownerController.NetworkUpdated())
                 { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
+                    print("Network Disk Updated!");
                     diskDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
                     transform.position = ownerController.networkDiskNextPosition;
                 }
@@ -180,6 +182,8 @@ public class DiskController : MonoBehaviour
                 ownerController.networkDiskDirection = transform.forward;
                 ownerController.networkDiskVelocity = (transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime;
                 ownerController.networkDiskNextPosition = transform.position;
+                ownerController.networkDiskRotation = transform.rotation;
+
             }
         }
     }

@@ -111,7 +111,8 @@ public class PlayerController : NetworkBehaviour
     public Vector3 networkDiskNextPosition;
     [SyncVar]
     public Vector3 networkDiskVelocity;
-
+    [SyncVar]
+    public Quaternion networkDiskRotation;
     void Start()
     {
         // Instantiate body parts
@@ -155,14 +156,14 @@ public class PlayerController : NetworkBehaviour
 
             //Server is put on one side of the room and flipped around
             if(isLocalPlayer){
-              transform.position = new Vector3(0f, 0f, -3f);
-              objDisk.transform.position = new Vector3(0f, 1f, -2f);
+              transform.position = new Vector3(0f, 0f, -5f);
+              objDisk.transform.position = new Vector3(0f, 1f, -4f);
               networkDiskNextPosition = objDisk.transform.position;
               }
             else {
-              transform.position = new Vector3(0f, 0f, 3f);
+              transform.position = new Vector3(0f, 0f, 5f);
               transform.Rotate(Vector3.up*180);
-              objDisk.transform.position = new Vector3(0f, 1f, 2f);
+              objDisk.transform.position = new Vector3(0f, 1f, 4f);
               networkDiskNextPosition = objDisk.transform.position;
               }
             
