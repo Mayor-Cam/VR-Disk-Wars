@@ -20,19 +20,17 @@ public class CarZoom : MonoBehaviour {
 	}
     public void Zoom(){
         if(dir==true){
-            timer += Time.deltaTime;
-            posx+=10;
-            this.transform.position=new Vector3((posx+speed*(Time.time)),posY,posZ);
-            if(posx>=1000f){
-                posx=-1000;
+            posx+=50f*Time.deltaTime;
+            this.transform.position=new Vector3((posx),this.transform.position.y,this.transform.position.z);
+            if(posx>=100f){
+                posx=-100;
             }  
         }
         else {
-            timer += Time.deltaTime;
-            posx-=10;
-            this.transform.position=new Vector3((posx-(speed*Time.time)),posY,posZ);
-            if(posx<=-1000f){
-                posx=1000;
+            posx-=50f*Time.deltaTime;
+            this.transform.position=new Vector3((posx),this.transform.position.y,this.transform.position.z);
+            if(posx<=-100f){
+                posx=100;
             }
         }
     }  
