@@ -85,15 +85,17 @@ public class HandGrabbing : MonoBehaviour
         if (triggerPress && !grabbing)
         {
             //check for colliders in proximity
-            Collider[] colliders = Physics.OverlapSphere(transform.position, GrabDistance);
+            //Collider[] colliders = Physics.OverlapSphere(transform.position, GrabDistance);
+            if (Vector3.Distance(diskObj.transform.position, transform.position) <= GrabDistance)
 
-            // If we collided with something
-            if (colliders.Length > 0)
-            {
+                // If we collided with something
+                //if (colliders.Length > 0)
+                // {
                 // If the collided object is a disk
-                if (string.Compare(colliders[0].transform.gameObject.name, "disk") == 1)
-                {
-					currentObject = colliders[0].transform;
+                //if (colliders[0].transform.gameObject.tag == "Disk")
+                // {
+                //currentObject = colliders[0].transform;
+                currentObject = diskObj.transform;
 					diskController = currentObject.gameObject.GetComponent<DiskController>();
 
 					// If it's already being grabbed by your other hand, release it.
@@ -108,8 +110,8 @@ public class HandGrabbing : MonoBehaviour
 
                     diskController.Grab(anchor); // (second gameObject will be anchor) //gameObject.transform.position, gameObject.transform.eulerAngles);
 					grabbing = true;
-                }
-            }
+           //     }
+            //}
         }
 
         // Releasing a disk
