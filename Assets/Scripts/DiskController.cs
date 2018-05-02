@@ -93,8 +93,10 @@ public class DiskController : MonoBehaviour
                     {
                         if (hit.transform.gameObject.name == "DummyPlayer")  // if we've hit the dummy
                             hit.transform.gameObject.GetComponent<DummyController>().DiskHit();
-                        else // We've hit the opposing player
+                        else {// We've hit the opposing player
                             hit.transform.parent.gameObject.GetComponent<PlayerController>().DiskHit();
+                            ownerController.SyncHit();
+                        }
                         DestroyDisk();    // Call the disk's DestroyDisk method
                     }
                 }

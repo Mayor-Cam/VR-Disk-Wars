@@ -325,39 +325,14 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114292876886451506, guid: 5bf4950c04881884db3f1b0a267a371f,
         type: 2}
-      propertyPath: disk
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114292876886451506, guid: 5bf4950c04881884db3f1b0a267a371f,
-        type: 2}
-      propertyPath: hostPlayer
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114292876886451506, guid: 5bf4950c04881884db3f1b0a267a371f,
-        type: 2}
       propertyPath: dummyPlayer
       value: 
       objectReference: {fileID: 1064097331}
     - target: {fileID: 114292876886451506, guid: 5bf4950c04881884db3f1b0a267a371f,
         type: 2}
-      propertyPath: clientController
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114292876886451506, guid: 5bf4950c04881884db3f1b0a267a371f,
-        type: 2}
-      propertyPath: hostController
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114292876886451506, guid: 5bf4950c04881884db3f1b0a267a371f,
-        type: 2}
       propertyPath: dummyController
       value: 
       objectReference: {fileID: 1064097332}
-    - target: {fileID: 114292876886451506, guid: 5bf4950c04881884db3f1b0a267a371f,
-        type: 2}
-      propertyPath: winScore
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5bf4950c04881884db3f1b0a267a371f, type: 2}
   m_IsPrefabParent: 0

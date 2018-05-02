@@ -17,6 +17,8 @@ public class PlayerController : NetworkBehaviour
         public int RIGHTRIGHT = 2;
     }
     Body body;
+
+    public PlayerController otherPlayerController;
     //Body Objects
     public GameObject prefHead;
     public GameObject prefLHand;
@@ -197,6 +199,10 @@ public class PlayerController : NetworkBehaviour
             }
             
         }
+        if(isLocalPlayer && isServer) otherPlayerController = gameControllerScript.clientController;
+        else if(isLocalPlayer && !isServer) otherPlayerController = gameControllerScript.hostController;
+        else if(!isLocalPlayer && isServer) otherPlayerController = gameControllerScript.hostController;
+        else otherPlayerController = gameControllerScript.clientController;
         //Set OTHER player a different color
         if (isLocalPlayer)
         {
@@ -477,9 +483,17 @@ public class PlayerController : NetworkBehaviour
         Instantiate(youLose);
     }
 
+    public void SyncHit() {
+        if(isServer) RpcSyncHit();
+        else CmdSyncHit();
+    }
     [ClientRpc]
-    public void RpcUpdateScores(int hostScore, int clientScore){
-        gameControllerScript.hostScore = hostScore;
-        gameControllerScript.clientScore = clientScore;
+    public void RpcSyncHit() {
+        otherPlayerController.DiskHit();
+    }
+
+    [Command]
+    public void CmdSyncHit() {
+        otherPlayerController.DiskHit();
     }
 }
