@@ -201,15 +201,11 @@ public class PlayerController : NetworkBehaviour
         }
         if(isLocalPlayer && !isServer) {
             otherPlayerController = gameControllerScript.hostController;
-            otherPlayerController.otherPlayerController = gameControllerScript.clientController;
-        }
-        else if(!isLocalPlayer && !isServer) {
-            otherPlayerController = gameControllerScript.clientController;
-            otherPlayerController.otherPlayerController = gameControllerScript.hostController;
+            gameControllerScript.hostController.otherPlayerController = gameControllerScript.clientController;
         }
         if(!isLocalPlayer && isServer) {
             otherPlayerController = gameControllerScript.hostController;
-            otherPlayerController.otherPlayerController = gameControllerScript.clientController;
+            gameControllerScript.hostController.otherPlayerController = gameControllerScript.clientController;
         }
         //Set OTHER player a different color
         if (isLocalPlayer)
