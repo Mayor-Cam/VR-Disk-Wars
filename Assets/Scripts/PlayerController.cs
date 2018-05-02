@@ -233,15 +233,20 @@ public class PlayerController : NetworkBehaviour
     private void Update()
     {
         // Slow disk to cruise speed
-        if (isServer)
-        {
-            if (networkDiskSpeed > diskController.cruiseSpeed) networkDiskSpeed = Mathf.Lerp(networkDiskSpeed, diskController.cruiseSpeed, Time.deltaTime * diskController.decelSpeed);
-        }
 
         playerTorso.transform.position = new Vector3(playerHead.transform.position.x,playerHead.transform.position.y-0.65f,playerHead.transform.position.z);
         playerTorso.transform.eulerAngles = new Vector3(playerTorso.transform.eulerAngles.x,playerHead.transform.eulerAngles.y,playerTorso.transform.eulerAngles.z);
         if (isLocalPlayer)
         {
+            if (isServer)
+            {
+                if (networkDiskSpeed > diskController.cruiseSpeed) networkDiskSpeed = Mathf.Lerp(networkDiskSpeed, diskController.cruiseSpeed, Time.deltaTime * diskController.decelSpeed);
+            }
+            else {
+                CmdCruise();
+            }
+
+
             transform.GetChild(0).gameObject.SetActive(true);
             playerHead.transform.localPosition = InputTracking.GetLocalPosition(xrHead);
             playerHead.transform.localRotation = InputTracking.GetLocalRotation(xrHead);
@@ -505,5 +510,10 @@ public class PlayerController : NetworkBehaviour
     public void CmdSyncHit() {
         print ("CMD HITTING");
         otherPlayerController.DiskHit();
+    }
+
+    [Command]
+    public void CmdCruise() {
+        if (networkDiskSpeed > diskController.cruiseSpeed) networkDiskSpeed = Mathf.Lerp(networkDiskSpeed, diskController.cruiseSpeed, Time.deltaTime * diskController.decelSpeed);
     }
 }
