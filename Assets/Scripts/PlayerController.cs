@@ -309,7 +309,10 @@ public class PlayerController : NetworkBehaviour
             }
         }
     }
-
+    [Command]
+    public void CmdSetFired(bool fired) {
+        networkDiskFired = fired;
+    }
     [Command]
     void CmdInstantiateBodyParts()
     {

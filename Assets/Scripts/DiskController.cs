@@ -200,7 +200,8 @@ public class DiskController : MonoBehaviour
     public void Respawn()
     {
         gameObject.SetActive(false);  // Set inactive in case this disk is currently active
-        ownerController.networkDiskFired = false;
+        if(ownerController.isServer) ownerController.networkDiskFired = false;
+        else ownerController.CmdSetFired(false);
 
         // Stop, re-orient, and reposition to spawnPoint.
         transform.position = spawnPoint;
@@ -237,7 +238,8 @@ public class DiskController : MonoBehaviour
     public void Grab(Transform anchor) // Vector3 newPosition, Vector3 newAngle) 
     {
         grabbed = true;
-        ownerController.networkDiskFired = false;
+        if(ownerController.isServer) ownerController.networkDiskFired = false;
+        else ownerController.CmdSetFired(false);
         anchorTrans = anchor;
 
         // If it's already grabbed by a hand...
@@ -265,7 +267,8 @@ public class DiskController : MonoBehaviour
     {
         print("Grabbing");
         grabbed = true;
-        ownerController.networkDiskFired = false;
+        if(ownerController.isServer) ownerController.networkDiskFired = false;
+        else ownerController.CmdSetFired(false);
         anchorObj = anchor;
         anchorTrans = anchor.transform;
 
@@ -296,8 +299,9 @@ public class DiskController : MonoBehaviour
 
         if (currentVelocity.magnitude > throwThreshold)
         {
-            ownerController.networkDiskFired = true;
-              ownerController.networkDiskSpeed = Mathf.Clamp(currentVelocity.magnitude, throwThreshold, maxSpeed);
+            if(ownerController.isServer) ownerController.networkDiskFired = true;
+            else ownerController.CmdSetFired(true);
+            ownerController.networkDiskSpeed = Mathf.Clamp(currentVelocity.magnitude, throwThreshold, maxSpeed);
 
             // rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
             transform.forward = currentVelocity;  // option 2: use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
