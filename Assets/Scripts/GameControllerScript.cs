@@ -36,6 +36,7 @@ public class GameControllerScript : MonoBehaviour {
 		hostScore = 0;
 		clientScore = 0;
         respTimer = -1;
+        
     }
 	
 	// Update is called once per frame
@@ -89,7 +90,7 @@ public class GameControllerScript : MonoBehaviour {
 		if (GameObject.ReferenceEquals(hitPlayer, hostPlayer))  // If the hostPlayer was hit, score 1 for the clientPlayer.
 			clientScore++;
 		else  hostScore++;  // If not, score 1 for the hostPlayer.
-
+        hostPlayer.RpcUpdateScores(hostScore, clientScore);
         if (!gameOver)
         {
             if (hostScore == winScore)

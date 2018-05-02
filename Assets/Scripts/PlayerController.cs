@@ -476,4 +476,10 @@ public class PlayerController : NetworkBehaviour
     {
         Instantiate(youLose);
     }
+
+    [RpcClient]
+    public void RpcUpdateScore(int hostScore, int clientScore){
+        gameControllerScript.hostScore = hostScore;
+        gameControllerScript.clientScore = clientscore;
+    )
 }

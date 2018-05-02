@@ -89,7 +89,7 @@ public class DiskController : MonoBehaviour
                 // -- Cam 3/13/2018 -- edited 5/1/2018
                 if (isTrigger)
                 { 
-                    if (hit.transform.gameObject.tag == "Player" && hit.transform.gameObject != owner)  // If we've hit the dummy
+                    if (hit.transform.gameObject.tag == "Player" && hit.transform.parent.gameObject != owner)  // If we've hit the dummy
                     {
                         if (hit.transform.gameObject.name == "DummyPlayer")  // if we've hit the dummy
                             hit.transform.gameObject.GetComponent<DummyController>().DiskHit();
