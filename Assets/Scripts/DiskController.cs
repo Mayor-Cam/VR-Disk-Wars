@@ -114,11 +114,6 @@ public class DiskController : MonoBehaviour
                     int index = Random.Range(0, wallsSoundFX.Length);
                     wallsSoundFX[index].Play();
                 }
-                if(!ownerController.networkDiskFired) {
-                    ownerController.networkDiskDirection = transform.forward;
-                    ownerController.networkDiskVelocity = (transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime;
-                    ownerController.networkDiskNextPosition = transform.position;
-                }
             }
             else
             { //disk doesn't belong to the local player
@@ -168,16 +163,23 @@ public class DiskController : MonoBehaviour
             }
         }
         if(!ownerController.networkDiskFired){           
-            transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
+            if(!ownerController.isLocalPlayer) {
+                transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
 
-            if (ownerController.NetworkUpdated())
-            { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
-                diskDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
-                transform.position = ownerController.networkDiskNextPosition;
+                if (ownerController.NetworkUpdated())
+                { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
+                    diskDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
+                    transform.position = ownerController.networkDiskNextPosition;
+                }
+                else
+                {
+                    diskDeltaPosition += ownerController.networkDiskVelocity * Time.deltaTime; //accumulated deltaposition over time (in between network frames)
+                }
             }
-            else
-            {
-                diskDeltaPosition += ownerController.networkDiskVelocity * Time.deltaTime; //accumulated deltaposition over time (in between network frames)
+            else {
+                ownerController.networkDiskDirection = transform.forward;
+                ownerController.networkDiskVelocity = (transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime;
+                ownerController.networkDiskNextPosition = transform.position;
             }
         }
     }
