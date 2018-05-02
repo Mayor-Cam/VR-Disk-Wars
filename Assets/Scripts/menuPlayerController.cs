@@ -17,6 +17,7 @@ public class menuPlayerController : MonoBehaviour {
 	bool searchMatch = false;
 	bool requestMatches = false;
 	void Start () {
+		manager = GameObject.Find("Network Manager").GetComponent<NetworkManager>();
 	}
 	
 	// Update is called once per frame
