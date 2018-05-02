@@ -101,6 +101,7 @@ public class DiskController : MonoBehaviour
                 transform.Translate(Vector3.forward * frameDistance); //Basically, if frameDistance is still positive, but since it's out of the rb.Sweeptest loop (nothing hits), just move the disk forward for the remainder of frameDistance
                 if (isHit)
                 { //if the disk hit something this frame we can assume the disk's vector changed, so definitely update the ownercontroller's variablesi
+                    print(hit.transform.name);
                     ownerController.CmdUpdateVector(transform.position, transform.forward, ownerController.networkDiskSpeed);
                     ownerController.networkDiskDeparturePosition = transform.position;
                     ownerController.networkDiskDirection = transform.forward;
