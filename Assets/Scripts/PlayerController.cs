@@ -157,11 +157,13 @@ public class PlayerController : NetworkBehaviour
             if(isLocalPlayer){
               transform.position = new Vector3(0f, 0f, -3f);
               objDisk.transform.position = new Vector3(0f, 1f, -2f);
+              networkDiskNextPosition = objDisk.transform.position;
               }
             else {
               transform.position = new Vector3(0f, 0f, 3f);
               transform.Rotate(Vector3.up*180);
               objDisk.transform.position = new Vector3(0f, 1f, 2f);
+              networkDiskNextPosition = objDisk.transform.position;
               }
             
         }
