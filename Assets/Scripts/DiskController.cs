@@ -132,7 +132,7 @@ public class DiskController : MonoBehaviour
         /// Added by Cam -- 4/9/2018
         /// last edited -- 4/16/2018
         /// 
-        else if (grabbed)
+        else if (grabbed && ownerController.isLocalPlayer)
         {
             if (gameObject.transform.parent != null)  // if we're currently attached to the anchor
             {
@@ -155,7 +155,7 @@ public class DiskController : MonoBehaviour
             }
             
         }
-        else // disk is idle - level out the eulerAngles (x & z) and maybe a float animation? 
+        else if (ownerController.isLocalPlayer)// disk is idle - level out the eulerAngles (x & z) and maybe a float animation? 
         {
             // Smooth Lerp to level out.
             if (transform.rotation != targetRotation)
