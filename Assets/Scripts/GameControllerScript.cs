@@ -21,6 +21,7 @@ public class GameControllerScript : MonoBehaviour {
     public DummyController dummyController;
 
     public int winScore;
+    bool gameOver= false;
 
 	// public GameObject hostSpawn;
 	// public GameObject clientSpawn;
@@ -35,20 +36,6 @@ public class GameControllerScript : MonoBehaviour {
 		hostScore = 0;
 		clientScore = 0;
         respTimer = -1;
-
-
-        // Assign Objects
-        // hostPlayer = GameObject.Find("Player");
-        // clientPlayer = GameObject.Find("Player(1)");
-        // hostDisk = GameObject.Find("OldDisk");
-        // clientDisk = GameObject.Find("OldDisk(1)");
-
-
-        // Assign scripts
-        // diskController = disk.GetComponent<DiskController>();
-        // hostController = clientPlayer.GetComponent<PlayerController>();
-        // clientController = hostPlayer.GetComponent<PlayerController>();
-        // dummyController = dummyPlayer.GetComponent<DummyController>();
     }
 	
 	// Update is called once per frame
@@ -102,17 +89,26 @@ public class GameControllerScript : MonoBehaviour {
 		if (GameObject.ReferenceEquals(hitPlayer, hostPlayer))  // If the hostPlayer was hit, score 1 for the clientPlayer.
 			clientScore++;
 		else  hostScore++;  // If not, score 1 for the hostPlayer.
-        
-        if(hostScore == winScore)
-        {
-            // Host win state
-        }
-        else if (clientScore == winScore)
-        {
-            // Client win state
-        }
 
-        SetTimer();
+        if (!gameOver)
+        {
+            if (hostScore == winScore)
+            {
+                // Host win state
+                hostController.Win();
+                clientController.Lose();
+                gameOver = true;
+            }
+            else if (clientScore == winScore)
+            {
+                // Client win state
+                clientController.Win();
+                hostController.Lose();
+                gameOver = true;
+            }
+            else
+                SetTimer();
+        }
 	}
     
     // Called when someone is hit by the disk.  

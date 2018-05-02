@@ -179,18 +179,20 @@ MonoBehaviour:
   xrLeftHand: 4
   xrRightHand: 5
   playerHead: {fileID: 0}
+  playerTorso: {fileID: 0}
   playerCamera: {fileID: 1193613951200992}
   leftHand: {fileID: 0}
   rightHand: {fileID: 0}
   objDisk: {fileID: 0}
   prefDisk: {fileID: 1800443872324012, guid: 47fcff8b0dfc0f94dbadfa10a40163c8, type: 2}
   diskController: {fileID: 0}
+  youWin: {fileID: 1169560824274356, guid: 730ee2bf2b21e074e81f0cf58e01e359, type: 2}
+  youLose: {fileID: 1442184001368710, guid: 62680119abcf1d342a0a3f07e7444c6e, type: 2}
   otherPlayerBaseColor: {fileID: 2100000, guid: 0587712d15032de48a942ecbf0db3813,
     type: 2}
   otherPlayerHeadColor: {fileID: 2100000, guid: 4220790e7a9640c4590d3a464582aa51,
     type: 2}
-  otherPlayerBodyColor: {fileID: 2100000, guid: 86a70c0e442b690409becfc3c8b00217,
-    type: 2}
+  otherplayerTorsoColor: {fileID: 0}
   otherPlayerColor: {fileID: 2100000, guid: 456bb1eee9bf36f46b4f3a61b433b884, type: 2}
   otherDiskColor: {fileID: 2100000, guid: 456bb1eee9bf36f46b4f3a61b433b884, type: 2}
   otherLightColor:
