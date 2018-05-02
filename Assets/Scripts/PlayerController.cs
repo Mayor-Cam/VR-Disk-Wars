@@ -313,6 +313,12 @@ public class PlayerController : NetworkBehaviour
         }
     }
     [Command]
+    public void CmdDiskPosition(Vector3 vel, Vector3 dir,Vector3 pos) {
+        networkDiskDirection = transform.forward;
+        networkDiskVelocity = (transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime;
+        networkDiskNextPosition = transform.position;        
+    }
+    [Command]
     public void CmdSetFired(bool fired) {
         networkDiskFired = fired;
     }

@@ -164,9 +164,9 @@ public class DiskController : MonoBehaviour
         }
         if(!ownerController.networkDiskFired){           
             if(!ownerController.isLocalPlayer) {
-                //transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
-                transform.position = ownerController.networkDiskNextposition;
-                transform.rotation = ownerController.networkDiskRotation;
+                transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
+                //transform.position = ownerController.networkDiskNextPosition;
+                transform.forward = ownerController.networkDiskDirection;
                 if (ownerController.NetworkUpdated())
                 { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
                     print("Network Disk Updated!");
@@ -179,10 +179,14 @@ public class DiskController : MonoBehaviour
                 }
             }
             else {
-                ownerController.networkDiskDirection = transform.forward;
-                ownerController.networkDiskVelocity = (transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime;
-                ownerController.networkDiskNextPosition = transform.position;
-                ownerController.networkDiskRotation = transform.rotation;
+                if(ownerController.isServer){
+                    ownerController.networkDiskDirection = transform.forward;
+                    ownerController.networkDiskVelocity = (transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime;
+                    ownerController.networkDiskNextPosition = transform.position;
+                }
+                else {
+                    ownerController.CmdDiskPosition(transform.forward, ((transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime),transform.position);
+                }
 
             }
         }
