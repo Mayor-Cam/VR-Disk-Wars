@@ -104,6 +104,11 @@ public class PlayerController : NetworkBehaviour
     [SyncVar]
     public Vector3 networkRightHandVelocity;
     
+    [SyncVar]
+    public Vector3 networkDiskNextPosition;
+    [SyncVar]
+    public Vector3 networkDiskVelocity;
+
     void Start()
     {
         // Instantiate body parts
@@ -343,13 +348,8 @@ public class PlayerController : NetworkBehaviour
 
     }
 
-    [Command]
-    void CmdThrow(Vector3 diskPosition, Vector3 discRotation, float throwStrength)
-    { //Throw disk, not used atm
-      //TODO
-    }
 
-    bool NetworkUpdated()
+    public bool NetworkUpdated()
     { //Checks if the network has updated via networkPlayerTinmestamp / networkPlayerOldTimestamp
         if (networkPlayerOldTimestamp != networkPlayerNewTimestamp)
         {
@@ -397,13 +397,6 @@ public class PlayerController : NetworkBehaviour
         networkDiskMagnitude = mag;
     }
 
-    public void Release(Vector3 dir)
-    {
-        networkDiskDirection = dir;
-        objDisk.transform.SetParent(null);
-        RpcRelease(dir);
-        CmdRelease(dir);
-    }
     [ClientRpc]
     void RpcRelease(Vector3 dir)
     {
