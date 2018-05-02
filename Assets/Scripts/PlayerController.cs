@@ -287,8 +287,11 @@ public class PlayerController : NetworkBehaviour
         { //if not local player go ahead and perform calculations based on network-synced variables
             
             playerHead.transform.localPosition = Vector3.Lerp(playerHead.transform.localPosition, networkHeadNextPosition + headDeltaPosition, Time.deltaTime * 60f);
+            playerHead.transform.localRotation = networkHeadRotation;
             leftHand.transform.localPosition = Vector3.Lerp(leftHand.transform.localPosition, networkLeftHandNextPosition + lHandDeltaPosition, Time.deltaTime * 60f);
+            leftHand.transform.localRotation = networkLeftHandRotation;
             rightHand.transform.localPosition = Vector3.Lerp(rightHand.transform.localPosition, networkRightHandNextPosition + rHandDeltaPosition, Time.deltaTime * 60f);
+            rightHand.transform.localRotation = networkRightHandRotation;
             if (NetworkUpdated())
             { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
                 headDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
