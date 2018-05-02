@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DiskController : MonoBehaviour
+public class DiskController1 : MonoBehaviour
 {
     public bool grabbed = false;    // Added by Cam - 4/9/2918
     public GameObject owner;  // Identifier for which player this disk belongs to.  
@@ -165,7 +165,7 @@ public class DiskController : MonoBehaviour
             }
         }
         if(ownerController != null && !ownerController.networkDiskFired){ 
-            /*          
+                   
             if(!ownerController.isLocalPlayer) {
                 //transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
                 transform.position = ownerController.networkDiskNextPosition;
@@ -189,7 +189,7 @@ public class DiskController : MonoBehaviour
                     ownerController.CmdDiskPosition(transform.rotation, ((transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime),transform.position);
                 }
 
-            }*/
+            }
         }
     }
 

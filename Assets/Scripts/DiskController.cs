@@ -206,9 +206,9 @@ public class DiskController : MonoBehaviour
     public void Respawn()
     {
         gameObject.SetActive(false);  // Set inactive in case this disk is currently active
-        //if(ownerController.isServer) ownerController.networkDiskFired = false;
-        //else ownerController.CmdSetFired(false);
-        ownerController.networkDiskFired;
+        if(ownerController.isServer) ownerController.networkDiskFired = false;
+        else ownerController.CmdSetFired(false);
+
         // Stop, re-orient, and reposition to spawnPoint.
         transform.position = spawnPoint;
         transform.eulerAngles = new Vector3(0, 0, 0);
@@ -305,8 +305,9 @@ public class DiskController : MonoBehaviour
 
         if (currentVelocity.magnitude > throwThreshold)
         {
-            if(ownerController.isServer) ownerController.networkDiskFired = true;
-            else ownerController.CmdSetFired(true);
+            ownerController.networkDiskFired = true;
+            //if(ownerController.isServer) ownerController.networkDiskFired = true;
+            //else ownerController.CmdSetFired(true);
             ownerController.networkDiskSpeed = Mathf.Clamp(currentVelocity.magnitude, throwThreshold, maxSpeed);
 
             // rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
