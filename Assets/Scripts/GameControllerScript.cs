@@ -96,15 +96,22 @@ public class GameControllerScript : MonoBehaviour {
             if (hostScore == winScore)
             {
                 // Host win state
+
+                // if localplayer is host
                 hostController.Win();
+                // else localplayer is client
                 clientController.Lose();
                 gameOver = true;
             }
             else if (clientScore == winScore)
             {
                 // Client win state
-                clientController.Win();
+
+                // if localplayer is host
                 hostController.Lose();
+                // else localplayer is client
+                clientController.Win();
+
                 gameOver = true;
             }
             else
