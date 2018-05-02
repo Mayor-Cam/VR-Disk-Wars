@@ -89,13 +89,12 @@ public class DiskController : MonoBehaviour
                 // -- Cam 3/13/2018 -- edited 5/1/2018
                 if (isTrigger)
                 { 
-                    print(hit.transform.gameObject.tag);
                     if (hit.transform.gameObject.tag == "Player" && hit.transform.gameObject != owner)  // If we've hit the dummy
                     {
                         if (hit.transform.gameObject.name == "DummyPlayer")  // if we've hit the dummy
                             hit.transform.gameObject.GetComponent<DummyController>().DiskHit();
                         else // We've hit the opposing player
-                            hit.transform.gameObject.GetComponent<PlayerController>().DiskHit();
+                            hit.transform.parent.gameObject.GetComponent<PlayerController>().DiskHit();
                         DestroyDisk();    // Call the disk's DestroyDisk method
                     }
                 }
@@ -164,8 +163,8 @@ public class DiskController : MonoBehaviour
         }
         if(!ownerController.networkDiskFired){           
             if(!ownerController.isLocalPlayer) {
-                transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
-                //transform.position = ownerController.networkDiskNextPosition;
+                //transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
+                transform.position = ownerController.networkDiskNextPosition;
                 transform.forward = ownerController.networkDiskDirection;
                 if (ownerController.NetworkUpdated())
                 { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed

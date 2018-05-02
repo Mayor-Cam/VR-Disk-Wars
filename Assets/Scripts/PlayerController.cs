@@ -149,42 +149,52 @@ public class PlayerController : NetworkBehaviour
         print("XRDevice: " + (XRDevice.isPresent ? XRDevice.model : "Not Present"));
         if (isServer)
         {
-            gameControllerScript.hostPlayer = this.gameObject;
-            gameControllerScript.hostController = this;
-            gameControllerScript.hostDisk = objDisk;
-            gameControllerScript.hostDiskController = diskController;
-
             //Server is put on one side of the room and flipped around
             if(isLocalPlayer){
-              transform.position = new Vector3(0f, 0f, -5f);
-              objDisk.transform.position = new Vector3(0f, 1f, -4f);
-              networkDiskNextPosition = objDisk.transform.position;
-              }
+                transform.position = new Vector3(0f, 0f, -5f);
+                objDisk.transform.position = new Vector3(0f, 1f, -4f);
+                networkDiskNextPosition = objDisk.transform.position;
+
+                gameControllerScript.hostPlayer = this.gameObject;
+                gameControllerScript.hostController = this;
+                gameControllerScript.hostDisk = objDisk;
+                gameControllerScript.hostDiskController = diskController;
+            }
             else {
-              transform.position = new Vector3(0f, 0f, 5f);
-              transform.Rotate(Vector3.up*180);
-              objDisk.transform.position = new Vector3(0f, 1f, 4f);
-              networkDiskNextPosition = objDisk.transform.position;
+                transform.position = new Vector3(0f, 0f, 5f);
+                transform.Rotate(Vector3.up*180);
+                objDisk.transform.position = new Vector3(0f, 1f, 4f);
+                networkDiskNextPosition = objDisk.transform.position;
+
+                gameControllerScript.clientPlayer = this.gameObject;
+                gameControllerScript.clientController = this;
+                gameControllerScript.clientDisk = objDisk;
+                gameControllerScript.clientDiskController = diskController;
               }
             
         }
         else
         {
-            gameControllerScript.clientPlayer = this.gameObject;
-            gameControllerScript.clientController = this;
-            gameControllerScript.clientDisk = objDisk;
-            gameControllerScript.clientDiskController = diskController;
-
             //If client, put player on other side
             if(isLocalPlayer){
-              transform.position = new Vector3(0f, 0f, 5f);
-              transform.Rotate(Vector3.up*180);
-              objDisk.transform.position = new Vector3(0f, 1f, 4f);
+                transform.position = new Vector3(0f, 0f, 5f);
+                transform.Rotate(Vector3.up*180);
+                objDisk.transform.position = new Vector3(0f, 1f, 4f);
+
+                gameControllerScript.clientPlayer = this.gameObject;
+                gameControllerScript.clientController = this;
+                gameControllerScript.clientDisk = objDisk;
+                gameControllerScript.clientDiskController = diskController;
               }
             else {
-              transform.position = new Vector3(0f, 0f, -5f);
-              objDisk.transform.position = new Vector3(0f, 1f, -4f);
-              }
+                transform.position = new Vector3(0f, 0f, -5f);
+                objDisk.transform.position = new Vector3(0f, 1f, -4f);
+
+                gameControllerScript.hostPlayer = this.gameObject;
+                gameControllerScript.hostController = this;
+                gameControllerScript.hostDisk = objDisk;
+                gameControllerScript.hostDiskController = diskController;
+            }
             
         }
         //Set OTHER player a different color
@@ -314,9 +324,9 @@ public class PlayerController : NetworkBehaviour
     }
     [Command]
     public void CmdDiskPosition(Vector3 vel, Vector3 dir,Vector3 pos) {
-        networkDiskDirection = transform.forward;
-        networkDiskVelocity = (transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime;
-        networkDiskNextPosition = transform.position;        
+        networkDiskDirection = dir;
+        networkDiskVelocity = vel;
+        networkDiskNextPosition = pos;        
     }
     [Command]
     public void CmdSetFired(bool fired) {

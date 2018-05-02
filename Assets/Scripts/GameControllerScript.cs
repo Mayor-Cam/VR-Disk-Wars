@@ -26,8 +26,8 @@ public class GameControllerScript : MonoBehaviour {
 	// public GameObject hostSpawn;
 	// public GameObject clientSpawn;
 
-	int hostScore;
-	int clientScore;
+	public int hostScore;
+	public int clientScore;
     float respTimer;
     public int timerMax = 5;
 	
@@ -79,10 +79,10 @@ public class GameControllerScript : MonoBehaviour {
         lastHitPlayer = hitPlayer;
 
         // Destroy the still active disk.
-        if(hostDisk.activeSelf == false)
+        if(hostDisk.activeSelf)
             hostDiskController.DestroyDisk();
         if (clientDisk != null) {
-            if (clientDisk.activeSelf == false)
+            if (clientDisk.activeSelf)
                 clientDiskController.DestroyDisk();
         }
 

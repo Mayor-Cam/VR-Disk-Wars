@@ -51,10 +51,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 588f17e25884e274181d11f57f8130b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disk: {fileID: 0}
+  hostDisk: {fileID: 0}
+  clientDisk: {fileID: 0}
   clientPlayer: {fileID: 0}
   hostPlayer: {fileID: 0}
   dummyPlayer: {fileID: 0}
+  clientDiskController: {fileID: 0}
+  hostDiskController: {fileID: 0}
   clientController: {fileID: 0}
   hostController: {fileID: 0}
+  dummyController: {fileID: 0}
+  winScore: 3
+  hostScore: 0
+  clientScore: 0
   timerMax: 10
