@@ -64,7 +64,7 @@ public class DiskController : MonoBehaviour
             { //if this disk belongs to the local player
                 
                //Collision detection
-               Vector3 startPosition = transform.position; // Position of disk at start of the frame
+                Vector3 startPosition = transform.position; // Position of disk at start of the frame
                 RaycastHit hit;
                 float frameDistance = ownerController.networkDiskSpeed * Time.deltaTime; //The distance the disk is projected to travel in one frame
                 bool isHit = false;
@@ -114,7 +114,7 @@ public class DiskController : MonoBehaviour
                     int index = Random.Range(0, wallsSoundFX.Length);
                     wallsSoundFX[index].Play();
                 }
-            if(!ownerController.networkDiskFired) {
+                if(!ownerController.networkDiskFired) {
                     ownerController.networkDiskDirection = transform.forward;
                     ownerController.networkDiskVelocity = (transform.position - ownerController.networkDiskNextPosition) / Time.deltaTime;
                     ownerController.networkDiskNextPosition = transform.position;
@@ -122,7 +122,6 @@ public class DiskController : MonoBehaviour
             }
             else
             { //disk doesn't belong to the local player
-            if(ownerController.networkDiskFired){
                 if (diskDeparturePosition != ownerController.networkDiskDeparturePosition){ //if the diskDeparturePosition has changed (Means the disk has hit something since the last frame, and vector has changed)
                     diskDeparturePosition = ownerController.networkDiskDeparturePosition; //Change the new diskDeparturePosition, and
                     transform.position = diskDeparturePosition; //move the disk there (basically this also serves to resync the disks over the network, since its fresh data
@@ -131,24 +130,7 @@ public class DiskController : MonoBehaviour
                 transform.Translate(Vector3.forward * ownerController.networkDiskSpeed * Time.deltaTime); //Move disk at the networkDiskSpeed
                 diskDeparturePosition = ownerController.networkDiskDeparturePosition; //Update diskDepartuerPosition
             }
-            else {
-                { //if not local player go ahead and perform calculations based on network-synced variables
-                    
-                    transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
-
-                    if (ownerController.NetworkUpdated())
-                    { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
-                        diskDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
-                        transform.position = ownerController.networkDiskNextPosition;
-                    }
-                    else
-                    {
-                        diskDeltaPosition += ownerController.networkDiskVelocity * Time.deltaTime; //accumulated deltaposition over time (in between network frames)
-                    }
-                }
-            }
         }
-    }
 
         /////////////
         /// Added by Cam -- 4/9/2018
@@ -185,12 +167,21 @@ public class DiskController : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * slerpSpeed);
             }
         }
+        if(!ownerController.networkDiskFired){           
+            transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
 
-        ///
-        ///
-        /////////////
+            if (ownerController.NetworkUpdated())
+            { //This boolean checks to see if new packets came in by seeing if the networkPlayerNewTimestamp variable (Time.time) changed
+                diskDeltaPosition = Vector3.zero; //if so, we have new positional data, so reset the delta position (for lerping inbetween network frames)
+                transform.position = ownerController.networkDiskNextPosition;
+            }
+            else
+            {
+                diskDeltaPosition += ownerController.networkDiskVelocity * Time.deltaTime; //accumulated deltaposition over time (in between network frames)
+            }
+        }
     }
-    ///////////////////
+
     // Additions for player/dummy collision
     // -- Cam 3/13/2018
 
