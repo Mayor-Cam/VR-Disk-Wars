@@ -68,36 +68,40 @@ public class DiskController : MonoBehaviour
                 RaycastHit hit;
                 float frameDistance = ownerController.networkDiskSpeed * Time.deltaTime; //The distance the disk is projected to travel in one frame
                 bool isHit = false;
-                while (rb.SweepTest(transform.forward, out hit, frameDistance) && !hit.collider.isTrigger)
+                bool isTrigger = false;
+                while (rb.SweepTest(transform.forward, out hit, frameDistance))
                 {  //While the Sweeptest actually hits something (Collides)
+                    if(hit.collider.isTrigger)
+                    {
+                        isTrigger = true;
+                        break;
+                    }
                     isHit = true; //hit condition boolean
                     Vector3 reflect = Vector3.Reflect(transform.forward, hit.normal); //Get the reflect vector from collision point
                     transform.position = transform.position + hit.distance * transform.forward; //Move the disk to where it would be during the collision
                     transform.forward = reflect; //change the disk's direction to its reflect vector (collision exit vector)
                     frameDistance = Mathf.Clamp(frameDistance - hit.distance, 0f, frameDistance); //Reduce frameDistance to what is left for calculation
 
+                } //Basically this while loop will exit when the disk doesn't hit anything (or if the frameDistance = 0)
 
-                    ///////////////////
-                    // Additions for player/dummy collision
-                    // -- Cam 3/13/2018
+                ///////////////////
+                // Additions for player/dummy collision
+                // -- Cam 3/13/2018 -- edited 5/1/2018
+                if (isTrigger)
+                { 
                     print(hit.transform.gameObject.tag);
                     if (hit.transform.gameObject.tag == "Player" && hit.transform.gameObject != owner)  // If we've hit the dummy
                     {
-
-                        if (hit.transform.gameObject.name == "DummyPlayer") {    // if we've hit the dummy
+                        if (hit.transform.gameObject.name == "DummyPlayer")  // if we've hit the dummy
                             hit.transform.gameObject.GetComponent<DummyController>().DiskHit();
-                            print("HIT THE DUMMY");
-                            }
                         else // We've hit the opposing player
                             hit.transform.gameObject.GetComponent<PlayerController>().DiskHit();
-
                         DestroyDisk();    // Call the disk's DestroyDisk method
                     }
+                }
+                //
+                /////////////
 
-                    //
-                    /////////////
-
-                } //Basically this while loop will exit when the disk doesn't hit anything (or if the frameDistance = 0)
                 transform.Translate(Vector3.forward * frameDistance); //Basically, if frameDistance is still positive, but since it's out of the rb.Sweeptest loop (nothing hits), just move the disk forward for the remainder of frameDistance
                 if (isHit)
                 { //if the disk hit something this frame we can assume the disk's vector changed, so definitely update the ownercontroller's variablesi
