@@ -37,6 +37,9 @@ public class PlayerController : NetworkBehaviour
     public GameObject objDisk;
     public GameObject prefDisk;
     public DiskController diskController;
+
+    public GameObject youWin;
+    public GameObject youLose;
     
     //Materials for other player
     public Material otherPlayerBaseColor;
@@ -437,5 +440,15 @@ public class PlayerController : NetworkBehaviour
         playerTorso.GetComponent<Renderer>().material.SetColor("_ColorTint", playerColor);
         leftHand.GetComponent<Renderer>().material.SetColor("_ColorTint", playerColor);
         rightHand.GetComponent<Renderer>().material.SetColor("_ColorTint", playerColor);
+    }
+
+    public void Win()
+    {
+        Instantiate(youWin);
+    }
+
+    public void Lose()
+    {
+        Instantiate(youLose);
     }
 }
