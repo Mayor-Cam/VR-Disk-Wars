@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DiskController_1 : MonoBehaviour
+public class DiskController : MonoBehaviour
 {
     public bool grabbed = false;    // Added by Cam - 4/9/2918
     public GameObject owner;  // Identifier for which player this disk belongs to.  
