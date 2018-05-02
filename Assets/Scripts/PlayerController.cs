@@ -483,12 +483,15 @@ public class PlayerController : NetworkBehaviour
 
     public void Win()
     {
-        Instantiate(youWin);
+        GameObject endstate = Instantiate(youWin);
+        if(!isServer) endstate.transform.Rotate(Vector3.up * 180);
+
     }
 
     public void Lose()
     {
-        Instantiate(youLose);
+        GameObject endstate =Instantiate(youLose);
+        if(!isServer) endstate.transform.Rotate(Vector3.up * 180);
     }
 
     public void SyncHit() {

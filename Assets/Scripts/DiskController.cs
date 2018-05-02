@@ -132,7 +132,7 @@ public class DiskController : MonoBehaviour
         /// Added by Cam -- 4/9/2018
         /// last edited -- 4/16/2018
         /// 
-        else if (grabbed && ownerController.isLocalPlayer)
+        else if (ownerController != null && grabbed && ownerController.isLocalPlayer)
         {
             if (gameObject.transform.parent != null)  // if we're currently attached to the anchor
             {
@@ -155,7 +155,7 @@ public class DiskController : MonoBehaviour
             }
             
         }
-        else if (ownerController.isLocalPlayer)// disk is idle - level out the eulerAngles (x & z) and maybe a float animation? 
+        else if (ownerController != null && ownerController.isLocalPlayer)// disk is idle - level out the eulerAngles (x & z) and maybe a float animation? 
         {
             // Smooth Lerp to level out.
             if (transform.rotation != targetRotation)
@@ -163,7 +163,7 @@ public class DiskController : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * slerpSpeed);
             }
         }
-        if(!ownerController.networkDiskFired){           
+        if(ownerController != null && !ownerController.networkDiskFired){           
             if(!ownerController.isLocalPlayer) {
                 //transform.position = Vector3.Lerp(transform.position, ownerController.networkDiskNextPosition + diskDeltaPosition, Time.deltaTime * 60f);
                 transform.position = ownerController.networkDiskNextPosition;
@@ -309,6 +309,10 @@ public class DiskController : MonoBehaviour
 
             // rb.velocity = currentVelocity;  // option 1: use the vector of the last two recorded points of the disk to impart velocity
             transform.forward = currentVelocity;  // option 2: use currentVelocity to determine the angle the disk should be... but Pat's code might already do this!
+            ownerController.CmdUpdateVector(transform.position, transform.forward, ownerController.networkDiskSpeed);
+            ownerController.networkDiskDeparturePosition = transform.position;
+            ownerController.networkDiskDirection = transform.forward;
+            ownerController.networkDiskMagnitude = ownerController.networkDiskSpeed;
 
         }
         else

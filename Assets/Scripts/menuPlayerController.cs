@@ -15,6 +15,7 @@ public class menuPlayerController : MonoBehaviour {
 	public Transform pointerSelecting;
 	public NetworkManager manager;
 	bool searchMatch = false;
+	bool requestMatches = false;
 	void Start () {
 	}
 	
@@ -30,6 +31,9 @@ public class menuPlayerController : MonoBehaviour {
 		} 
 		else {
 			pointerSelecting = null;
+		}
+		if(Input.GetKey(KeyCode.Space) && !searchMatch) {
+			searchMatch = true;
 		}
 		if(pointerSelecting != null && !searchMatch) {
 			if(Input.GetAxis("TriggerRight") == 1f) {
@@ -56,7 +60,8 @@ public class menuPlayerController : MonoBehaviour {
 			}
 			else {
 				if(manager.matchInfo == null) {
-					if(manager.matches == null) {
+					if(manager.matches == null && !requestMatches)  {
+						requestMatches = true;
 						manager.matchMaker.ListMatches(0,20, "VRDiskWars", true, 0, 0, OnMatchList);
 					}
 				}
